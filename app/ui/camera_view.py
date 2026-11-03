@@ -101,13 +101,15 @@ class CameraView(QWidget):
         reg_layout = QVBoxLayout(regions_box)
         self.table = QTableWidget(0, 6)
         self.table.setHorizontalHeaderLabels(
-            ["Region", "Min (°C)", "Max (°C)", "Ambient (°C)", "ΔT (°C)", "Status"]
+            ["Region", "Min (°C)", "Max (°C)", "Amb (°C)", "ΔT (°C)", "Status"]
         )
         self.table.verticalHeader().setVisible(False)
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
-        self.table.horizontalHeader().setSectionResizeMode(
-            QHeaderView.ResizeMode.Stretch
-        )
+        header = self.table.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        # Keep headers fully legible in the narrow side panel: columns may
+        # never shrink below this, a scrollbar appears instead of eliding.
+        header.setMinimumSectionSize(76)
         reg_layout.addWidget(self.table)
         right.addWidget(regions_box, 1)
 
@@ -147,7 +149,9 @@ class CameraView(QWidget):
 
         right_widget = QWidget()
         right_widget.setLayout(right)
-        right_widget.setFixedWidth(430)
+        # Wide enough for the 6 measurement columns (6 x 76px minimum) so
+        # no header ever truncates; the camera column takes the rest.
+        right_widget.setFixedWidth(505)
         root.addWidget(right_widget)
 
         self._update_buttons()
