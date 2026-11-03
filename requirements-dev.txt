@@ -1,0 +1,4 @@
+# Development / CI (Linux-friendly headless OpenCV)
+-r requirements.txt
+pytest>=8.0
+opencv-python-headless>=4.9

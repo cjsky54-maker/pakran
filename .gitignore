@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build outputs
+build/
+dist/
+*.spec.bak
+
+# Application data (never commit databases, logs, exports)
+*.db
+*.db-wal
+*.db-shm
+logs/
+exports/
+settings/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
