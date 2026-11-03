@@ -22,7 +22,30 @@ DISPLAY_WIDTH = SENSOR_WIDTH * DISPLAY_SCALE   # 512
 DISPLAY_HEIGHT = SENSOR_HEIGHT * DISPLAY_SCALE  # 384
 
 ACQ_FPS_SIMULATED = 10.0
-ACQ_FPS_UVC = 15.0
+# HIKMICRO pocket-class cameras (VID 2BDF "HikCamera", 256x192 core)
+# stream YUYV 256x392 at their full native rate of 25 Hz.
+ACQ_FPS_UVC = 25.0
+
+# --- HIK "HikCamera" UVC frame layout (256x192 core, see docs/CAMERA_INTEGRATION.md)
+# Default stream mode: 200,704 bytes total
+HIK_DEFAULT_FRAME_BYTES = 200_704
+HIK_DEFAULT_COUNTS_OFF = 0            # 256x192 LE u16 RAW sensor counts (not temps)
+HIK_DEFAULT_METADATA_OFF = 98_304    # 2,048 B parameters/metadata/padding (~2.5 Hz)
+HIK_DEFAULT_PREVIEW_OFF = 100_352    # 256x192 YUYV preview
+HIK_DEFAULT_SUMMARY_OFF = 198_656    # 2,048 B camera-computed temperature summaries
+# Calibrated "mode 8" stream: 201,248 bytes total (OS stacks may truncate to
+# the advertised 200,704 - the temperature plane ends well before that)
+HIK_M8_FRAME_BYTES = 201_248
+HIK_M8_HEADER_BYTES = 4_640          # proprietary header
+HIK_M8_TEMPS_OFF = 4_640             # 256x192 LE u16 temperature codes
+HIK_M8_PREVIEW_OFF = 102_944         # 256x192 YUYV preview
+# Temperature conversion shared by the calibrated plane and the default-mode
+# summaries (confirmed against the manufacturer application):
+#     celsius = code / 64.0 - 50.0
+HIK_TEMP_SCALE = 64.0
+HIK_TEMP_OFFSET = -50.0
+# Safety gates for accepting a frame as radiometric (see hik_frame_parser)
+HIK_MIN_CONSECUTIVE_M8 = 2
 
 # Test types
 TEST_TYPE_STANDARD = "standard"

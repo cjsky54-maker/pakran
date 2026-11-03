@@ -57,6 +57,7 @@ class _AcquisitionWorker(QObject):
     def run(self) -> None:
         reconnect_deadline: float | None = None
         while not self._stop:
+            started = time.monotonic()
             try:
                 with self._emissivity_lock:
                     pending = self._pending_emissivity
@@ -84,7 +85,13 @@ class _AcquisitionWorker(QObject):
                 self._camera.close()
                 time.sleep(1.0)
             else:
-                time.sleep(self._interval)
+                # Target-rate pacing: real cameras block inside read() for a
+                # full frame interval, so the leftover wait is ~0 and the
+                # stream runs at its native rate (25 Hz for HikCamera UVC).
+                # Simulated cameras return instantly and are paced here.
+                delay = self._interval - (time.monotonic() - started)
+                if delay > 0:
+                    time.sleep(delay)
 
     def stop(self) -> None:
         self._stop = True
@@ -107,6 +114,7 @@ class CameraManager(QObject):
         self._lock = threading.Lock()
         self._latest: ThermalFrame | None = None
         self._last_error = ""
+        self._last_frame_radiometric = False
 
     # -- state ------------------------------------------------------------
     @property
@@ -201,8 +209,15 @@ class CameraManager(QObject):
     def _on_frame(self, frame: ThermalFrame) -> None:
         with self._lock:
             self._latest = frame
+        radiometric = bool(frame.is_radiometric)
         if self._state != CAM_CONNECTED:
             self._set_state(CAM_CONNECTED)
+        elif radiometric != self._last_frame_radiometric:
+            # The stream flipped between preview and calibrated mode while
+            # staying connected (e.g. HikCamera stream mode change) - force a
+            # status refresh so the UI reflects the new capability.
+            self._emit_status()
+        self._last_frame_radiometric = radiometric
 
     def _on_read_error(self, message: str) -> None:
         self._last_error = message
@@ -220,6 +235,9 @@ class CameraManager(QObject):
         if state == self._state:
             return
         self._state = state
+        self._emit_status()
+
+    def _emit_status(self) -> None:
         info = self.camera_info
         payload = {
             "name": info.name if info else "",
@@ -228,7 +246,7 @@ class CameraManager(QObject):
             "is_simulated": bool(info.is_simulated) if info else False,
             "error": self._last_error,
         }
-        self.statusChanged.emit(state, payload)
+        self.statusChanged.emit(self._state, payload)
 
     def _stop_worker(self) -> None:
         if self._worker is not None:

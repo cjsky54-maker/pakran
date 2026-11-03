@@ -197,7 +197,10 @@ class CameraView(QWidget):
         elif not radiometric:
             self.banner.setText(
                 "Radiometric temperature data is not available from this camera "
-                "interface. Live image only - measurements and tests are disabled."
+                "stream. Live image only - measurements and tests are disabled.\n"
+                "Tip: if HIKMICRO Analyzer shows temperatures for this camera, "
+                "open Analyzer once, close it, then reconnect here - the "
+                "calibrated stream is detected automatically."
             )
             self.banner.setStyleSheet(
                 "background:#fff3cd; color:#664d03; border:1px solid #ffe69c;"

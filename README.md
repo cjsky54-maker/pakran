@@ -18,14 +18,24 @@ The UI is entirely English (LTR), displays dates in the **Solar Hijri
 discovery/reconnection, simulated camera, preset management (immutable,
 soft-delete/restore), region editor, SQLite database with snapshots, reports
 page with filters and CSV export, backup/restore, rotating logs, automated
-test suite (85 tests), PyInstaller packaging.
+test suite (102 tests), PyInstaller packaging.
 
-**Phase 2 (integration point ready, pending SDK):** real radiometric matrix
-acquisition from the Mini2 V2. HIKMICRO does not publish a public SDK for
-this camera; see `docs/FEASIBILITY.md` and `docs/CAMERA_INTEGRATION.md`.
-Until a verified radiometric interface is connected, the application never
-fabricates temperatures: all temperature-dependent operations are disabled
-when the active camera is not radiometric.
+**HikCamera USB stream support (implemented):** HIKMICRO pocket-class cameras
+(USB VID 2BDF — Mini2 family and OEM variants) expose their thermal data
+through the standard UVC stream. The application opens the stream raw
+(no lossy conversion), parses the 256×392 YUYV container at **25 Hz** and —
+when the camera is in its calibrated stream mode — extracts the full
+per-pixel temperature matrix, exactly like HIKMICRO Analyzer. To switch the
+camera into the calibrated mode today: open HIKMICRO Analyzer once, close
+it, then connect here (see `docs/CAMERA_INTEGRATION.md` §3.3). When the
+camera streams its default mode the application shows the live preview
+only and never fabricates temperatures — raw sensor counts are never
+displayed as °C.
+
+**Phase 2 (integration point ready, pending SDK):** direct in-app switching
+of the camera's calibrated stream mode via the vendor control endpoint,
+and the official HIKMICRO SDK adapter for other camera series. See
+`docs/FEASIBILITY.md` and `docs/CAMERA_INTEGRATION.md`.
 
 See `docs/FEATURES.md` for the complete implemented/pending feature lists.
 
@@ -81,7 +91,11 @@ DriverThermalQC/
 
 1. **Connect the camera** — the app auto-detects a single supported camera
    at startup; use *Reconnect Camera* for the device selection dialog
-   (devices, status, refresh, connect).
+   (devices, status, refresh, connect). A HikCamera USB device is analysed
+   on connect: the calibrated stream enables measurements automatically; in
+   default mode the app shows the 25 Hz preview and a banner explains how
+   to enable the calibrated stream (open HIKMICRO Analyzer once, close it,
+   reconnect).
 2. **Select or create a Preset** — the header combo lists active presets
    (device code + version). *Create New Preset* opens the editor: draw
    rectangular regions on the live image, set each region's *Maximum
@@ -137,7 +151,7 @@ app/
     logging/            rotating file logging
     ui/                 main window, camera view, preset editor,
                         reports page, settings page, dialogs
-tests/                  85 automated tests (logic + GUI smoke)
+tests/                  102 automated tests (logic + GUI smoke)
 docs/                   feasibility report, camera integration guide,
                         features, reference documents
 resources/              icons / styles (placeholders)
@@ -157,7 +171,9 @@ Covers: region Min/Max/Ambient/ΔT, PASS/FAIL boundary (equality passes),
 rise trigger, waiting timeout, sample scheduling for 5/10/15 s, T60
 decision, missing-T60 handling, camera loss/missed samples, emergency stop,
 quick test, preset immutability, soft delete/restore, snapshots, crash
-recovery, backup/restore, CSV multi-region schema, Jalali conversion, and a
+recovery, backup/restore, CSV multi-region schema, Jalali conversion, the
+HikCamera frame parser (byte-exact synthetic frames for both wire layouts
+plus the safety gates), the UVC raw-stream pipeline, and a
 full GUI smoke test against the simulated camera.
 
 ## Known limitations (v1)
@@ -165,8 +181,13 @@ full GUI smoke test against the simulated camera.
 - No zoom/pan on the live image (by design for v1).
 - No charts in reports (by design for v1).
 - Presets cannot be edited after saving (by design; copy instead).
-- Radiometric measurements require a radiometric camera backend; with a
-  visual-only UVC device the image is shown but tests are disabled.
+- Switching the HikCamera into its calibrated stream mode from inside the
+  application requires the vendor USB control path (see
+  `docs/CAMERA_INTEGRATION.md` §3.3); until then use the documented
+  Analyzer workaround — the calibrated stream is then detected and parsed
+  automatically.
+- A visual-only UVC device (e.g. a regular webcam) shows an image but tests
+  stay disabled.
 - The HIKMICRO Mini2 V2 radiometric adapter awaits official SDK access.
 - The EXE must be built on Windows (or via the included GitHub Actions
   workflow); PyInstaller does not cross-compile.
