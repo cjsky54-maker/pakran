@@ -47,15 +47,23 @@ Useful flags:
 
 ## Building the standalone EXE
 
-Option A — on a Windows PC:
+Option A — on a Windows PC (requires Python 3.11+ from python.org with
+"Add python.exe to PATH" ticked in the installer):
 
 ```bat
 build_windows.bat
 ```
 
-Option B — automatically via GitHub Actions (Actions → *Build Windows EXE* →
-*Run workflow*). The EXE is uploaded as an artifact and attached to a draft
-release when a `v*` tag is pushed.
+If the script reports `Python was not found`, install Python from
+https://www.python.org/downloads/ and run it again — or just use Option B,
+which needs no Python at all.
+
+Option B — automatically via GitHub Actions. Every push to `main` (and the
+Actions → *Build Windows EXE* → *Run workflow* button) builds the EXE on a
+GitHub Windows runner and uploads it as an artifact: open the latest
+successful run and download **DriverThermalQC-windows-exe** from its
+*Artifacts* section. Pushing a `v*` tag also attaches the EXE to a draft
+release.
 
 The EXE is a single file, runs from a normal user account, and stores all
 data in `%LOCALAPPDATA%\DriverThermalQC`:
