@@ -95,7 +95,11 @@ class MainWindow(QMainWindow):
 
         self.preset_combo = QComboBox()
         self.preset_combo.setMinimumWidth(280)
-        self.preset_combo.currentIndexChanged.connect(self._on_preset_selected)
+        # activated (not currentIndexChanged): fires on every user pick,
+        # even when the index stays the same. With no presets stored,
+        # "Create New Preset..." is the only item and already current, so
+        # a click on it must still open the editor.
+        self.preset_combo.activated.connect(self._on_preset_selected)
         layout.addWidget(QLabel("Preset:"))
         layout.addWidget(self.preset_combo)
 

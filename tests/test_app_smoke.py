@@ -57,6 +57,59 @@ def test_main_window_smoke(services, qapp):
     window.close()  # exercises closeEvent (normal shutdown path)
 
 
+def test_create_new_preset_opens_editor_on_every_click(services, qapp, monkeypatch):
+    """Regression: with no presets stored, 'Create New Preset...' is the only
+    combo item and already current; a click on it must still open the editor
+    (the combo reacts to `activated`, not `currentIndexChanged`)."""
+    from app.ui.main_window import MainWindow
+    from app.ui.preset_editor import PresetEditorDialog
+
+    window = MainWindow(services)
+    window.show()
+    QApplication.processEvents()
+
+    combo = window.preset_combo
+    assert combo.count() == 1
+    assert combo.currentText() == "Create New Preset..."
+    assert combo.currentIndex() == 0  # already selected before any click
+
+    calls = {"n": 0}
+
+    def fake_exec(self):
+        calls["n"] += 1
+        return PresetEditorDialog.DialogCode.Rejected
+
+    monkeypatch.setattr(PresetEditorDialog, "exec", fake_exec)
+
+    # A real popup click emits `activated(index)` even when the index is
+    # unchanged (0 -> 0); currentIndexChanged would stay silent.
+    combo.activated.emit(combo.currentIndex())
+    QApplication.processEvents()
+    assert calls["n"] == 1
+
+    # Clicking again after cancelling must reopen the editor.
+    combo.activated.emit(combo.currentIndex())
+    QApplication.processEvents()
+    assert calls["n"] == 2
+
+    # With an existing preset, selecting it loads it; selecting
+    # "Create New Preset..." afterwards opens the editor again.
+    from app.thermal.region_calculator import RegionDefinition
+    pid = services.db.create_preset("REG-1", "1.00", [
+        RegionDefinition("A", 20, 20, 50, 50, "#ff0000", 35.0),
+    ])
+    window.refresh_presets(select_id=pid)
+    combo.activated.emit(combo.findData(pid))
+    QApplication.processEvents()
+    assert window._current_preset.id == pid
+
+    combo.activated.emit(combo.findText("Create New Preset..."))
+    QApplication.processEvents()
+    assert calls["n"] == 3
+
+    window.close()
+
+
 def test_simulated_preset_workflow(services, qapp):
     """End-to-end: simulated camera + preset + Quick Test through the DB."""
     from app.testing.quick_test import run_quick_test
