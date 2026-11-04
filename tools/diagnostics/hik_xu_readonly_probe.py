@@ -1,8 +1,8 @@
 """Read-only HIKMICRO UVC Extension Unit diagnostic for Windows.
 
-This script DOES NOT send SET requests and never changes camera mode.
+This script sends one documented command-selection SET (selector 5, payload 03 05), but never changes camera stream mode.
 It enumerates DirectShow video devices, inspects KS topology, then attempts
-a GET-only read of XU selector 4 on each device-specific node.
+a GET of selector 4, selects the selector-3 read command, then queries and reads selector 3.
 
 Requires Windows, Python 3.10+, and: pip install comtypes
 Run with HIKMICRO Analyzer closed and DriverThermalQC disconnected.
@@ -133,9 +133,47 @@ def _friendly_name(moniker: IMoniker) -> str:
         return "(FriendlyName unavailable)"
 
 
-def _read_xu_selector(ks: IKsControl, node_id: int, selector: int) -> dict:
-    """Issue one KSPROPERTY GET for a selector; no SET or mode change."""
+def _raw_ks_property(
+    ks: IKsControl, prop: KSP_NODE, data_ptr: int | None, data_length: int
+) -> tuple[int, int]:
+    """Call IKsControl::KsProperty directly and preserve HRESULT + BytesReturned."""
+    this_ptr = ctypes.cast(ks, c_void_p).value
+    if not this_ptr:
+        raise RuntimeError("IKsControl returned a null interface pointer")
+    vtable = ctypes.cast(this_ptr, POINTER(POINTER(c_void_p))).contents
+    call = ctypes.WINFUNCTYPE(
+        ctypes.c_long, c_void_p, c_void_p, c_ulong,
+        c_void_p, c_ulong, POINTER(c_ulong)
+    )(vtable[3])
+    returned = c_ulong(0)
+    hr = int(call(
+        this_ptr, ctypes.byref(prop), ctypes.sizeof(prop),
+        data_ptr, data_length, byref(returned)
+    ))
+    return hr, int(returned.value)
 
+
+def _set_xu_selector5_command(ks: IKsControl, node_id: int) -> dict:
+    """Select the HTI UVC2 read-command channel; this is not a mode change."""
+    payload = (ctypes.c_ubyte * 2)(0x03, 0x05)
+    prop = KSP_NODE(
+        HIK_XU_GUID, 5,
+        0x00000002 | KSPROPERTY_TYPE_TOPOLOGY,
+        node_id, 0,
+    )
+    hr, returned = _raw_ks_property(
+        ks, prop, ctypes.cast(payload, c_void_p).value, ctypes.sizeof(payload)
+    )
+    return {
+        "payload": "03 05",
+        "hresult": f"0x{hr & 0xFFFFFFFF:08X}",
+        "bytes_returned": returned,
+        "ok": hr >= 0,
+    }
+
+
+def _read_xu_selector(ks: IKsControl, node_id: int, selector: int) -> dict:
+    """Query the KS response size, then GET exactly that many bytes."""
     prop = KSP_NODE(
         HIK_XU_GUID,
         selector,
@@ -143,24 +181,36 @@ def _read_xu_selector(ks: IKsControl, node_id: int, selector: int) -> dict:
         node_id,
         0,
     )
-    output = ctypes.create_string_buffer(READ_BUFFER_SIZE)
-    returned = c_ulong(0)
     try:
-        # comtypes automatically allocates plain [out] parameters and
-        # returns them from the call; do not pass BytesReturned explicitly.
-        result = ks.KsProperty(
-            ctypes.addressof(prop), ctypes.sizeof(prop),
-            ctypes.addressof(output), READ_BUFFER_SIZE,
+        # IKsControl documents NULL/0 as a required-size query. Usbvideo
+        # translates this property request using the XU control descriptor.
+        size_hr, required = _raw_ks_property(ks, prop, None, 0)
+        if not 1 <= required <= 512:
+            return {
+                "ok": False,
+                "stage": "size_query",
+                "hresult": f"0x{size_hr & 0xFFFFFFFF:08X}",
+                "bytes_required": required,
+                "error": "KS did not report a plausible response size (1..512)",
+            }
+        output = ctypes.create_string_buffer(required)
+        hr, returned = _raw_ks_property(
+            ks, prop, ctypes.cast(output, c_void_p).value, required
         )
-        if isinstance(result, tuple):
-            returned_value = int(result[-1])
-        else:
-            returned_value = int(result)
-        returned.value = returned_value
-        payload = output.raw[: min(returned.value, READ_BUFFER_SIZE)]
+        if hr < 0:
+            return {
+                "ok": False,
+                "stage": "GET",
+                "hresult": f"0x{hr & 0xFFFFFFFF:08X}",
+                "bytes_required": required,
+                "bytes_returned": returned,
+            }
+        payload = output.raw[: min(returned, required)]
         return {
             "ok": True,
-            "bytes_returned": returned.value,
+            "size_query_hresult": f"0x{size_hr & 0xFFFFFFFF:08X}",
+            "bytes_required": required,
+            "bytes_returned": returned,
             "hex": payload.hex(" "),
             "ascii": "".join(chr(b) if 32 <= b < 127 else "." for b in payload),
         }
@@ -219,14 +269,22 @@ def inspect_device(moniker: IMoniker, index: int) -> dict:
                         node_entry["xu_selector4_get"] = _read_xu_selector(
                             ks, node_id, XU_PROTOCOL_VERSION_SELECTOR
                         )
-                        # Read current value of selector 3 only; no SET is issued.
-                        node_entry["xu_selector3_get"] = _read_xu_selector(
-                            ks, node_id, 3
+                        # HTI UVC2 protocol: select the read-command channel,
+                        # then query/read selector 3. This SET does not select
+                        # or change the thermal stream mode.
+                        node_entry["xu_selector5_command_select"] = (
+                            _set_xu_selector5_command(ks, node_id)
                         )
-                        # Selector 5 is also probed with GET only.
-                        node_entry["xu_selector5_get"] = _read_xu_selector(
-                            ks, node_id, 5
-                        )
+                        if node_entry["xu_selector5_command_select"]["ok"]:
+                            node_entry["xu_selector3_get"] = _read_xu_selector(
+                                ks, node_id, 3
+                            )
+                        else:
+                            node_entry["xu_selector3_get"] = {
+                                "ok": False,
+                                "stage": "command_select",
+                                "error": "Selector 5 command selection failed",
+                            }
                         node_entry["ikSControl_available"] = True
                     except Exception as exc:
                         node_entry["ikSControl_available"] = False
@@ -255,7 +313,7 @@ def main() -> int:
         "platform": platform.platform(),
         "python": sys.version.split()[0],
         "xu_guid": str(HIK_XU_GUID),
-        "operation": "GET selectors 3, 4, and 5 only; no SET requests are issued",
+        "operation": "GET selector 4; SET selector 5 payload 03 05 (read-command selection only); size-query + GET selector 3; no stream mode change",
         "devices": [],
     }
 
