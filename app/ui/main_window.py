@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 
 from app.camera.camera_manager import CameraManager, create_camera
 from app.core.constants import (
+    APP_VERSION,
     CAM_CONNECTED,
     ORG_NAME,
     APP_TITLE,
@@ -46,7 +47,7 @@ class MainWindow(QMainWindow):
         self._current_preset: Optional[Preset] = None
         self._standard_running = False
 
-        self.setWindowTitle(f"{APP_TITLE} - {ORG_NAME}")
+        self.setWindowTitle(f"{APP_TITLE} v{APP_VERSION} - {ORG_NAME}")
         self.resize(services.settings.window_width, services.settings.window_height)
 
         self.controller = StandardTestController(services.db, self)

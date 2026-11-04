@@ -11,7 +11,7 @@ import sys
 
 APP_NAME = "DriverThermalQC"
 APP_TITLE = "Driver Thermal QC"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 ORG_NAME = "Pakran"
 
 # Sensor / display geometry (HIKMICRO Mini2 V2 class sensor, 256x192)
