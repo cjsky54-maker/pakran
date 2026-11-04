@@ -131,3 +131,137 @@ def test_simulated_preset_workflow(services, qapp):
     assert result["test_id"] > 0
     assert result["overall_result"] in ("PASS", "FAIL")
     assert services.db.list_tests(test_type="quick")
+
+
+# -- camera manager: async open --------------------------------------------------
+
+
+def test_camera_manager_connects_async(qapp, tmp_path):
+    """attach() returns immediately; the device is opened on the worker
+    thread and the state settles to connected with frames."""
+    import time
+
+    from app.camera.camera_manager import CameraManager
+    from app.camera.simulated_camera import SimulatedCamera
+    from app.core.configuration import SettingsData
+    from app.core.constants import CAM_CONNECTED, CAM_CONNECTING
+
+    mgr = CameraManager(lambda: SettingsData())
+    mgr.attach(SimulatedCamera())
+    assert mgr.state == CAM_CONNECTING  # non-blocking: not connected yet
+
+    end = time.monotonic() + 3.0
+    while mgr.latest_frame() is None and time.monotonic() < end:
+        qapp.processEvents()
+        time.sleep(0.02)
+    assert mgr.latest_frame() is not None
+    assert mgr.state == CAM_CONNECTED
+    assert mgr.is_radiometric
+    mgr.detach()
+    assert mgr.state == "disconnected"
+
+
+def test_camera_manager_open_failure_reported_async(qapp):
+    """A failing open never blocks the GUI thread: the error arrives via
+    signal and the manager settles back to disconnected (this used to be
+    a 30 s frozen window followed by a fallback to the simulated camera)."""
+    import time
+
+    from app.camera.camera_interface import CameraError, CameraInterface
+    from app.camera.camera_manager import CameraManager
+    from app.camera.camera_models import CameraInfo
+    from app.core.configuration import SettingsData
+    from app.core.constants import CAM_CONNECTING, CAM_DISCONNECTED
+
+    class BadCamera(CameraInterface):
+        def __init__(self) -> None:
+            self.info = CameraInfo(
+                key="bad:0", name="Bad Camera", kind="uvc",
+                is_radiometric=False, is_simulated=False,
+            )
+
+        def open(self) -> None:
+            raise CameraError("simulated open failure - device busy")
+
+        def close(self) -> None:
+            pass
+
+        def is_open(self) -> bool:
+            return False
+
+        def read_frame(self):
+            raise CameraError("never opened")
+
+        def set_emissivity(self, value: float) -> None:
+            pass
+
+    mgr = CameraManager(lambda: SettingsData())
+    errors: list[str] = []
+    mgr.errorOccurred.connect(errors.append)
+    mgr.attach(BadCamera())
+    assert mgr.state == CAM_CONNECTING
+
+    end = time.monotonic() + 3.0
+    while mgr.state != CAM_DISCONNECTED and time.monotonic() < end:
+        qapp.processEvents()
+        time.sleep(0.02)
+    assert mgr.state == CAM_DISCONNECTED
+    assert errors and "open failure" in errors[0]
+    assert "open failure" in mgr.last_error
+    mgr.detach()
+
+
+def test_worker_reopens_camera_after_read_error(qapp):
+    """The reconnection loop actually reopens the device instead of
+    spinning on a closed camera until the deadline."""
+    import time
+
+    from app.camera.camera_interface import CameraError, CameraInterface
+    from app.camera.camera_manager import CameraManager
+    from app.camera.camera_models import CameraInfo
+    from app.core.configuration import SettingsData
+    from app.thermal.thermal_frame import ThermalFrame
+    from app.core.jalali import utc_now_iso
+
+    class FlakyCamera(CameraInterface):
+        """Fails the first read, then recovers after a reopen."""
+
+        def __init__(self) -> None:
+            self.info = CameraInfo(
+                key="flaky:0", name="Flaky Camera", kind="uvc",
+                is_radiometric=False, is_simulated=False,
+            )
+            self._open_count = 0
+            self._reads = 0
+
+        def open(self) -> None:
+            self._open_count += 1
+
+        def close(self) -> None:
+            pass
+
+        def is_open(self) -> bool:
+            return self._open_count > 0
+
+        def read_frame(self):
+            self._reads += 1
+            if self._open_count == 1 and self._reads == 1:
+                raise CameraError("transient stream stall")
+            return ThermalFrame(
+                matrix=None, image=None, timestamp=time.monotonic(),
+                wall_time=utc_now_iso(), source="flaky", is_simulated=False,
+            )
+
+        def set_emissivity(self, value: float) -> None:
+            pass
+
+    camera = FlakyCamera()
+    mgr = CameraManager(lambda: SettingsData())
+    mgr.attach(camera)
+    end = time.monotonic() + 5.0
+    while camera._open_count < 2 and time.monotonic() < end:
+        qapp.processEvents()
+        time.sleep(0.02)
+    assert camera._open_count >= 2      # reopened during reconnection
+    assert mgr.latest_frame() is not None
+    mgr.detach()

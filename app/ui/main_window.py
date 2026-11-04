@@ -71,6 +71,7 @@ class MainWindow(QMainWindow):
         self._wire_controller()
         self._wire_camera()
         self.refresh_presets()
+        self._device_dialog_open = False
         self._auto_connect()
 
         # Idle auto-reconnection: keep looking for a camera while disconnected.
@@ -174,6 +175,11 @@ class MainWindow(QMainWindow):
             self._open_device_dialog()
 
     def _try_auto_reconnect(self) -> None:
+        # Never race the open selection dialog: the deep discovery it runs
+        # opens UVC devices, and auto-attaching behind a modal dialog is
+        # confusing.
+        if self._device_dialog_open:
+            return
         if self._services.camera.state != "disconnected":
             return
         devices = self._services.camera.discover()
@@ -181,12 +187,19 @@ class MainWindow(QMainWindow):
             self._services.camera.attach(create_camera(devices[0]))
 
     def _open_device_dialog(self) -> None:
-        devices = self._services.camera.discover()
-        dialog = DeviceSelectionDialog(devices, self)
-        if dialog.exec() == dialog.DialogCode.Accepted:
-            device = dialog.current_device()
-            if device is not None:
-                self._services.camera.attach(create_camera(device))
+        self._device_dialog_open = True
+        try:
+            devices = self._services.camera.discover()
+            dialog = DeviceSelectionDialog(
+                devices, self,
+                refresh_fn=lambda: self._services.camera.discover(deep=True),
+            )
+            if dialog.exec() == dialog.DialogCode.Accepted:
+                device = dialog.selected or dialog.current_device()
+                if device is not None:
+                    self._services.camera.attach(create_camera(device))
+        finally:
+            self._device_dialog_open = False
 
     # -- presets -----------------------------------------------------------------
     def refresh_presets(self, select_id: Optional[int] = None) -> None:

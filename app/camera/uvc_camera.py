@@ -15,6 +15,12 @@ Two acquisition paths:
 2. Visual path (fallback) - any other UVC device: OpenCV converts frames
    to BGR; ``matrix`` stays ``None`` and temperature-dependent features
    remain disabled. The image is never used to estimate temperatures.
+
+Opening is strictly BOUNDED in time (MSMF open/read timeouts, a small
+number of probe reads) and the visual fallback RETRIES: after the raw
+probe releases the device the OS may need a moment before the same
+device can be reopened, which previously surfaced as a spurious
+"did not open" error.
 """
 from __future__ import annotations
 
@@ -46,9 +52,32 @@ from app.thermal.thermal_frame import ThermalFrame
 logger = get_logger("camera.uvc")
 
 _HIK_NAME = "HIKMICRO Thermal Camera (USB)"
+_GENERIC_UVC_DETAILS = "USB video device - capability is checked when connected"
 _HIK_W, HIK_H = SENSOR_WIDTH, SENSOR_HEIGHT + 200   # 256 x 392 stream
 _RAW_FRAME_SIZES = (HIK_DEFAULT_FRAME_BYTES, HIK_M8_FRAME_BYTES)
-_PROBE_READS = 12
+_PROBE_READS = 5            # raw-open probe reads per backend
+_DISCOVERY_PROBE_READS = 4  # deep-discovery reads (enough to confirm mode 8)
+_VISUAL_OPEN_ATTEMPTS = 3   # visual fallback retries (device may be busy)
+_VISUAL_RETRY_DELAY_S = 1.5
+_MSMF_OPEN_TIMEOUT_MS = 4000
+_MSMF_READ_TIMEOUT_MS = 1200
+
+
+def _set_stream_timeouts(cap: cv2.VideoCapture) -> None:
+    """Bound MSMF open/read calls so a stalled device cannot hang forever.
+
+    The properties are MSMF-only and may be absent in older OpenCV builds;
+    setting them on other backends is simply ignored.
+    """
+    for prop, value in (
+        (cv2.CAP_PROP_OPEN_TIMEOUT_MSEC, _MSMF_OPEN_TIMEOUT_MS),
+        (cv2.CAP_PROP_READ_TIMEOUT_MSEC, _MSMF_READ_TIMEOUT_MS),
+    ):
+        if hasattr(cv2, "CAP_PROP_OPEN_TIMEOUT_MSEC"):
+            try:
+                cap.set(prop, value)
+            except Exception:  # pragma: no cover - defensive
+                pass
 
 
 class UvcCamera(CameraInterface):
@@ -66,7 +95,7 @@ class UvcCamera(CameraInterface):
             kind="uvc",
             is_radiometric=False,
             is_simulated=False,
-            details="USB video device - capability is checked when connected",
+            details=_GENERIC_UVC_DETAILS,
         )
 
     # -- CameraInterface --------------------------------------------------
@@ -88,20 +117,34 @@ class UvcCamera(CameraInterface):
             )
             return
 
-        # Fallback: plain visual UVC device.
-        try:
-            cap = cv2.VideoCapture(self.index)
-        except Exception as exc:  # pragma: no cover - platform dependent
-            raise CameraError(f"Could not open UVC device {self.index}: {exc}") from exc
-        if not cap.isOpened():
+        # Fallback: plain visual UVC device. The raw probe above just
+        # released the device; the OS may need a moment before it can be
+        # reopened, so retry instead of failing on the first attempt.
+        last_error = ""
+        for attempt in range(1, _VISUAL_OPEN_ATTEMPTS + 1):
+            try:
+                cap = cv2.VideoCapture(self.index)
+            except Exception as exc:  # pragma: no cover - platform dependent
+                raise CameraError(f"Could not open UVC device {self.index}: {exc}") from exc
+            if cap.isOpened():
+                _set_stream_timeouts(cap)
+                self._hik_raw = False
+                self._classifier = None
+                self._cap = cap
+                return
             cap.release()
-            raise CameraError(
-                f"UVC device {self.index} did not open. Check the USB connection "
-                "and Windows camera privacy settings."
+            last_error = (
+                f"UVC device {self.index} did not open (attempt {attempt}/"
+                f"{_VISUAL_OPEN_ATTEMPTS}). Check the USB connection and "
+                "Windows camera privacy settings."
             )
-        self._hik_raw = False
-        self._classifier = None
-        self._cap = cap
+            if attempt < _VISUAL_OPEN_ATTEMPTS:
+                logger.info(
+                    "Visual open attempt %d/%d for UVC device %d failed; retrying",
+                    attempt, _VISUAL_OPEN_ATTEMPTS, self.index,
+                )
+                time.sleep(_VISUAL_RETRY_DELAY_S)
+        raise CameraError(last_error)
 
     def close(self) -> None:
         if self._cap is not None:
@@ -127,7 +170,7 @@ class UvcCamera(CameraInterface):
         return self._read_visual_frame()
 
     # -- HIK raw path -------------------------------------------------------
-    def _open_hik_raw(self) -> cv2.VideoCapture | None:
+    def _open_hik_raw(self, probe_reads: int = _PROBE_READS) -> cv2.VideoCapture | None:
         """Try to open the device as a raw HikCamera YUYV stream.
 
         Attempts the MSMF and DirectShow backends with an explicit YUY2
@@ -137,31 +180,29 @@ class UvcCamera(CameraInterface):
         (caller falls back to the plain visual path).
         """
         fourcc_yuy2 = cv2.VideoWriter_fourcc(*"YUY2")
-        for backend in (cv2.CAP_MSMF, cv2.CAP_DSHOW, None):
+        for backend in (cv2.CAP_MSMF, cv2.CAP_DSHOW):
             try:
-                cap = (
-                    cv2.VideoCapture(self.index, backend)
-                    if backend is not None else cv2.VideoCapture(self.index)
-                )
+                cap = cv2.VideoCapture(self.index, backend)
             except Exception:
                 continue
             if not cap.isOpened():
                 cap.release()
                 continue
+            _set_stream_timeouts(cap)
             cap.set(cv2.CAP_PROP_FOURCC, fourcc_yuy2)
             cap.set(cv2.CAP_PROP_FRAME_WIDTH, _HIK_W)
             cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HIK_H)
             cap.set(cv2.CAP_PROP_FPS, 25.0)
             cap.set(cv2.CAP_PROP_CONVERT_RGB, 0)
-            if self._probe_raw_frames(cap):
+            if self._probe_raw_frames(cap, probe_reads):
                 return cap
             cap.release()
         return None
 
     @staticmethod
-    def _probe_raw_frames(cap: cv2.VideoCapture) -> bool:
+    def _probe_raw_frames(cap: cv2.VideoCapture, reads: int = _PROBE_READS) -> bool:
         """True when a probe frame matches the HikCamera container size."""
-        for _ in range(_PROBE_READS):
+        for _ in range(reads):
             ok, frame = cap.read()
             if ok and frame is not None and frame.dtype == np.uint8:
                 if frame.nbytes in _RAW_FRAME_SIZES:
@@ -233,27 +274,95 @@ class UvcCamera(CameraInterface):
         )
 
 
-def discover_uvc_cameras(max_index: int = 3) -> list[CameraInfo]:
-    """Probe video device indices and return the ones that open."""
+# -- discovery -----------------------------------------------------------------
+
+def probe_hik_capability(index: int) -> dict:
+    """Check whether UVC device ``index`` is a HIKMICRO HikCamera.
+
+    Opens the device once with the raw-stream settings (MSMF, YUY2
+    256x392, no RGB conversion, short read timeout) and classifies a few
+    frames. Used by the device-selection dialog so a real HIKMICRO camera
+    is listed under its proper name with an honest Radiometric value and
+    instructions, instead of a generic "UVC Camera N / No" entry.
+
+    Returns {"is_hik": bool, "radiometric": bool, "reason": str}.
+    """
+    result = {"is_hik": False, "radiometric": False, "reason": ""}
+    cam = UvcCamera(index)
+    try:
+        cap = cam._open_hik_raw(probe_reads=_DISCOVERY_PROBE_READS)
+        if cap is None:
+            return result
+        classifier = HikStreamClassifier()
+        parsed = 0
+        try:
+            for _ in range(_DISCOVERY_PROBE_READS):
+                ok, frame = cap.read()
+                if not ok or frame is None:
+                    break
+                if frame.ndim == 3 and frame.shape[2] == 3:
+                    break  # converted frame - not the raw HikCamera stream
+                raw = frame.tobytes()
+                if len(raw) not in _RAW_FRAME_SIZES:
+                    break
+                outcome = classifier.classify(raw)
+                if outcome.preview_rgb is None:
+                    break
+                parsed += 1
+        finally:
+            cap.release()
+        if parsed > 0:
+            result["is_hik"] = True
+            result["radiometric"] = bool(classifier.radiometric)
+            result["reason"] = "calibrated radiometric stream" if result["radiometric"] else (
+                "preview stream (no temperatures) - open HIKMICRO Analyzer "
+                "once, close it, then reconnect to enable the calibrated stream"
+            )
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.debug("HikCamera capability probe failed for index %d: %s", index, exc)
+    return result
+
+
+def discover_uvc_cameras(max_index: int = 3, deep: bool = False) -> list[CameraInfo]:
+    """Probe video device indices and return the ones that open.
+
+    ``deep=True`` additionally runs the HikCamera capability probe so
+    HIKMICRO devices are identified by name in the selection dialog.
+    The deep probe opens each device again for a few hundred
+    milliseconds, so it is only used from the dialog's background
+    refresh - never from the periodic reconnect timer.
+    """
     found: list[CameraInfo] = []
     for index in range(max_index + 1):
         try:
             cap = cv2.VideoCapture(index)
-            if cap.isOpened():
-                found.append(
-                    CameraInfo(
-                        key=f"uvc:{index}",
-                        name=f"UVC Camera {index}",
-                        kind="uvc",
-                        is_radiometric=False,
-                        is_simulated=False,
-                        details=(
-                            "USB video device - capability is checked when "
-                            "connected"
-                        ),
-                    )
-                )
+            if not cap.isOpened():
+                cap.release()
+                continue
             cap.release()
         except Exception:  # pragma: no cover - platform dependent
             continue
+
+        info = CameraInfo(
+            key=f"uvc:{index}",
+            name=f"UVC Camera {index}",
+            kind="uvc",
+            is_radiometric=False,
+            is_simulated=False,
+            details=_GENERIC_UVC_DETAILS,
+        )
+        if deep:
+            probe = probe_hik_capability(index)
+            if probe["is_hik"]:
+                info = replace(
+                    info,
+                    name=_HIK_NAME,
+                    is_radiometric=bool(probe["radiometric"]),
+                    details=(
+                        "HikCamera USB stream - "
+                        + ("calibrated, per-pixel temperatures available"
+                           if probe["radiometric"] else probe["reason"])
+                    ),
+                )
+        found.append(info)
     return found

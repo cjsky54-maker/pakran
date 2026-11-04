@@ -33,10 +33,16 @@ logger = get_logger("camera")
 
 
 class _AcquisitionWorker(QObject):
-    """Reads frames from one camera inside its own thread."""
+    """Opens and reads frames from one camera inside its own thread.
+
+    Opening happens here on purpose: UVC opens can take seconds (backend
+    format negotiation, retries after a busy device) and must never block
+    the GUI thread.
+    """
 
     frameReady = Signal(object)
     readError = Signal(str)
+    openFailed = Signal(str)
     gaveUp = Signal()
 
     def __init__(self, camera: CameraInterface, fps: float,
@@ -55,6 +61,24 @@ class _AcquisitionWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        if self._stop:
+            return
+        # Open OFF the GUI thread (see class docstring).
+        try:
+            self._camera.open()
+        except CameraError as exc:
+            if not self._stop:
+                self.openFailed.emit(str(exc))
+            return
+        except Exception as exc:  # unexpected backend crash
+            if not self._stop:
+                self.openFailed.emit(f"Unexpected camera error: {exc}")
+            return
+        if self._stop:
+            # Detached while opening - clean up on this thread where the
+            # device is actually being used.
+            self._camera.close()
+            return
         reconnect_deadline: float | None = None
         while not self._stop:
             started = time.monotonic()
@@ -80,6 +104,12 @@ class _AcquisitionWorker(QObject):
                     self.gaveUp.emit()
                     return
                 time.sleep(1.0)
+                # Actually try to reopen the device (a closed camera would
+                # just keep raising "not open" until the deadline).
+                try:
+                    self._camera.open()
+                except Exception:
+                    continue
             except Exception as exc:  # unexpected backend crash
                 self.readError.emit(f"Unexpected camera error: {exc}")
                 self._camera.close()
@@ -115,6 +145,9 @@ class CameraManager(QObject):
         self._latest: ThermalFrame | None = None
         self._last_error = ""
         self._last_frame_radiometric = False
+        # Workers still winding down after a blocked open/read; kept alive
+        # so their QThread can finish safely (see _stop_worker).
+        self._retiring: list = []
 
     # -- state ------------------------------------------------------------
     @property
@@ -138,8 +171,13 @@ class CameraManager(QObject):
         return self._last_error
 
     # -- discovery / attachment -------------------------------------------
-    def discover(self) -> list[CameraInfo]:
-        """Enumerate all supported devices (simulated, UVC, SDK)."""
+    def discover(self, deep: bool = False) -> list[CameraInfo]:
+        """Enumerate all supported devices (simulated, UVC, SDK).
+
+        ``deep=True`` also probes each UVC device for the HikCamera raw
+        stream (adds ~1-2 s per device); use it only from the interactive
+        device dialog, never from the periodic reconnect timer.
+        """
         try:
             show_simulated = bool(self._settings_getter().show_simulated_camera)
         except Exception:
@@ -148,27 +186,23 @@ class CameraManager(QObject):
         if show_simulated:
             devices.append(SimulatedCamera().info)
         try:
-            devices.extend(discover_uvc_cameras())
+            devices.extend(discover_uvc_cameras(deep=deep))
         except Exception as exc:
             self.errorOccurred.emit(f"UVC discovery failed: {exc}")
         devices.extend(discover_hikmicro_cameras())
         return devices
 
     def attach(self, camera: CameraInterface) -> None:
-        """Open a camera and start acquiring frames in a worker thread."""
+        """Start acquiring frames from a camera.
+
+        The device is OPENED inside the worker thread; the GUI thread
+        returns immediately and the status shows "Connecting..." until
+        the first frame arrives (or an open failure is reported).
+        """
         self.detach()
         self._camera = camera
         self._set_state(CAM_CONNECTING)
         logger.info("Connecting to camera: %s (%s)", camera.info.name, camera.info.kind)
-        try:
-            camera.open()
-        except CameraError as exc:
-            self._last_error = str(exc)
-            logger.error("Camera open failed: %s", exc)
-            self.errorOccurred.emit(str(exc))
-            self._camera = None
-            self._set_state(CAM_DISCONNECTED)
-            return
         fps = ACQ_FPS_SIMULATED if camera.info.is_simulated else ACQ_FPS_UVC
         self._worker = _AcquisitionWorker(camera, fps, lambda: self._settings_getter().camera_reconnection_timeout)
         self._thread = QThread(self)
@@ -176,6 +210,7 @@ class CameraManager(QObject):
         self._thread.started.connect(self._worker.run)
         self._worker.frameReady.connect(self._on_frame)
         self._worker.readError.connect(self._on_read_error)
+        self._worker.openFailed.connect(self._on_open_failed)
         self._worker.gaveUp.connect(self._on_gave_up)
         # Apply the current emissivity once connected.
         try:
@@ -187,9 +222,13 @@ class CameraManager(QObject):
     def detach(self) -> None:
         if self._camera is not None:
             logger.info("Camera detached: %s", self._camera.info.name)
-        self._stop_worker()
+        stopped = self._stop_worker()
         if self._camera is not None:
-            self._camera.close()
+            if stopped:
+                self._camera.close()
+            # else: the worker is still inside open()/read() and closes the
+            # device itself when it sees the stop flag - closing it here
+            # would race native code from two threads.
             self._camera = None
         with self._lock:
             self._latest = None
@@ -227,6 +266,20 @@ class CameraManager(QObject):
             logger.info("Attempting automatic reconnection...")
             self._set_state(CAM_RECONNECTING)
 
+    def _on_open_failed(self, message: str) -> None:
+        """Worker could not open the camera - report and clean up."""
+        self._last_error = message
+        logger.error("Camera open failed: %s", message)
+        self._stop_worker()
+        if self._camera is not None:
+            try:
+                self._camera.close()
+            except Exception:  # pragma: no cover - defensive
+                pass
+            self._camera = None
+        self._set_state(CAM_DISCONNECTED)
+        self.errorOccurred.emit(message)
+
     def _on_gave_up(self) -> None:
         logger.error("Reconnection failed; camera disconnected")
         self._set_state(CAM_DISCONNECTED)
@@ -248,14 +301,40 @@ class CameraManager(QObject):
         }
         self.statusChanged.emit(self._state, payload)
 
-    def _stop_worker(self) -> None:
-        if self._worker is not None:
-            self._worker.stop()
-        if self._thread is not None:
-            self._thread.quit()
-            self._thread.wait(2000)
+    def _stop_worker(self) -> bool:
+        """Stop the acquisition thread.
+
+        Returns True when the thread is fully stopped (safe to touch the
+        camera from the calling thread), False when the worker is still
+        blocked inside open()/read() and will clean up after itself.
+        """
+        worker = self._worker
+        thread = self._thread
         self._worker = None
         self._thread = None
+        if worker is not None:
+            worker.stop()
+        if thread is None:
+            return True
+        thread.quit()
+        if thread.isRunning() and not thread.wait(2000):
+            # The worker is still blocked inside open()/read(). Do NOT
+            # touch the camera from here (racing native code); the worker
+            # closes the device itself once it sees the stop flag. Keep
+            # the references alive until the thread really ends.
+            self._retiring.append((thread, worker))
+
+            def _reap(t=thread, w=worker) -> None:
+                try:
+                    self._retiring.remove((t, w))
+                except ValueError:
+                    pass
+
+            thread.finished.connect(_reap)
+            thread.finished.connect(thread.deleteLater)
+            return False
+        thread.deleteLater()
+        return True
 
 
 def create_camera(info: CameraInfo) -> CameraInterface:

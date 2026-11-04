@@ -146,10 +146,89 @@ def test_non_hik_camera_falls_back_to_visual(fake_capture):
     cam.close()
 
 
-def test_hik_open_failure_raises_camera_error(fake_capture):
+def test_hik_open_failure_raises_camera_error(fake_capture, monkeypatch):
+    monkeypatch.setattr(uvc_module, "_VISUAL_RETRY_DELAY_S", 0.0)
     fake_capture.opened = False
     cam = UvcCamera(1)
     from app.camera.camera_interface import CameraError
 
     with pytest.raises(CameraError):
         cam.open()
+
+
+def test_visual_open_retries_after_busy_device(fake_capture, monkeypatch):
+    """After the raw probe releases a device the OS may need a moment
+    before it can be reopened - the visual fallback must retry instead of
+    failing on the first attempt (previously surfaced as a spurious
+    'did not open' error after ~30 s)."""
+    monkeypatch.setattr(uvc_module, "_VISUAL_RETRY_DELAY_S", 0.0)
+    fake_capture.bgr = True          # raw probe fails fast (converted frames)
+    fake_capture.frames = []
+    fake_capture.opened = False      # first two opens fail, then the device appears
+    cam = UvcCamera(0)
+
+    class _FlakyCounter:
+        n = 0
+
+    original_init = _FakeVideoCapture.__init__
+
+    def flaky_init(self, *args, **kwargs):
+        original_init(self, *args, **kwargs)
+        _FlakyCounter.n += 1
+        # Raw probe (MSMF, DSHOW) + visual attempts 1-2 fail; the third
+        # visual attempt finally opens the device.
+        self.opened = _FlakyCounter.n > 4
+
+    monkeypatch.setattr(_FakeVideoCapture, "__init__", flaky_init)
+    cam.open()
+    assert cam.is_open()
+    frame = cam.read_frame()          # BGR visual path
+    assert frame.image is not None
+    assert not frame.is_radiometric
+    cam.close()
+
+
+# -- deep discovery (HikCamera identification in the device dialog) ---------------
+
+
+def test_deep_discovery_identifies_hikcamera_preview_mode(fake_capture):
+    """A HikCamera streaming the default (raw counts) mode is listed under
+    its proper name with an honest Radiometric=No and instructions."""
+    fake_capture.frames = [build_default_frame(seed=5)]
+    devices = uvc_module.discover_uvc_cameras(max_index=0, deep=True)
+    assert len(devices) == 1
+    dev = devices[0]
+    assert dev.kind == "uvc"
+    assert dev.name == "HIKMICRO Thermal Camera (USB)"
+    assert not dev.is_radiometric
+    assert "Analyzer" in dev.details
+
+
+def test_deep_discovery_identifies_calibrated_hikcamera(fake_capture):
+    """A camera left in calibrated mode by HIKMICRO Analyzer is reported
+    as radiometric right in the dialog."""
+    fake_capture.frames = [build_mode8_frame(seed=6)]
+    devices = uvc_module.discover_uvc_cameras(max_index=0, deep=True)
+    dev = devices[0]
+    assert dev.name == "HIKMICRO Thermal Camera (USB)"
+    assert dev.is_radiometric
+    assert "calibrated" in dev.details.lower()
+
+
+def test_deep_discovery_keeps_generic_webcam_label(fake_capture):
+    """A plain UVC webcam keeps the generic name and No."""
+    fake_capture.bgr = True
+    fake_capture.frames = []
+    devices = uvc_module.discover_uvc_cameras(max_index=0, deep=True)
+    dev = devices[0]
+    assert dev.name == "UVC Camera 0"
+    assert not dev.is_radiometric
+
+
+def test_shallow_discovery_does_not_probe_hik_stream(fake_capture):
+    """The periodic reconnect timer uses the cheap path: no raw probing."""
+    fake_capture.frames = [build_mode8_frame(seed=7)]
+    devices = uvc_module.discover_uvc_cameras(max_index=0, deep=False)
+    dev = devices[0]
+    assert dev.name == "UVC Camera 0"
+    assert not dev.is_radiometric

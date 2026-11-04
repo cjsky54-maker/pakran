@@ -32,6 +32,13 @@ camera streams its default mode the application shows the live preview
 only and never fabricates temperatures — raw sensor counts are never
 displayed as °C.
 
+Since v1.0.2 the device dialog identifies HIKMICRO cameras by name (deep
+discovery in a background thread, honest Radiometric column with
+instructions), camera opens are bounded and run off the GUI thread (no more
+~30 s freeze / "crash" when a device stalls), the visual fallback retries
+when the device is momentarily busy, and the reconnection loop actually
+reopens the camera.
+
 **Phase 2 (integration point ready, pending SDK):** direct in-app switching
 of the camera's calibrated stream mode via the vendor control endpoint,
 and the official HIKMICRO SDK adapter for other camera series. See

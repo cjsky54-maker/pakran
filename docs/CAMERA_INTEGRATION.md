@@ -131,6 +131,32 @@ calibrated stream is detected and parsed automatically (measurements and
 tests become available). The application banner shows this hint whenever a
 HikCamera is connected in default mode.
 
+### 3.3.1 Device identification and bounded opens (v1.0.2)
+
+The device-selection dialog runs a **deep discovery pass in a background
+thread**: every openable UVC index is briefly probed with the raw-stream
+settings (MSMF, YUY2 256×392, no RGB conversion, short read timeout) and
+frames are run through `HikStreamClassifier`. A HIKMICRO camera is therefore
+listed as **"HIKMICRO Thermal Camera (USB)"** with an honest *Radiometric*
+value:
+
+- calibrated stream → *Yes* ("calibrated, per-pixel temperatures available"),
+- default stream → *No* + the Analyzer instructions in the status column.
+
+Opening a camera is **strictly bounded and always off the GUI thread**:
+
+- the open runs inside the acquisition worker thread — the interface shows
+  "Connecting..." and never freezes (a failed open previously blocked the
+  GUI for ~30 s and looked like a crash);
+- MSMF `OPEN_TIMEOUT_MSEC` / `READ_TIMEOUT_MSEC` bound stalled negotiations;
+- the raw probe reads at most 5 frames on two backends (MSMF, DirectShow);
+- the visual fallback **retries 3×** with 1.5 s delay — right after the raw
+  probe releases the device, the OS may need a moment before the same
+  device can be reopened (previously surfaced as a spurious
+  "did not open" error);
+- the reconnection loop **reopens** the camera after a read error instead
+  of spinning on a closed device until the deadline.
+
 ### 3.4 References
 
 - Krastanov/ht-203u-linux (CC0): HT-203U USB protocol notes, frame layouts,
