@@ -205,7 +205,7 @@ def inspect_device(moniker: IMoniker, index: int) -> dict:
                         # IKsControl is obtained from the topology node instance,
                         # not assumed to be implemented by the parent filter.
                         node_instance = topology.CreateNodeInstance(
-                            node_id, 0, byref(IID_KS_CONTROL)
+                            node_id, byref(IID_KS_CONTROL)
                         )
                         ks = node_instance.QueryInterface(IKsControl)
                         node_entry["xu_selector4_get"] = _read_xu_selector4(
