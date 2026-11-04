@@ -8,6 +8,9 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: write   # required to publish GitHub Releases on tag builds
+
 jobs:
   build:
     runs-on: windows-latest
@@ -38,3 +41,20 @@ jobs:
         with:
           name: DriverThermalQC-windows-exe
           path: dist/DriverThermalQC.exe
+
+      # Tag builds publish a real GitHub Release with the EXE attached, so
+      # the Releases page is the one place users download from. Regular
+      # pushes to main only upload the Actions artifact above.
+      - name: Publish GitHub Release (tag builds)
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "$env:GITHUB_REF_NAME"
+          if (-not (gh release view $tag)) {
+            gh release create $tag dist/DriverThermalQC.exe `
+              --title "DriverThermalQC $tag" --generate-notes
+          } else {
+            gh release upload $tag dist/DriverThermalQC.exe --clobber
+          }

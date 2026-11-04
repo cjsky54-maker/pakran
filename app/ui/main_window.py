@@ -180,6 +180,11 @@ class MainWindow(QMainWindow):
         # confusing.
         if self._device_dialog_open:
             return
+        # Never race a worker that is still (winding down from) opening
+        # a device - it may hold the per-device lock for a few more
+        # seconds inside a bounded native open.
+        if self._services.camera.busy:
+            return
         if self._services.camera.state != "disconnected":
             return
         devices = self._services.camera.discover()
@@ -189,10 +194,22 @@ class MainWindow(QMainWindow):
     def _open_device_dialog(self) -> None:
         self._device_dialog_open = True
         try:
-            devices = self._services.camera.discover()
+            # Instant list WITHOUT any native camera call on the GUI
+            # thread (simulated / SDK / the streaming camera). USB devices
+            # arrive in two background stages: the shallow enumeration
+            # lists them within a second or two, the deep HikCamera probe
+            # then refines names and the Radiometric column (15-30 s).
+            # Previously the shallow UVC enumeration ran here on the GUI
+            # thread and could block behind a device lock held by a
+            # winding-down worker.
             dialog = DeviceSelectionDialog(
-                devices, self,
-                refresh_fn=lambda: self._services.camera.discover(deep=True),
+                self._services.camera.discover_fast(), self,
+                shallow_fn=lambda should_stop: self._services.camera.discover(
+                    deep=False, should_stop=should_stop
+                ),
+                refresh_fn=lambda should_stop: self._services.camera.discover(
+                    deep=True, should_stop=should_stop
+                ),
             )
             if dialog.exec() == dialog.DialogCode.Accepted:
                 device = dialog.selected or dialog.current_device()

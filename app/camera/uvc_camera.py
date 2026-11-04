@@ -21,9 +21,20 @@ number of probe reads) and the visual fallback RETRIES: after the raw
 probe releases the device the OS may need a moment before the same
 device can be reopened, which previously surfaced as a spurious
 "did not open" error.
+
+THREAD-SAFETY (v1.0.3): OpenCV's MSMF/DirectShow backends are NOT safe
+against concurrent use of the same device from two threads - doing so
+crashes the whole process with an access violation and NO log line
+(it looked like "the app suddenly closes while connecting"). Every
+native call in this module therefore holds a PER-DEVICE lock, so the
+deep-discovery probe of the device dialog and the acquisition worker's
+open() can never race each other. Long probe sequences additionally
+accept a ``should_stop`` callback so a cancelled dialog probe aborts
+between native calls instead of holding its lock.
 """
 from __future__ import annotations
 
+import threading
 import time
 from dataclasses import replace
 
@@ -61,6 +72,21 @@ _VISUAL_OPEN_ATTEMPTS = 3   # visual fallback retries (device may be busy)
 _VISUAL_RETRY_DELAY_S = 1.5
 _MSMF_OPEN_TIMEOUT_MS = 4000
 _MSMF_READ_TIMEOUT_MS = 1200
+
+# One lock per device index: native (C++) camera calls for the SAME
+# device must never overlap - that is a hard process crash on Windows.
+# Cross-device opens are independent and may run in parallel.
+_DEVICE_LOCKS: dict[int, threading.RLock] = {}
+_DEVICE_LOCKS_GUARD = threading.Lock()
+
+
+def _device_lock(index: int) -> threading.RLock:
+    with _DEVICE_LOCKS_GUARD:
+        lock = _DEVICE_LOCKS.get(index)
+        if lock is None:
+            lock = threading.RLock()
+            _DEVICE_LOCKS[index] = lock
+        return lock
 
 
 def _set_stream_timeouts(cap: cv2.VideoCapture) -> None:
@@ -100,6 +126,13 @@ class UvcCamera(CameraInterface):
 
     # -- CameraInterface --------------------------------------------------
     def open(self) -> None:
+        # The WHOLE open sequence (raw probe on two backends + visual
+        # retries) runs under the device lock: concurrent native opens of
+        # the same device are a process-killing access violation.
+        with _device_lock(self.index):
+            self._open_locked()
+
+    def _open_locked(self) -> None:
         cap = self._open_hik_raw()
         if cap is not None:
             self._cap = cap
@@ -147,14 +180,16 @@ class UvcCamera(CameraInterface):
         raise CameraError(last_error)
 
     def close(self) -> None:
-        if self._cap is not None:
-            self._cap.release()
-            self._cap = None
-        self._hik_raw = False
-        self._classifier = None
+        with _device_lock(self.index):
+            if self._cap is not None:
+                self._cap.release()
+                self._cap = None
+            self._hik_raw = False
+            self._classifier = None
 
     def is_open(self) -> bool:
-        return self._cap is not None and self._cap.isOpened()
+        with _device_lock(self.index):
+            return self._cap is not None and self._cap.isOpened()
 
     def set_emissivity(self, value: float) -> None:
         # Emissivity is applied by the camera firmware (default 0.95).
@@ -163,14 +198,19 @@ class UvcCamera(CameraInterface):
         return
 
     def read_frame(self) -> ThermalFrame:
-        if self._cap is None:
-            raise CameraError("UVC camera is not open")
-        if self._hik_raw:
-            return self._read_hik_frame()
-        return self._read_visual_frame()
+        with _device_lock(self.index):
+            if self._cap is None:
+                raise CameraError("UVC camera is not open")
+            if self._hik_raw:
+                return self._read_hik_frame()
+            return self._read_visual_frame()
 
     # -- HIK raw path -------------------------------------------------------
-    def _open_hik_raw(self, probe_reads: int = _PROBE_READS) -> cv2.VideoCapture | None:
+    def _open_hik_raw(
+        self,
+        probe_reads: int = _PROBE_READS,
+        should_stop=None,
+    ) -> cv2.VideoCapture | None:
         """Try to open the device as a raw HikCamera YUYV stream.
 
         Attempts the MSMF and DirectShow backends with an explicit YUY2
@@ -178,9 +218,16 @@ class UvcCamera(CameraInterface):
         verifies that probe frames really carry the HikCamera container
         size. Returns None when the device does not expose that format
         (caller falls back to the plain visual path).
+
+        ``should_stop`` (a no-arg callable returning True) is honoured
+        BETWEEN native calls so a cancelled dialog probe can abort a
+        multi-second sequence early; a native call already in flight
+        still runs to its bounded timeout.
         """
         fourcc_yuy2 = cv2.VideoWriter_fourcc(*"YUY2")
         for backend in (cv2.CAP_MSMF, cv2.CAP_DSHOW):
+            if should_stop is not None and should_stop():
+                return None
             try:
                 cap = cv2.VideoCapture(self.index, backend)
             except Exception:
@@ -194,15 +241,21 @@ class UvcCamera(CameraInterface):
             cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HIK_H)
             cap.set(cv2.CAP_PROP_FPS, 25.0)
             cap.set(cv2.CAP_PROP_CONVERT_RGB, 0)
-            if self._probe_raw_frames(cap, probe_reads):
+            if self._probe_raw_frames(cap, probe_reads, should_stop):
                 return cap
             cap.release()
         return None
 
     @staticmethod
-    def _probe_raw_frames(cap: cv2.VideoCapture, reads: int = _PROBE_READS) -> bool:
+    def _probe_raw_frames(
+        cap: cv2.VideoCapture,
+        reads: int = _PROBE_READS,
+        should_stop=None,
+    ) -> bool:
         """True when a probe frame matches the HikCamera container size."""
         for _ in range(reads):
+            if should_stop is not None and should_stop():
+                return False
             ok, frame = cap.read()
             if ok and frame is not None and frame.dtype == np.uint8:
                 if frame.nbytes in _RAW_FRAME_SIZES:
@@ -276,7 +329,7 @@ class UvcCamera(CameraInterface):
 
 # -- discovery -----------------------------------------------------------------
 
-def probe_hik_capability(index: int) -> dict:
+def probe_hik_capability(index: int, should_stop=None) -> dict:
     """Check whether UVC device ``index`` is a HIKMICRO HikCamera.
 
     Opens the device once with the raw-stream settings (MSMF, YUY2
@@ -285,45 +338,58 @@ def probe_hik_capability(index: int) -> dict:
     is listed under its proper name with an honest Radiometric value and
     instructions, instead of a generic "UVC Camera N / No" entry.
 
+    Runs entirely under the device lock (see module docstring) and can be
+    cancelled between native calls via ``should_stop``.
+
     Returns {"is_hik": bool, "radiometric": bool, "reason": str}.
     """
     result = {"is_hik": False, "radiometric": False, "reason": ""}
-    cam = UvcCamera(index)
-    try:
-        cap = cam._open_hik_raw(probe_reads=_DISCOVERY_PROBE_READS)
-        if cap is None:
-            return result
-        classifier = HikStreamClassifier()
-        parsed = 0
+    with _device_lock(index):
+        cam = UvcCamera(index)
         try:
-            for _ in range(_DISCOVERY_PROBE_READS):
-                ok, frame = cap.read()
-                if not ok or frame is None:
-                    break
-                if frame.ndim == 3 and frame.shape[2] == 3:
-                    break  # converted frame - not the raw HikCamera stream
-                raw = frame.tobytes()
-                if len(raw) not in _RAW_FRAME_SIZES:
-                    break
-                outcome = classifier.classify(raw)
-                if outcome.preview_rgb is None:
-                    break
-                parsed += 1
-        finally:
-            cap.release()
-        if parsed > 0:
-            result["is_hik"] = True
-            result["radiometric"] = bool(classifier.radiometric)
-            result["reason"] = "calibrated radiometric stream" if result["radiometric"] else (
-                "preview stream (no temperatures) - open HIKMICRO Analyzer "
-                "once, close it, then reconnect to enable the calibrated stream"
+            cap = cam._open_hik_raw(
+                probe_reads=_DISCOVERY_PROBE_READS, should_stop=should_stop
             )
-    except Exception as exc:  # pragma: no cover - defensive
-        logger.debug("HikCamera capability probe failed for index %d: %s", index, exc)
+            if cap is None:
+                return result
+            classifier = HikStreamClassifier()
+            parsed = 0
+            try:
+                for _ in range(_DISCOVERY_PROBE_READS):
+                    if should_stop is not None and should_stop():
+                        break
+                    ok, frame = cap.read()
+                    if not ok or frame is None:
+                        break
+                    if frame.ndim == 3 and frame.shape[2] == 3:
+                        break  # converted frame - not the raw HikCamera stream
+                    raw = frame.tobytes()
+                    if len(raw) not in _RAW_FRAME_SIZES:
+                        break
+                    outcome = classifier.classify(raw)
+                    if outcome.preview_rgb is None:
+                        break
+                    parsed += 1
+            finally:
+                cap.release()
+            if parsed > 0:
+                result["is_hik"] = True
+                result["radiometric"] = bool(classifier.radiometric)
+                result["reason"] = "calibrated radiometric stream" if result["radiometric"] else (
+                    "preview stream (no temperatures) - open HIKMICRO Analyzer "
+                    "once, close it, then reconnect to enable the calibrated stream"
+                )
+        except Exception as exc:  # pragma: no cover - defensive
+            logger.debug("HikCamera capability probe failed for index %d: %s", index, exc)
     return result
 
 
-def discover_uvc_cameras(max_index: int = 3, deep: bool = False) -> list[CameraInfo]:
+def discover_uvc_cameras(
+    max_index: int = 3,
+    deep: bool = False,
+    should_stop=None,
+    skip_keys: tuple[str, ...] = (),
+) -> list[CameraInfo]:
     """Probe video device indices and return the ones that open.
 
     ``deep=True`` additionally runs the HikCamera capability probe so
@@ -331,28 +397,42 @@ def discover_uvc_cameras(max_index: int = 3, deep: bool = False) -> list[CameraI
     The deep probe opens each device again for a few hundred
     milliseconds, so it is only used from the dialog's background
     refresh - never from the periodic reconnect timer.
+
+    ``should_stop`` cancels the (multi-second) deep probe between
+    devices/backends; ``skip_keys`` lists device keys (e.g. the camera
+    that is currently streaming) whose deep probe must be skipped so a
+    dialog refresh never stalls or re-opens the active device.
     """
     found: list[CameraInfo] = []
     for index in range(max_index + 1):
-        try:
-            cap = cv2.VideoCapture(index)
-            if not cap.isOpened():
-                cap.release()
-                continue
-            cap.release()
-        except Exception:  # pragma: no cover - platform dependent
+        if should_stop is not None and should_stop():
+            break
+        key = f"uvc:{index}"
+        if key in tuple(skip_keys):
+            # Currently streaming: opening a second handle on it can stall
+            # or disturb the stream. CameraManager.discover() re-adds the
+            # live camera info for this key.
             continue
+        with _device_lock(index):
+            try:
+                cap = cv2.VideoCapture(index)
+                if not cap.isOpened():
+                    cap.release()
+                    continue
+                cap.release()
+            except Exception:  # pragma: no cover - platform dependent
+                continue
 
         info = CameraInfo(
-            key=f"uvc:{index}",
+            key=key,
             name=f"UVC Camera {index}",
             kind="uvc",
             is_radiometric=False,
             is_simulated=False,
             details=_GENERIC_UVC_DETAILS,
         )
-        if deep:
-            probe = probe_hik_capability(index)
+        if deep and key not in tuple(skip_keys):
+            probe = probe_hik_capability(index, should_stop=should_stop)
             if probe["is_hik"]:
                 info = replace(
                     info,

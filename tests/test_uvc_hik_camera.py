@@ -232,3 +232,104 @@ def test_shallow_discovery_does_not_probe_hik_stream(fake_capture):
     dev = devices[0]
     assert dev.name == "UVC Camera 0"
     assert not dev.is_radiometric
+
+
+# -- thread safety: per-device locks + cancellable probes (v1.0.3) ------------------
+#
+# Regression: opening the SAME device from two threads at once (the device
+# dialog's deep-discovery probe racing the acquisition worker's open) is a
+# native access violation that kills the whole process without any log
+# line - "the app suddenly closes while connecting".
+
+
+def test_device_lock_is_per_index_and_reentrant():
+    lock_a = uvc_module._device_lock(0)
+    lock_b = uvc_module._device_lock(0)
+    lock_c = uvc_module._device_lock(1)
+    assert lock_a is lock_b            # same device -> same lock
+    assert lock_a is not lock_c        # different devices are independent
+    with lock_a:                       # RLock: reentrant on the same thread
+        assert lock_a.acquire(blocking=False)
+        lock_a.release()
+
+
+def test_open_serialises_against_concurrent_probe(fake_capture, monkeypatch):
+    """UvcCamera.open() must hold the device lock for the whole native
+    open sequence, so a deep probe running in parallel can only ever
+    wait - never overlap - and the lock is released even when open fails."""
+    import threading
+
+    fake_capture.bgr = True
+    fake_capture.frames = []
+    fake_capture.opened = False
+    monkeypatch.setattr(uvc_module, "_VISUAL_RETRY_DELAY_S", 0.0)
+
+    lock = uvc_module._device_lock(0)
+    held = []
+    real_open = uvc_module.UvcCamera._open_locked
+
+    def spy_open(self):
+        # While open() runs, ANOTHER thread must not be able to grab the
+        # device lock (that is exactly the concurrent-probe situation the
+        # lock exists to prevent).
+        outcome = {}
+
+        def attempt():
+            outcome["acquired"] = lock.acquire(timeout=0.05)
+            if outcome["acquired"]:
+                lock.release()
+
+        probe_thread = threading.Thread(target=attempt)
+        probe_thread.start()
+        probe_thread.join()
+        held.append(not outcome["acquired"])
+        return real_open(self)
+
+    monkeypatch.setattr(uvc_module.UvcCamera, "_open_locked", spy_open)
+    from app.camera.camera_interface import CameraError
+
+    cam = uvc_module.UvcCamera(0)
+    with pytest.raises(CameraError):
+        cam.open()                      # exhausts the visual retries
+    assert held and all(held)
+    # Lock was released on the failure path (exception left the `with`).
+    assert lock.acquire(blocking=False)
+    lock.release()
+
+
+def test_probe_hik_capability_is_cancellable(fake_capture, monkeypatch):
+    """A cancelled dialog probe returns 'not hik' without touching the
+    device (no native reads after cancellation)."""
+    fake_capture.frames = [build_mode8_frame(seed=8)]
+    reads = {"n": 0}
+    real_read = _FakeVideoCapture.read
+
+    def counting_read(self):
+        reads["n"] += 1
+        return real_read(self)
+
+    monkeypatch.setattr(_FakeVideoCapture, "read", counting_read)
+    result = uvc_module.probe_hik_capability(0, should_stop=lambda: True)
+    assert result == {"is_hik": False, "radiometric": False, "reason": ""}
+    assert reads["n"] == 0             # cancelled before any native call
+
+
+def test_deep_discovery_skips_active_device(fake_capture, monkeypatch):
+    """The streaming (active) camera is never re-opened by a dialog
+    refresh: its key is skipped ENTIRELY (not even the shallow open runs
+    on it - a second handle could stall or disturb the stream) and
+    CameraManager.discover() re-adds its live info instead."""
+    opened = {"n": 0}
+    real_init = _FakeVideoCapture.__init__
+
+    def counting_init(self, *args, **kwargs):
+        real_init(self, *args, **kwargs)
+        opened["n"] += 1
+
+    monkeypatch.setattr(_FakeVideoCapture, "__init__", counting_init)
+    fake_capture.frames = [build_mode8_frame(seed=9)]
+    devices = uvc_module.discover_uvc_cameras(
+        max_index=0, deep=True, skip_keys=("uvc:0",)
+    )
+    assert devices == []                # skipped entirely - manager re-adds it
+    assert opened["n"] == 0             # never opened at all

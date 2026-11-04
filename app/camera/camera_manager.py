@@ -61,6 +61,18 @@ class _AcquisitionWorker(QObject):
 
     @Slot()
     def run(self) -> None:
+        # Nothing may ever escape this slot: PySide6 >= 6.5.2 treats an
+        # unhandled exception in a slot as FATAL and kills the process.
+        try:
+            self._run()
+        except BaseException as exc:  # noqa: BLE001 - last-resort guard
+            if not self._stop:
+                try:
+                    self.openFailed.emit(f"Unexpected camera error: {exc}")
+                except Exception:
+                    pass
+
+    def _run(self) -> None:
         if self._stop:
             return
         # Open OFF the GUI thread (see class docstring).
@@ -170,13 +182,62 @@ class CameraManager(QObject):
     def last_error(self) -> str:
         return self._last_error
 
+    @property
+    def busy(self) -> bool:
+        """True while any acquisition worker exists or is still winding
+        down. Discovery/auto-reconnect must not run in this state - the
+        previous worker may still hold the per-device lock inside a
+        bounded open(), and racing it (even with the lock serialising
+        native calls) only produces confusing device lists."""
+        return self._worker is not None or bool(self._retiring)
+
     # -- discovery / attachment -------------------------------------------
-    def discover(self, deep: bool = False) -> list[CameraInfo]:
+    def discover(self, deep: bool = False, should_stop=None) -> list[CameraInfo]:
         """Enumerate all supported devices (simulated, UVC, SDK).
 
         ``deep=True`` also probes each UVC device for the HikCamera raw
         stream (adds ~1-2 s per device); use it only from the interactive
         device dialog, never from the periodic reconnect timer.
+
+        The device that is currently ATTACHED is never re-opened or
+        deep-probed (its live info is used instead), so a dialog refresh
+        can safely run while a camera is streaming. ``should_stop`` is
+        honoured between native calls and cancels the deep probe.
+        """
+        try:
+            show_simulated = bool(self._settings_getter().show_simulated_camera)
+        except Exception:
+            show_simulated = True
+        active_key = self._camera.info.key if self._camera else None
+        devices: list[CameraInfo] = []
+        if show_simulated:
+            devices.append(SimulatedCamera().info)
+        try:
+            uvc_devices = discover_uvc_cameras(
+                deep=deep,
+                should_stop=should_stop,
+                skip_keys=(active_key,) if active_key else (),
+            )
+        except Exception as exc:
+            self.errorOccurred.emit(f"UVC discovery failed: {exc}")
+            uvc_devices = []
+        devices.extend(uvc_devices)
+        devices.extend(discover_hikmicro_cameras())
+        # Keep the streaming camera listed even when a fresh shallow open
+        # reported it as busy/absent (it is obviously still working).
+        if active_key is not None and all(d.key != active_key for d in devices):
+            if self._camera is not None:
+                devices.append(self._camera.info)
+        return devices
+
+    def discover_fast(self) -> list[CameraInfo]:
+        """Instant device list with NO native camera call at all.
+
+        Simulated camera, SDK devices (pure Python check) and the
+        currently attached camera. USB/UVC enumeration is deliberately
+        skipped: it opens devices and can block behind a per-device
+        lock, so it belongs on a background thread (the device dialog's
+        deep refresh), never on the GUI thread.
         """
         try:
             show_simulated = bool(self._settings_getter().show_simulated_camera)
@@ -185,11 +246,10 @@ class CameraManager(QObject):
         devices: list[CameraInfo] = []
         if show_simulated:
             devices.append(SimulatedCamera().info)
-        try:
-            devices.extend(discover_uvc_cameras(deep=deep))
-        except Exception as exc:
-            self.errorOccurred.emit(f"UVC discovery failed: {exc}")
         devices.extend(discover_hikmicro_cameras())
+        active = self._camera.info if self._camera else None
+        if active is not None and all(d.key != active.key for d in devices):
+            devices.append(active)
         return devices
 
     def attach(self, camera: CameraInterface) -> None:

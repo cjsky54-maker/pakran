@@ -12,10 +12,15 @@ from app.camera.camera_manager import CameraManager
 from app.core.configuration import SettingsData, load_settings, save_settings
 from app.core.constants import (
     APP_NAME,
+    APP_VERSION,
     ensure_data_dirs,
 )
 from app.database.database_manager import DatabaseManager
-from app.logging.log_manager import get_logger, setup_logging
+from app.logging.log_manager import (
+    get_logger,
+    install_crash_diagnostics,
+    setup_logging,
+)
 from app.reports.report_manager import ReportManager
 
 
@@ -36,6 +41,9 @@ class ApplicationServices:
         self.db_path = os.path.join(self.data_dir, "database", "thermal_qc.db")
 
         self.logger = setup_logging(self.logs_dir)
+        # Native-crash evidence (crash.log / stderr.log / excepthooks) -
+        # must be in place BEFORE the first camera is opened.
+        install_crash_diagnostics(self.logs_dir, version=APP_VERSION)
         self.logger.info("%s starting - data dir: %s", APP_NAME, self.data_dir)
 
         self.settings = load_settings(self.data_dir)

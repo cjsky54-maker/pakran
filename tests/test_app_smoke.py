@@ -293,7 +293,7 @@ def test_device_dialog_deep_refresh_identifies_hikcamera(qapp):
         ),
     ]
 
-    dialog = DeviceSelectionDialog(shallow, refresh_fn=lambda: deep)
+    dialog = DeviceSelectionDialog(shallow, refresh_fn=lambda should_stop: deep)
     QApplication.processEvents()
     assert dialog.table.rowCount() == 2
     assert dialog.table.item(0, 2).text() == "Yes"   # simulated is radiometric
@@ -313,3 +313,227 @@ def test_device_dialog_deep_refresh_identifies_hikcamera(qapp):
     assert dialog.refresh_btn.isEnabled()            # re-enabled after the pass
 
     dialog.reject()
+
+
+# -- v1.0.3: connect-while-probing crash regression tests -----------------------
+
+
+def test_device_dialog_cancels_probe_on_connect(qapp):
+    """Clicking Connect/Cancel/close must cancel the background deep probe
+    so the acquisition open() that follows never races a native probe."""
+    from app.camera.camera_models import CameraInfo
+    from app.ui.dialogs.device_selection import DeviceSelectionDialog
+
+    devices = [
+        CameraInfo("simulated:0", "Simulated Thermal Camera", "simulated",
+                   True, True, "synthetic data"),
+    ]
+    seen = {}
+
+    def refresh_fn(should_stop):
+        seen["should_stop"] = should_stop
+        return devices
+
+    dialog = DeviceSelectionDialog(devices, refresh_fn=refresh_fn)
+    assert not dialog._probe_cancel.is_set()
+    dialog.accept()
+    assert dialog._probe_cancel.is_set()          # probe told to stop
+    assert callable(seen["should_stop"])          # probe could observe it
+    assert seen["should_stop"]()
+
+
+def test_device_dialog_lists_usb_cameras_before_deep_probe(qapp):
+    """'Opens instantly' must include the camera LIST, not just the window:
+    the shallow background enumeration shows the USB rows within a couple
+    of seconds, then the deep pass refines them (15-30 s)."""
+    import threading
+    import time
+
+    from app.camera.camera_models import CameraInfo
+    from app.ui.dialogs.device_selection import DeviceSelectionDialog
+
+    shallow = [CameraInfo("uvc:0", "UVC Camera 0", "uvc", False, False,
+                          "USB video device - capability is checked when connected")]
+    deep = [CameraInfo("uvc:0", "HIKMICRO Thermal Camera (USB)", "uvc",
+                       False, False,
+                       "HikCamera USB stream - preview stream (no temperatures)")]
+    # The deep stage blocks until released so the intermediate (shallow)
+    # state is observable deterministically.
+    deep_may_finish = threading.Event()
+
+    def deep_stage(should_stop):
+        deep_may_finish.wait(3.0)
+        return deep
+
+    def first_cell() -> str:
+        item = dialog.table.item(0, 0)
+        return item.text() if item else ""
+
+    dialog = DeviceSelectionDialog(
+        [], refresh_fn=deep_stage,
+        shallow_fn=lambda should_stop: shallow,
+    )
+    # Stage 1: the shallow list replaces the placeholder quickly...
+    end = time.monotonic() + 3.0
+    while first_cell() != "UVC Camera 0" and time.monotonic() < end:
+        QApplication.processEvents()
+        time.sleep(0.02)
+    assert first_cell() == "UVC Camera 0"
+    assert not dialog.refresh_btn.isEnabled()     # deep probe still running
+    # Stage 2: the deep pass renames the row and re-enables Refresh.
+    deep_may_finish.set()
+    end = time.monotonic() + 3.0
+    while first_cell() != "HIKMICRO Thermal Camera (USB)" \
+            and time.monotonic() < end:
+        QApplication.processEvents()
+        time.sleep(0.02)
+    assert first_cell() == "HIKMICRO Thermal Camera (USB)"
+    assert dialog.table.item(0, 1).text() == "HikCamera USB (UVC)"
+    assert dialog.refresh_btn.isEnabled()
+
+    dialog.reject()
+
+
+def test_device_dialog_empty_search_does_not_search_forever(qapp):
+    """When the discovery pass finishes with no cameras, the placeholder
+    row must say so - not 'Searching for USB cameras...' forever."""
+    import time
+
+    from app.ui.dialogs.device_selection import DeviceSelectionDialog
+
+    dialog = DeviceSelectionDialog([], refresh_fn=lambda should_stop: [])
+    end = time.monotonic() + 3.0
+    while dialog.table.item(0, 3).text() \
+            == "Searching for USB cameras..." and time.monotonic() < end:
+        QApplication.processEvents()
+        time.sleep(0.02)
+    assert dialog.table.item(0, 0).text() == "(no camera)"
+    assert "No cameras found" in dialog.table.item(0, 3).text()
+    # The placeholder is not selectable -> Connect stays disabled, but a
+    # retry (Refresh) is possible.
+    assert not dialog.connect_btn.isEnabled()
+    assert dialog.refresh_btn.isEnabled()
+
+    dialog.reject()
+
+
+def test_device_dialog_shows_error_when_discovery_fails(qapp):
+    """A crashing discovery pass reports an error instead of pretending
+    to search forever."""
+    import time
+
+    from app.ui.dialogs.device_selection import DeviceSelectionDialog
+
+    def broken_refresh(should_stop):
+        raise RuntimeError("probe exploded")
+
+    dialog = DeviceSelectionDialog([], refresh_fn=broken_refresh)
+    end = time.monotonic() + 3.0
+    while dialog.table.item(0, 3).text() \
+            == "Searching for USB cameras..." and time.monotonic() < end:
+        QApplication.processEvents()
+        time.sleep(0.02)
+    assert dialog.table.item(0, 0).text() == "(error)"
+    assert "Discovery failed" in dialog.table.item(0, 3).text()
+    assert dialog.refresh_btn.isEnabled()          # retry is offered
+
+    dialog.reject()
+
+
+def test_discover_skips_and_keeps_active_camera(qapp, monkeypatch):
+    """A dialog refresh while a camera streams: the active device is not
+    re-opened (its key is passed as skip_keys) and stays listed even when
+    a fresh open reports it busy/absent."""
+    from app.camera import camera_manager as cm
+    from app.camera.camera_models import CameraInfo
+    from app.core.configuration import SettingsData
+
+    mgr = cm.CameraManager(lambda: SettingsData())
+    active = CameraInfo(
+        "uvc:0", "HIKMICRO Thermal Camera (USB)", "uvc",
+        True, False, "Calibrated thermal stream - measurements enabled",
+    )
+    mgr._camera = _StaticCameraStub(active)       # pretend it is attached
+
+    calls = {}
+
+    def fake_discover_uvc(**kwargs):
+        calls.update(kwargs)
+        return []                                 # shallow open "fails"
+
+    monkeypatch.setattr(cm, "discover_uvc_cameras", fake_discover_uvc)
+
+    devices = mgr.discover(deep=True)
+    assert calls["skip_keys"] == ("uvc:0",)       # active device not probed
+    keys = [d.key for d in devices]
+    assert "uvc:0" in keys                        # but still listed
+    uvc = next(d for d in devices if d.key == "uvc:0")
+    assert uvc.name == "HIKMICRO Thermal Camera (USB)"
+    assert uvc.is_radiometric
+
+    fast = mgr.discover_fast()
+    assert "uvc:0" in [d.key for d in fast]       # instant list includes it
+
+
+def test_camera_manager_busy_while_worker_runs(qapp):
+    """Auto-reconnect must not run discovery while a worker is alive or
+    winding down (it may hold a per-device lock inside a bounded open)."""
+    import time
+
+    from app.core.configuration import SettingsData
+    from app.camera.camera_manager import CameraManager
+    from app.camera.camera_models import CameraInfo
+
+    class _BlockingCamera(_StaticCameraStub):
+        def __init__(self) -> None:
+            super().__init__(CameraInfo(
+                "uvc:0", "UVC Camera 0", "uvc", False, False, "slow open",
+            ))
+            self.released = False
+
+        def open(self) -> None:
+            import threading
+            # Simulate a slow bounded native open: longer than the
+            # manager's 2 s join, so the worker goes to "retiring".
+            self._open_event = threading.Event()
+            self._open_event.wait(timeout=3.0)
+
+        def close(self) -> None:
+            self.released = True
+
+    camera = _BlockingCamera()
+    mgr = CameraManager(lambda: SettingsData())
+    assert not mgr.busy
+    mgr.attach(camera)
+    assert mgr.busy                              # worker exists -> busy
+    mgr.detach()
+    deadline = time.monotonic() + 8.0
+    while mgr.busy and time.monotonic() < deadline:
+        QApplication.processEvents()
+        time.sleep(0.02)
+    assert not mgr.busy                          # retired worker reaped
+    assert camera.released
+
+
+class _StaticCameraStub:
+    """Minimal CameraInterface stand-in holding a fixed info."""
+
+    def __init__(self, info) -> None:
+        self.info = info
+
+    def open(self) -> None:
+        return
+
+    def close(self) -> None:
+        return
+
+    def is_open(self) -> bool:
+        return True
+
+    def read_frame(self):
+        from app.camera.camera_interface import CameraError
+
+        raise CameraError("not used")
+
+    def set_emissivity(self, value: float) -> None:
+        return

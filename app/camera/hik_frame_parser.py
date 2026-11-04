@@ -189,6 +189,13 @@ class HikStreamClassifier:
 
     def _try_mode8(self, raw: bytes) -> Optional[HikParseResult]:
         """Validate the frame as calibrated mode 8. None when rejected."""
+        # A 256x392 YUY2 request makes the OS deliver 200,704 bytes: a mode-8
+        # frame (201,248 B) arrives 544 B short. The temperature plane is
+        # intact; only the tail of the preview is cut. Pad it so the preview
+        # still decodes. Only mode-8 CANDIDATES are padded and they still
+        # have to pass every statistical gate below.
+        if len(raw) < HIK_M8_FRAME_BYTES:
+            raw = raw + b"\x80" * (HIK_M8_FRAME_BYTES - len(raw))
         codes = np.frombuffer(
             raw[HIK_M8_TEMPS_OFF:HIK_M8_TEMPS_OFF + _TEMP_PLANE_BYTES],
             dtype="<u2",

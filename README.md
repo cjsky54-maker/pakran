@@ -39,6 +39,16 @@ instructions), camera opens are bounded and run off the GUI thread (no more
 when the device is momentarily busy, and the reconnection loop actually
 reopens the camera.
 
+Since v1.0.3 concurrent native access to the same camera is serialised by
+per-device locks (a dialog probe racing the acquisition open used to kill
+the process with an access violation and no log line), the dialog's
+background discovery is cancellable, a streaming camera is never re-opened
+by *Refresh*, the dialog lists USB cameras within a second or two (shallow
+pass) before the deep probe refines them, native crashes now leave
+`logs/crash.log` evidence (faulthandler + excepthook), and mode-8 frames
+truncated by the OS to the advertised 200,704 bytes are padded so the
+calibrated stream still yields the full temperature matrix.
+
 **Phase 2 (integration point ready, pending SDK):** direct in-app switching
 of the camera's calibrated stream mode via the vendor control endpoint,
 and the official HIKMICRO SDK adapter for other camera series. See
@@ -79,8 +89,9 @@ Option B — automatically via GitHub Actions. Every push to `main` (and the
 Actions → *Build Windows EXE* → *Run workflow* button) builds the EXE on a
 GitHub Windows runner and uploads it as an artifact: open the latest
 successful run and download **DriverThermalQC-windows-exe** from its
-*Artifacts* section. Pushing a `v*` tag also attaches the EXE to a draft
-release.
+*Artifacts* section. Pushing a `v*` tag additionally **publishes a GitHub
+Release** with the EXE attached, so released versions are downloaded from
+the repository's *Releases* page.
 
 The EXE is a single file, runs from a normal user account, and stores all
 data in `%LOCALAPPDATA%\DriverThermalQC`:

@@ -143,6 +143,23 @@ value:
 - calibrated stream → *Yes* ("calibrated, per-pixel temperatures available"),
 - default stream → *No* + the Analyzer instructions in the status column.
 
+Since v1.0.3 the dialog opens instantly with a native-call-free list, then
+fills in USB cameras in **two background stages**: a shallow enumeration
+(brief open per index) lists every device that answers within a second or
+two, and the deep probe above afterwards refines the names and the
+*Radiometric* column (15-30 s). The whole sequence is cancellable —
+Connect/Cancel/close aborts it between native calls — and the camera that
+is currently streaming is skipped entirely (its live info is reused), so a
+Refresh can never disturb an active stream. When the pass ends with no
+cameras (or fails), the dialog says so instead of searching forever.
+
+The mode-8 calibrated frame is 201,248 bytes, but a 256×392 YUY2 request
+makes Windows deliver only the advertised 200,704: the frame arrives 544
+bytes short with the temperature plane intact and just the preview tail
+cut. Mode-8 candidates are therefore **padded to the full size before
+validation** (they still have to pass every statistical gate), so the
+truncated stream still yields the full temperature matrix and preview.
+
 Opening a camera is **strictly bounded and always off the GUI thread**:
 
 - the open runs inside the acquisition worker thread — the interface shows

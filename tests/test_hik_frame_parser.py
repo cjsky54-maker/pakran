@@ -225,6 +225,18 @@ def test_truncated_mode8_preview_rejected():
         assert r.radiometric is False
 
 
+def test_mode8_truncated_to_advertised_size_is_accepted():
+    """A 256x392 YUY2 request delivers 200,704 B: mode 8 arrives 544 B short."""
+    buf = build_mode8_frame(seed=10)[:HIK_DEFAULT_FRAME_BYTES]
+    assert len(buf) < HIK_M8_FRAME_BYTES
+    clf = HikStreamClassifier()
+    for _ in range(4):
+        r = clf.classify(buf)
+    assert r.radiometric is True
+    assert r.temp_matrix is not None
+    assert r.temp_matrix.shape == (SENSOR_HEIGHT, SENSOR_WIDTH)
+
+
 def test_scan_camera_reported_filters_coordinates():
     frame = bytearray(HIK_DEFAULT_FRAME_BYTES)
     window = bytearray(2048)
