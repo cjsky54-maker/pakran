@@ -160,6 +160,29 @@ def _read_xu_selector4(ks: IKsControl, node_id: int) -> dict:
         return {"ok": False, "error": str(exc)}
 
 
+def _raw_get_num_nodes(topology: IKsTopologyInfo) -> int:
+    """Call IKsTopologyInfo::get_NumNodes through its native vtable slot.
+
+    This bypasses comtypes' generated out-parameter wrapper while preserving
+    the documented COM ABI. IKsTopologyInfo::get_NumNodes is vtable slot 8:
+    IUnknown's 3 slots plus the first 5 IKsTopologyInfo methods.
+    """
+    this_ptr = ctypes.cast(topology, c_void_p).value
+    if not this_ptr:
+        raise RuntimeError("IKsTopologyInfo returned a null interface pointer")
+    vtable = ctypes.cast(
+        this_ptr, POINTER(POINTER(c_void_p))
+    ).contents
+    get_num_nodes = ctypes.WINFUNCTYPE(
+        ctypes.c_long, c_void_p, POINTER(wintypes.DWORD)
+    )(vtable[8])
+    count = wintypes.DWORD(0)
+    hr = int(get_num_nodes(this_ptr, byref(count)))
+    if hr < 0:
+        raise OSError(f"IKsTopologyInfo::get_NumNodes failed: HRESULT 0x{hr & 0xFFFFFFFF:08X}")
+    return int(count.value)
+
+
 def inspect_device(moniker: IMoniker, index: int) -> dict:
     item: dict = {"index": index, "name": _friendly_name(moniker)}
     stage = "BindToObject(IBaseFilter)"
@@ -169,8 +192,8 @@ def inspect_device(moniker: IMoniker, index: int) -> dict:
         base_filter = filter_ptr.QueryInterface(IUnknown)
         stage = "QueryInterface(IKsTopologyInfo)"
         topology = base_filter.QueryInterface(IKsTopologyInfo)
-        stage = "IKsTopologyInfo.get_NumNodes"
-        node_count = int(topology.get_NumNodes())
+        stage = "IKsTopologyInfo.get_NumNodes (native vtable)"
+        node_count = _raw_get_num_nodes(topology)
         nodes = []
         for node_id in range(node_count):
             try:
