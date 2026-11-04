@@ -133,11 +133,12 @@ def _friendly_name(moniker: IMoniker) -> str:
         return "(FriendlyName unavailable)"
 
 
-def _read_xu_selector4(ks: IKsControl, node_id: int) -> dict:
-    """Issue exactly one KSPROPERTY GET; no SET or mode change is possible."""
+def _read_xu_selector(ks: IKsControl, node_id: int, selector: int) -> dict:
+    """Issue one KSPROPERTY GET for a selector; no SET or mode change."""
+
     prop = KSP_NODE(
         HIK_XU_GUID,
-        XU_PROTOCOL_VERSION_SELECTOR,
+        selector,
         KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_TOPOLOGY,
         node_id,
         0,
@@ -215,8 +216,12 @@ def inspect_device(moniker: IMoniker, index: int) -> dict:
                             node_id, byref(IID_KS_CONTROL)
                         )
                         ks = node_instance.QueryInterface(IKsControl)
-                        node_entry["xu_selector4_get"] = _read_xu_selector4(
-                            ks, node_id
+                        node_entry["xu_selector4_get"] = _read_xu_selector(
+                            ks, node_id, XU_PROTOCOL_VERSION_SELECTOR
+                        )
+                        # Selector 5 is probed with GET only; no SET is issued.
+                        node_entry["xu_selector5_get"] = _read_xu_selector(
+                            ks, node_id, 5
                         )
                         node_entry["ikSControl_available"] = True
                     except Exception as exc:
