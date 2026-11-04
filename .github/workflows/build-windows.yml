@@ -38,10 +38,3 @@ jobs:
         with:
           name: DriverThermalQC-windows-exe
           path: dist/DriverThermalQC.exe
-
-      - name: Attach to draft release (tags only)
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          draft: true
-          files: dist/DriverThermalQC.exe
