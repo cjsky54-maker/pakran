@@ -65,6 +65,8 @@ class _FakeVideoCapture:
 @pytest.fixture()
 def fake_capture(monkeypatch):
     monkeypatch.setattr(uvc_module.cv2, "VideoCapture", _FakeVideoCapture)
+    # Existing raw-parser tests explicitly exercise the opt-in experimental path.
+    monkeypatch.setenv("DRIVERTHERMALQC_HIK_RAW", "1")
     # Keep the suite fast: the per-device settle window is a no-op in
     # tests (it exists to protect the real MSMF/DirectShow pipeline).
     monkeypatch.setattr(uvc_module, "_DEVICE_SETTLE_S", 0.0)
@@ -131,6 +133,47 @@ def test_mode_switch_detected_without_reconnect(fake_capture):
     assert confirmed.is_radiometric
     assert cam.info.is_radiometric
     cam.close()
+
+
+def test_normal_mode_skips_native_raw_probe(fake_capture, monkeypatch):
+    """Default app mode opens visual UVC directly and never probes raw HIK."""
+    monkeypatch.delenv("DRIVERTHERMALQC_HIK_RAW", raising=False)
+    fake_capture.bgr = True
+    fake_capture.frames = []
+    order = []
+    real_init = _FakeVideoCapture.__init__
+
+    def recording_init(self, *args, **kwargs):
+        order.append(args[1] if len(args) > 1 else uvc_module.cv2.CAP_ANY)
+        real_init(self, *args, **kwargs)
+
+    monkeypatch.setattr(_FakeVideoCapture, "__init__", recording_init)
+    cam = UvcCamera(0)
+    cam.open()
+    try:
+        assert cam.is_open()
+        assert order == [uvc_module.cv2.CAP_DSHOW]
+        frame = cam.read_frame()
+        assert frame.image is not None
+        assert frame.matrix is None
+    finally:
+        cam.close()
+
+
+def test_deep_capability_probe_is_disabled_in_normal_mode(fake_capture, monkeypatch):
+    monkeypatch.delenv("DRIVERTHERMALQC_HIK_RAW", raising=False)
+    opened = {"n": 0}
+    real_init = _FakeVideoCapture.__init__
+
+    def counting_init(self, *args, **kwargs):
+        opened["n"] += 1
+        real_init(self, *args, **kwargs)
+
+    monkeypatch.setattr(_FakeVideoCapture, "__init__", counting_init)
+    result = uvc_module.probe_hik_capability(0)
+    assert result["is_hik"] is False
+    assert "disabled" in result["reason"].lower()
+    assert opened["n"] == 0
 
 
 def test_non_hik_camera_falls_back_to_visual(fake_capture):
