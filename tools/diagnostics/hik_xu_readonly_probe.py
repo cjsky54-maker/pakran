@@ -219,7 +219,11 @@ def inspect_device(moniker: IMoniker, index: int) -> dict:
                         node_entry["xu_selector4_get"] = _read_xu_selector(
                             ks, node_id, XU_PROTOCOL_VERSION_SELECTOR
                         )
-                        # Selector 5 is probed with GET only; no SET is issued.
+                        # Read current value of selector 3 only; no SET is issued.
+                        node_entry["xu_selector3_get"] = _read_xu_selector(
+                            ks, node_id, 3
+                        )
+                        # Selector 5 is also probed with GET only.
                         node_entry["xu_selector5_get"] = _read_xu_selector(
                             ks, node_id, 5
                         )
@@ -251,7 +255,7 @@ def main() -> int:
         "platform": platform.platform(),
         "python": sys.version.split()[0],
         "xu_guid": str(HIK_XU_GUID),
-        "operation": "GET selector 4 only; no SET requests are issued",
+        "operation": "GET selectors 3, 4, and 5 only; no SET requests are issued",
         "devices": [],
     }
 
