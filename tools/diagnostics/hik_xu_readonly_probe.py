@@ -98,15 +98,18 @@ class IKsTopologyInfo(IUnknown):
                   (["out"], POINTER(GUID))),
         COMMETHOD([], HRESULT, "get_NumConnections", (["out"], POINTER(wintypes.DWORD))),
         COMMETHOD([], HRESULT, "get_ConnectionInfo", (["in"], wintypes.DWORD), (["in"], c_void_p)),
-        COMMETHOD([], HRESULT, "get_NumNodes", (["out"], POINTER(wintypes.DWORD))),
-        COMMETHOD([], HRESULT, "get_NodeType", (["in"], wintypes.DWORD),
-                  (["out"], POINTER(GUID))),
-        COMMETHOD([], HRESULT, "CreateNodeInstance", (["in"], wintypes.DWORD),
-                  (["in"], wintypes.DWORD), (["in"], POINTER(GUID)),
-                  (["out"], POINTER(POINTER(IUnknown)))),
+        # Preserve the exact native vtable order from vidcap.h:
+        # get_NodeName precedes get_NumNodes.
         COMMETHOD([], HRESULT, "get_NodeName", (["in"], wintypes.DWORD),
                   (["out"], c_void_p), (["in"], wintypes.DWORD),
                   (["out"], POINTER(wintypes.DWORD))),
+        COMMETHOD([], HRESULT, "get_NumNodes", (["out"], POINTER(wintypes.DWORD))),
+        COMMETHOD([], HRESULT, "get_NodeType", (["in"], wintypes.DWORD),
+                  (["out"], POINTER(GUID))),
+        # Native signature: CreateNodeInstance(DWORD nodeId, REFIID iid, void**).
+        COMMETHOD([], HRESULT, "CreateNodeInstance", (["in"], wintypes.DWORD),
+                  (["in"], POINTER(GUID)),
+                  (["out"], POINTER(POINTER(IUnknown)))),
     ]
 
 
