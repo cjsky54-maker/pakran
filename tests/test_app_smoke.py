@@ -259,9 +259,57 @@ def test_worker_reopens_camera_after_read_error(qapp):
     mgr = CameraManager(lambda: SettingsData())
     mgr.attach(camera)
     end = time.monotonic() + 5.0
-    while camera._open_count < 2 and time.monotonic() < end:
+    while ((camera._open_count < 2 or mgr.latest_frame() is None)
+           and time.monotonic() < end):
         qapp.processEvents()
         time.sleep(0.02)
     assert camera._open_count >= 2      # reopened during reconnection
     assert mgr.latest_frame() is not None
     mgr.detach()
+
+
+def test_device_dialog_deep_refresh_identifies_hikcamera(qapp):
+    """The dialog shows the fast list immediately, then the background
+    deep pass renames HIKMICRO devices and updates the table in place."""
+    import time
+
+    from app.camera.camera_models import CameraInfo
+    from app.ui.dialogs.device_selection import DeviceSelectionDialog
+
+    shallow = [
+        CameraInfo("simulated:0", "Simulated Thermal Camera", "simulated",
+                   True, True, "synthetic data"),
+        CameraInfo("uvc:0", "UVC Camera 0", "uvc", False, False,
+                   "USB video device - capability is checked when connected"),
+    ]
+    deep = [
+        shallow[0],
+        CameraInfo(
+            "uvc:0", "HIKMICRO Thermal Camera (USB)", "uvc",
+            False, False,
+            "HikCamera USB stream - preview stream (no temperatures) - open "
+            "HIKMICRO Analyzer once, close it, then reconnect to enable the "
+            "calibrated stream",
+        ),
+    ]
+
+    dialog = DeviceSelectionDialog(shallow, refresh_fn=lambda: deep)
+    QApplication.processEvents()
+    assert dialog.table.rowCount() == 2
+    assert dialog.table.item(0, 2).text() == "Yes"   # simulated is radiometric
+    # (the background deep pass may already have completed here on a fast
+    # machine, so do not assert the generic "UVC Camera 0" label)
+
+    # Deep pass result (may complete immediately or via the queued signal).
+    end = time.monotonic() + 3.0
+    while dialog.table.item(1, 0).text() != "HIKMICRO Thermal Camera (USB)" \
+            and time.monotonic() < end:
+        QApplication.processEvents()
+        time.sleep(0.02)
+    assert dialog.table.item(1, 0).text() == "HIKMICRO Thermal Camera (USB)"
+    assert dialog.table.item(1, 1).text() == "HikCamera USB (UVC)"
+    assert dialog.table.item(1, 2).text() == "No"    # honest until calibrated
+    assert "Analyzer" in dialog.table.item(1, 3).text()
+    assert dialog.refresh_btn.isEnabled()            # re-enabled after the pass
+
+    dialog.reject()
