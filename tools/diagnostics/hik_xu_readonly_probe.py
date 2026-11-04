@@ -163,12 +163,6 @@ def inspect_device(moniker: IMoniker, index: int) -> dict:
         filter_ptr = moniker.BindToObject(None, None, byref(IID_BASE_FILTER))
         base_filter = filter_ptr.QueryInterface(IUnknown)
         topology = base_filter.QueryInterface(IKsTopologyInfo)
-        try:
-            ks = base_filter.QueryInterface(IKsControl)
-        except Exception as exc:
-            item["ikSControl"] = {"available": False, "error": str(exc)}
-            return item
-
         node_count = int(topology.get_NumNodes())
         nodes = []
         for node_id in range(node_count):
@@ -176,12 +170,27 @@ def inspect_device(moniker: IMoniker, index: int) -> dict:
                 node_type = topology.get_NodeType(node_id)
                 node_entry = {"node_id": node_id, "node_type": str(node_type)}
                 if node_type == KSNODETYPE_DEV_SPECIFIC:
-                    node_entry["xu_selector4_get"] = _read_xu_selector4(ks, node_id)
+                    try:
+                        # IKsControl is obtained from the topology node instance,
+                        # not assumed to be implemented by the parent filter.
+                        node_instance = topology.CreateNodeInstance(
+                            node_id, 0, byref(IID_KS_CONTROL)
+                        )
+                        ks = node_instance.QueryInterface(IKsControl)
+                        node_entry["xu_selector4_get"] = _read_xu_selector4(
+                            ks, node_id
+                        )
+                        node_entry["ikSControl_available"] = True
+                    except Exception as exc:
+                        node_entry["ikSControl_available"] = False
+                        node_entry["xu_selector4_get"] = {
+                            "ok": False, "error": str(exc)
+                        }
                 nodes.append(node_entry)
             except Exception as exc:
                 nodes.append({"node_id": node_id, "error": str(exc)})
 
-        item["ikSControl"] = {"available": True}
+        item["topology_available"] = True
         item["node_count"] = node_count
         item["nodes"] = nodes
     except Exception as exc:
@@ -238,9 +247,10 @@ def main() -> int:
             if "error" in dev:
                 print("  Device inspection error:", dev["error"])
                 continue
-            print("  IKsControl:", dev.get("ikSControl", {}).get("available", False))
             for node in dev.get("nodes", []):
                 print(f"  Node {node['node_id']}: {node.get('node_type', node.get('error'))}")
+                if "ikSControl_available" in node:
+                    print("    Node IKsControl:", node["ikSControl_available"])
                 read = node.get("xu_selector4_get")
                 if read:
                     if read.get("ok"):
