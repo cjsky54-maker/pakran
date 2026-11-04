@@ -159,14 +159,19 @@ def _read_xu_selector4(ks: IKsControl, node_id: int) -> dict:
 
 def inspect_device(moniker: IMoniker, index: int) -> dict:
     item: dict = {"index": index, "name": _friendly_name(moniker)}
+    stage = "BindToObject(IBaseFilter)"
     try:
         filter_ptr = moniker.BindToObject(None, None, byref(IID_BASE_FILTER))
+        stage = "QueryInterface(IUnknown)"
         base_filter = filter_ptr.QueryInterface(IUnknown)
+        stage = "QueryInterface(IKsTopologyInfo)"
         topology = base_filter.QueryInterface(IKsTopologyInfo)
+        stage = "IKsTopologyInfo.get_NumNodes"
         node_count = int(topology.get_NumNodes())
         nodes = []
         for node_id in range(node_count):
             try:
+                stage = f"IKsTopologyInfo.get_NodeType(node_id={node_id})"
                 node_type = topology.get_NodeType(node_id)
                 node_entry = {"node_id": node_id, "node_type": str(node_type)}
                 if node_type == KSNODETYPE_DEV_SPECIFIC:
@@ -194,6 +199,7 @@ def inspect_device(moniker: IMoniker, index: int) -> dict:
         item["node_count"] = node_count
         item["nodes"] = nodes
     except Exception as exc:
+        item["error_stage"] = stage
         item["error"] = str(exc)
     return item
 
