@@ -145,10 +145,17 @@ def _read_xu_selector4(ks: IKsControl, node_id: int) -> dict:
     output = ctypes.create_string_buffer(READ_BUFFER_SIZE)
     returned = c_ulong(0)
     try:
-        ks.KsProperty(
+        # comtypes automatically allocates plain [out] parameters and
+        # returns them from the call; do not pass BytesReturned explicitly.
+        result = ks.KsProperty(
             ctypes.addressof(prop), ctypes.sizeof(prop),
-            ctypes.addressof(output), READ_BUFFER_SIZE, byref(returned),
+            ctypes.addressof(output), READ_BUFFER_SIZE,
         )
+        if isinstance(result, tuple):
+            returned_value = int(result[-1])
+        else:
+            returned_value = int(result)
+        returned.value = returned_value
         payload = output.raw[: min(returned.value, READ_BUFFER_SIZE)]
         return {
             "ok": True,
