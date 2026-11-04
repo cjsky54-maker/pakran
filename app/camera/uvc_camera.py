@@ -53,6 +53,7 @@ Two defences, both applied everywhere in this module:
 """
 from __future__ import annotations
 
+import os
 import threading
 import time
 from dataclasses import replace
@@ -91,6 +92,17 @@ _VISUAL_OPEN_ATTEMPTS = 3   # visual fallback retries (device may be busy)
 _VISUAL_RETRY_DELAY_S = 1.5
 _MSMF_OPEN_TIMEOUT_MS = 4000
 _MSMF_READ_TIMEOUT_MS = 1200
+
+
+def _hik_raw_enabled() -> bool:
+    """Raw HikCamera probing is opt-in because native backend calls can hang or crash.
+
+    Set DRIVERTHERMALQC_HIK_RAW=1 only for an explicitly requested
+    experimental raw-stream test. The normal application path is visual-first.
+    """
+    return os.environ.get("DRIVERTHERMALQC_HIK_RAW", "0").strip().lower() in {
+        "1", "true", "yes", "on"
+    }
 
 # DirectShow first, Media Foundation only as a fallback (v1.0.4 - see
 # the module docstring: the MSMF open access-violates on the HikCamera).
@@ -204,7 +216,8 @@ class UvcCamera(CameraInterface):
             self._open_locked()
 
     def _open_locked(self) -> None:
-        cap = self._open_hik_raw()
+        # Never enter the experimental native raw probe during normal use.
+        cap = self._open_hik_raw() if _hik_raw_enabled() else None
         if cap is not None:
             self._cap = cap
             self._hik_raw = True
@@ -418,6 +431,9 @@ def probe_hik_capability(index: int, should_stop=None) -> dict:
     Returns {"is_hik": bool, "radiometric": bool, "reason": str}.
     """
     result = {"is_hik": False, "radiometric": False, "reason": ""}
+    if not _hik_raw_enabled():
+        result["reason"] = "Experimental raw HikCamera probe is disabled (set DRIVERTHERMALQC_HIK_RAW=1 to opt in)"
+        return result
     with _device_lock(index):
         cam = UvcCamera(index)
         try:
