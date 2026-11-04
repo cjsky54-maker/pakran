@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - fix/mini2v2-camera
     tags:
       - "v*"
 
@@ -40,7 +41,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: DriverThermalQC-windows-exe
-          path: dist/DriverThermalQC.exe
+          path: |
+            dist/DriverThermalQC.exe
+            Run_Safe_Visual_Test.bat
+            Run_Experimental_Raw_HIK_Test.bat
 
       # Tag builds publish a real GitHub Release with the EXE attached, so
       # the Releases page is the one place users download from. Regular

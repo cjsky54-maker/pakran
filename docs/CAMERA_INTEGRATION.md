@@ -117,12 +117,46 @@ SET_CUR  selector 3, data 01 08 + zero padding to length
 GET_CUR  selector 3  -> verify byte 0 == 01, byte 1 == 08
 ```
 
-(bmRequestType 0x21/0xA1, wValue = selector << 8, wIndex = 10 << 8; control
-protocol version readable via selector 4, returns `2.0\0`.)
+(bmRequestType 0x21/0xA1, wValue = selector << 8, wIndex = 0x0A00;
+the UVC Extension Unit GUID reported for this device family is
+`{A29E7641-DE04-47E3-8B2B-F4341AFF003B}`, unit ID 10, with 15 controls.)
 
-Sending these requests from Python on Windows goes through the UVC driver's
-extension-unit KS-property interface (DirectShow `IAMKsPropertySet` /
-Media Foundation `IKsControl`) and is not yet implemented here.
+**Important scope limitation:** the complete selector sequence below was
+reverse-engineered and tested on an HTI HT-203U with firmware 4.09
+(`VID_2BDF&PID_0102`). That is evidence for a related HIKMICRO-derived
+device, not proof that every Mini2 V2 firmware exposes an identical
+descriptor, control length, or frame layout. The Mini2 V2 connected to the
+target Windows PC must be queried before enabling any write operation.
+Do not infer compatibility from VID/PID alone.
+
+The first safe Windows step is to obtain the UVC Extension Unit node through
+`IKsTopologyInfo`, verify its node type is
+`KSNODETYPE_DEV_SPECIFIC`, and query its `IKsControl` interface. The
+property-set GUID above identifies the extension unit; the node ID is a
+topology index and must be discovered at runtime (it is not the USB unit ID).
+For a non-mutating mode read, send the command-selection request
+`SET_CUR selector 5, data 03 05`, then issue `GET_LEN selector 3` and
+`GET_CUR selector 3`. Preserve the complete returned payload and inspect
+byte 0 (channel) and byte 1 (current mode). Also read selector 4 and confirm
+the reported protocol version is `2.0\\0`. The command-selection request
+selects which operation selector 3 refers to; it does not itself change the
+stream mode. If the extension unit, protocol version, length, or response
+does not match expectations, stop without sending the mode-setting request.
+
+Only after those checks should a separate, explicitly enabled operation
+send `SET_CUR selector 3` with channel/mode bytes `01 08` followed by
+zero-padding to the device-reported length. Save the original full selector-3
+payload first so the previous mode can be restored. Mode switching must
+happen **after** UVC streaming has started. The legacy UVC 1.0 command
+sequence is different and must not be sent to a device reporting protocol
+2.0.
+
+On Windows, these requests go through the UVC driver's Extension Unit
+KS-property interface: discover the node with DirectShow
+`IKsTopologyInfo::CreateNodeInstance`, then use `IKsControl::KsProperty`
+with `KSPROPERTY_TYPE_TOPOLOGY`. This Windows control path is not yet
+implemented in the application; OpenCV's `VideoCapture` API alone cannot
+send these vendor requests.
 
 **Workaround that works today:** HIKMICRO Analyzer switches the camera to
 the calibrated mode and the mode persists while the camera stays connected.

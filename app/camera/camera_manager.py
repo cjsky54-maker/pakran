@@ -317,6 +317,8 @@ class CameraManager(QObject):
             # status refresh so the UI reflects the new capability.
             self._emit_status()
         self._last_frame_radiometric = radiometric
+        # Forward the acquired frame to CameraView and other UI subscribers.
+        self.frameReady.emit(frame)
 
     def _on_read_error(self, message: str) -> None:
         self._last_error = message
