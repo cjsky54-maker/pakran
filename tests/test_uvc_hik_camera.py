@@ -65,6 +65,9 @@ class _FakeVideoCapture:
 @pytest.fixture()
 def fake_capture(monkeypatch):
     monkeypatch.setattr(uvc_module.cv2, "VideoCapture", _FakeVideoCapture)
+    # Keep the suite fast: the per-device settle window is a no-op in
+    # tests (it exists to protect the real MSMF/DirectShow pipeline).
+    monkeypatch.setattr(uvc_module, "_DEVICE_SETTLE_S", 0.0)
     _FakeVideoCapture.frames = []
     _FakeVideoCapture.opened = True
     _FakeVideoCapture.bgr = False
@@ -333,3 +336,72 @@ def test_deep_discovery_skips_active_device(fake_capture, monkeypatch):
     )
     assert devices == []                # skipped entirely - manager re-adds it
     assert opened["n"] == 0             # never opened at all
+
+
+# -- v1.0.4: DirectShow first + per-device session settle -------------------------
+#
+# Regression: crash.log (v1.0.3, EXE) showed "Windows fatal exception:
+# access violation" with the faulting thread inside the cv2.VideoCapture
+# CONSTRUCTOR (uvc_camera.py line 232, first backend = MSMF) on the
+# acquisition worker. Not a two-thread race - Media Foundation itself
+# crashes while (re)opening the HikCamera, especially right after another
+# session released it.
+
+
+def test_raw_open_tries_directshow_before_msmf(fake_capture, monkeypatch):
+    """The raw open must try DirectShow FIRST and only fall back to MSMF;
+    the visual open must also prefer DirectShow."""
+    order = []
+    real_init = _FakeVideoCapture.__init__
+
+    def recording_init(self, *args, **kwargs):
+        order.append(args[1] if len(args) > 1 else uvc_module.cv2.CAP_ANY)
+        real_init(self, *args, **kwargs)
+
+    monkeypatch.setattr(_FakeVideoCapture, "__init__", recording_init)
+    fake_capture.bgr = True          # raw probe fails -> both backends tried
+    fake_capture.frames = []
+    cam = UvcCamera(0)
+    cam.open()
+    try:
+        assert order[0] == uvc_module.cv2.CAP_DSHOW   # raw: DSHOW first
+        assert order[1] == uvc_module.cv2.CAP_MSMF    # raw: MSMF fallback
+        assert order[2] == uvc_module.cv2.CAP_DSHOW   # visual: DSHOW first
+    finally:
+        cam.close()
+
+
+def test_reopen_waits_out_settle_window(fake_capture, monkeypatch):
+    """After a real session ends, the next open on the same device waits
+    out the settle window - the zero-gap reopen (lock handoff from a
+    cancelled probe) is what crashed Media Foundation."""
+    import time as _time
+
+    monkeypatch.setattr(uvc_module, "_DEVICE_SETTLE_S", 0.2)
+    fake_capture.bgr = True
+    fake_capture.frames = []
+    cam = UvcCamera(0)
+    cam.open()
+    cam.close()                      # releases + timestamps the session
+    start = _time.monotonic()
+    uvc_module._wait_settle(0)
+    assert _time.monotonic() - start >= 0.15   # settle window honoured
+
+    # Without a recent release there is no wait at all.
+    monkeypatch.setattr(uvc_module, "_DEVICE_LAST_RELEASE", {})
+    start = _time.monotonic()
+    uvc_module._wait_settle(0)
+    assert _time.monotonic() - start < 0.1
+
+
+def test_failed_open_does_not_count_as_session(fake_capture, monkeypatch):
+    """A constructor that never opened the device must NOT start a settle
+    window - clean failures hold no driver state."""
+    fake_capture.opened = False      # every open fails cleanly
+    cam = UvcCamera(2)
+    from app.camera.camera_interface import CameraError
+
+    with pytest.raises(CameraError):
+        cam.open()
+    # No release of an actually-opened cap happened on index 2.
+    assert 2 not in uvc_module._DEVICE_LAST_RELEASE

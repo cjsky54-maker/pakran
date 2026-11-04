@@ -31,6 +31,25 @@ deep-discovery probe of the device dialog and the acquisition worker's
 open() can never race each other. Long probe sequences additionally
 accept a ``should_stop`` callback so a cancelled dialog probe aborts
 between native calls instead of holding its lock.
+
+BACKEND ORDER + SESSION SETTLE (v1.0.4): crash.log evidence showed the
+v1.0.3 access violation inside the ``cv2.VideoCapture`` CONSTRUCTOR
+itself (worker thread, first backend = MSMF) - i.e. not a two-thread
+race but Media Foundation crashing while (re)opening the HikCamera.
+Two defences, both applied everywhere in this module:
+
+1. DIRECTSHOW FIRST. ``cv2.CAP_DSHOW`` is tried before ``cv2.CAP_MSMF``
+   for every raw open, and before the platform default for every visual
+   open. DirectShow negotiates the odd 256x392 YUY2 media type through
+   the classic IAMStreamConfig path and does not access-violate on this
+   device class; MSMF stays only as a last-resort fallback.
+2. SESSION SETTLE. The per-device locks made the gap between one
+   session's ``release()`` and the next ``open()`` effectively ZERO on
+   lock handoff (a cancelled-but-in-flight dialog probe hands the lock
+   straight to the acquisition worker). Every release is timestamped
+   per device and every open first waits out ``_DEVICE_SETTLE_S`` since
+   that timestamp, so the driver/MF pipeline always gets its release
+   window.
 """
 from __future__ import annotations
 
@@ -73,11 +92,22 @@ _VISUAL_RETRY_DELAY_S = 1.5
 _MSMF_OPEN_TIMEOUT_MS = 4000
 _MSMF_READ_TIMEOUT_MS = 1200
 
+# DirectShow first, Media Foundation only as a fallback (v1.0.4 - see
+# the module docstring: the MSMF open access-violates on the HikCamera).
+_RAW_BACKENDS = (cv2.CAP_DSHOW, cv2.CAP_MSMF)
+
 # One lock per device index: native (C++) camera calls for the SAME
 # device must never overlap - that is a hard process crash on Windows.
 # Cross-device opens are independent and may run in parallel.
 _DEVICE_LOCKS: dict[int, threading.RLock] = {}
 _DEVICE_LOCKS_GUARD = threading.Lock()
+
+# Monotonic timestamp of the last REAL session release per device index
+# (only caps that were actually opened count). The next open on the same
+# device waits out the settle window so the OS/driver finishes releasing
+# before Media Foundation / DirectShow is asked to open it again.
+_DEVICE_SETTLE_S = 1.0
+_DEVICE_LAST_RELEASE: dict[int, float] = {}
 
 
 def _device_lock(index: int) -> threading.RLock:
@@ -87,6 +117,47 @@ def _device_lock(index: int) -> threading.RLock:
             lock = threading.RLock()
             _DEVICE_LOCKS[index] = lock
         return lock
+
+
+def _note_release(index: int) -> None:
+    """Record that a real capture session on ``index`` just ended."""
+    with _DEVICE_LOCKS_GUARD:
+        _DEVICE_LAST_RELEASE[index] = time.monotonic()
+
+
+def _wait_settle(index: int) -> None:
+    """Sleep just long enough that the previous session on ``index`` had
+    ``_DEVICE_SETTLE_S`` to fully release before we open it again."""
+    with _DEVICE_LOCKS_GUARD:
+        last = _DEVICE_LAST_RELEASE.get(index)
+    if last is not None:
+        remaining = _DEVICE_SETTLE_S - (time.monotonic() - last)
+        if remaining > 0.0:
+            time.sleep(remaining)
+
+
+def _release_capture(cap: cv2.VideoCapture, index: int) -> None:
+    """Release a capture and timestamp the end of its device session."""
+    try:
+        cap.release()
+    finally:
+        _note_release(index)
+
+
+def _open_visual_capture(index: int) -> cv2.VideoCapture | None:
+    """Open a device for visual use, preferring DirectShow (v1.0.4).
+
+    The MSMF backend access-violates while opening some UVC devices (seen
+    with the HikCamera raw container), so DirectShow is tried first; the
+    platform default backend order remains as a fallback for devices
+    DirectShow cannot handle. Returns None when nothing opens the device.
+    """
+    for backend in (cv2.CAP_DSHOW, cv2.CAP_ANY):
+        cap = cv2.VideoCapture(index, backend)
+        if cap.isOpened():
+            return cap
+        cap.release()
+    return None
 
 
 def _set_stream_timeouts(cap: cv2.VideoCapture) -> None:
@@ -155,17 +226,17 @@ class UvcCamera(CameraInterface):
         # reopened, so retry instead of failing on the first attempt.
         last_error = ""
         for attempt in range(1, _VISUAL_OPEN_ATTEMPTS + 1):
+            _wait_settle(self.index)
             try:
-                cap = cv2.VideoCapture(self.index)
+                cap = _open_visual_capture(self.index)
             except Exception as exc:  # pragma: no cover - platform dependent
                 raise CameraError(f"Could not open UVC device {self.index}: {exc}") from exc
-            if cap.isOpened():
+            if cap is not None:
                 _set_stream_timeouts(cap)
                 self._hik_raw = False
                 self._classifier = None
                 self._cap = cap
                 return
-            cap.release()
             last_error = (
                 f"UVC device {self.index} did not open (attempt {attempt}/"
                 f"{_VISUAL_OPEN_ATTEMPTS}). Check the USB connection and "
@@ -182,7 +253,7 @@ class UvcCamera(CameraInterface):
     def close(self) -> None:
         with _device_lock(self.index):
             if self._cap is not None:
-                self._cap.release()
+                _release_capture(self._cap, self.index)
                 self._cap = None
             self._hik_raw = False
             self._classifier = None
@@ -213,11 +284,11 @@ class UvcCamera(CameraInterface):
     ) -> cv2.VideoCapture | None:
         """Try to open the device as a raw HikCamera YUYV stream.
 
-        Attempts the MSMF and DirectShow backends with an explicit YUY2
-        format request at 256x392 and RGB conversion disabled, then
-        verifies that probe frames really carry the HikCamera container
-        size. Returns None when the device does not expose that format
-        (caller falls back to the plain visual path).
+        Attempts the DirectShow and (only as a fallback) MSMF backends
+        with an explicit YUY2 format request at 256x392 and RGB conversion
+        disabled, then verifies that probe frames really carry the
+        HikCamera container size. Returns None when the device does not
+        expose that format (caller falls back to the plain visual path).
 
         ``should_stop`` (a no-arg callable returning True) is honoured
         BETWEEN native calls so a cancelled dialog probe can abort a
@@ -225,9 +296,12 @@ class UvcCamera(CameraInterface):
         still runs to its bounded timeout.
         """
         fourcc_yuy2 = cv2.VideoWriter_fourcc(*"YUY2")
-        for backend in (cv2.CAP_MSMF, cv2.CAP_DSHOW):
+        for backend in _RAW_BACKENDS:
             if should_stop is not None and should_stop():
                 return None
+            # Give a just-released session on this device its settle
+            # window before the next native open (see module docstring).
+            _wait_settle(self.index)
             try:
                 cap = cv2.VideoCapture(self.index, backend)
             except Exception:
@@ -243,7 +317,7 @@ class UvcCamera(CameraInterface):
             cap.set(cv2.CAP_PROP_CONVERT_RGB, 0)
             if self._probe_raw_frames(cap, probe_reads, should_stop):
                 return cap
-            cap.release()
+            _release_capture(cap, self.index)
         return None
 
     @staticmethod
@@ -332,9 +406,9 @@ class UvcCamera(CameraInterface):
 def probe_hik_capability(index: int, should_stop=None) -> dict:
     """Check whether UVC device ``index`` is a HIKMICRO HikCamera.
 
-    Opens the device once with the raw-stream settings (MSMF, YUY2
-    256x392, no RGB conversion, short read timeout) and classifies a few
-    frames. Used by the device-selection dialog so a real HIKMICRO camera
+    Opens the device once with the raw-stream settings (DirectShow first,
+    YUY2 256x392, no RGB conversion, short read timeout) and classifies a
+    few frames. Used by the device-selection dialog so a real HIKMICRO camera
     is listed under its proper name with an honest Radiometric value and
     instructions, instead of a generic "UVC Camera N / No" entry.
 
@@ -371,7 +445,7 @@ def probe_hik_capability(index: int, should_stop=None) -> dict:
                         break
                     parsed += 1
             finally:
-                cap.release()
+                _release_capture(cap, index)
             if parsed > 0:
                 result["is_hik"] = True
                 result["radiometric"] = bool(classifier.radiometric)
@@ -415,11 +489,11 @@ def discover_uvc_cameras(
             continue
         with _device_lock(index):
             try:
-                cap = cv2.VideoCapture(index)
-                if not cap.isOpened():
-                    cap.release()
+                _wait_settle(index)
+                cap = _open_visual_capture(index)
+                if cap is None:
                     continue
-                cap.release()
+                _release_capture(cap, index)
             except Exception:  # pragma: no cover - platform dependent
                 continue
 

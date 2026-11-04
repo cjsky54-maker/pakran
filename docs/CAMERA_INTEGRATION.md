@@ -160,6 +160,17 @@ cut. Mode-8 candidates are therefore **padded to the full size before
 validation** (they still have to pass every statistical gate), so the
 truncated stream still yields the full temperature matrix and preview.
 
+Since v1.0.4 every open uses **DirectShow first** (`CAP_DSHOW`), with
+Media Foundation (`CAP_MSMF`) only as a fallback, and honours a
+per-device **session settle window** (1 s) between one capture's
+`release()` and the next `open()`. The v1.0.3 `crash.log` caught the
+connect-time access violation inside the `cv2.VideoCapture` constructor
+itself — first backend MSMF, immediately after the device dialog's probe
+had released the same device — i.e. Media Foundation crashing while
+re-opening the HikCamera, not a two-thread race. DirectShow negotiates
+the odd 256×392 YUY2 media type through the classic IAMStreamConfig
+path and does not access-violate on this device class.
+
 Opening a camera is **strictly bounded and always off the GUI thread**:
 
 - the open runs inside the acquisition worker thread — the interface shows

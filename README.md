@@ -49,6 +49,14 @@ pass) before the deep probe refines them, native crashes now leave
 truncated by the OS to the advertised 200,704 bytes are padded so the
 calibrated stream still yields the full temperature matrix.
 
+Since v1.0.4 every camera open tries **DirectShow before Media
+Foundation** and honours a per-device *session settle* window between a
+release and the next open. The v1.0.3 crash.log showed the access
+violation inside the `cv2.VideoCapture` constructor itself (first
+backend = MSMF, right after the device dialog's probe released the
+device) - i.e. Media Foundation crashing while re-opening the HikCamera,
+not a two-thread race.
+
 **Phase 2 (integration point ready, pending SDK):** direct in-app switching
 of the camera's calibrated stream mode via the vendor control endpoint,
 and the official HIKMICRO SDK adapter for other camera series. See
