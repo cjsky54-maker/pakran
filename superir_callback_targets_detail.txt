@@ -1,0 +1,1667 @@
+MICROPIXELER CALLBACK TARGET ANALYSIS
+==========================================================================================
+
+
+T0 | RVA=0xACF60 | SECTION=.text
+------------------------------------------------------------------------------------------
+000ACF60  48 85 d2                            test      rdx, rdx
+000ACF63  74 12                               je        0x1800acf77
+000ACF65  48 8d 05 44 cd 0b 00                lea       rax, [rip + 0xbcd44]
+000ACF6C  48 89 02                            mov       qword ptr [rdx], rax
+000ACF6F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000ACF73  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000ACF77  48 8b c2                            mov       rax, rdx
+000ACF7A  c3                                  ret       
+000ACF7B  cc                                  int3      
+000ACF7C  cc                                  int3      
+000ACF7D  cc                                  int3      
+000ACF7E  cc                                  int3      
+000ACF7F  cc                                  int3      
+000ACF80  cc                                  int3      
+000ACF81  cc                                  int3      
+000ACF82  cc                                  int3      
+000ACF83  cc                                  int3      
+000ACF84  cc                                  int3      
+000ACF85  cc                                  int3      
+000ACF86  cc                                  int3      
+000ACF87  cc                                  int3      
+000ACF88  cc                                  int3      
+000ACF89  cc                                  int3      
+000ACF8A  cc                                  int3      
+000ACF8B  cc                                  int3      
+000ACF8C  cc                                  int3      
+000ACF8D  cc                                  int3      
+000ACF8E  cc                                  int3      
+000ACF8F  cc                                  int3      
+000ACF90  48 8d 05 89 cc 0b 00                lea       rax, [rip + 0xbcc89]
+000ACF97  48 89 01                            mov       qword ptr [rcx], rax
+000ACF9A  84 d2                               test      dl, dl
+000ACF9C  0f 85 d4 4c f5 ff                   jne       0x180001c76
+000ACFA2  c3                                  ret       
+000ACFA3  cc                                  int3      
+000ACFA4  cc                                  int3      
+000ACFA5  cc                                  int3      
+000ACFA6  cc                                  int3      
+000ACFA7  cc                                  int3      
+000ACFA8  cc                                  int3      
+000ACFA9  cc                                  int3      
+000ACFAA  cc                                  int3      
+000ACFAB  cc                                  int3      
+000ACFAC  cc                                  int3      
+000ACFAD  cc                                  int3      
+000ACFAE  cc                                  int3      
+000ACFAF  cc                                  int3      
+000ACFB0  48 8d 05 69 cc 0b 00                lea       rax, [rip + 0xbcc69]
+000ACFB7  48 89 01                            mov       qword ptr [rcx], rax
+000ACFBA  84 d2                               test      dl, dl
+000ACFBC  0f 85 b4 4c f5 ff                   jne       0x180001c76
+000ACFC2  c3                                  ret       
+000ACFC3  cc                                  int3      
+000ACFC4  cc                                  int3      
+000ACFC5  cc                                  int3      
+000ACFC6  cc                                  int3      
+000ACFC7  cc                                  int3      
+000ACFC8  cc                                  int3      
+000ACFC9  cc                                  int3      
+000ACFCA  cc                                  int3      
+000ACFCB  cc                                  int3      
+000ACFCC  cc                                  int3      
+000ACFCD  cc                                  int3      
+000ACFCE  cc                                  int3      
+000ACFCF  cc                                  int3      
+000ACFD0  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000ACFD4  4c 8b ca                            mov       r9, rdx
+000ACFD7  49 8b c9                            mov       rcx, r9
+000ACFDA  49 8b d0                            mov       rdx, r8
+000ACFDD  48 ff e0                            jmp       rax
+000ACFE0  cc                                  int3      
+000ACFE1  cc                                  int3      
+000ACFE2  cc                                  int3      
+000ACFE3  cc                                  int3      
+000ACFE4  cc                                  int3      
+000ACFE5  cc                                  int3      
+000ACFE6  cc                                  int3      
+000ACFE7  cc                                  int3      
+000ACFE8  cc                                  int3      
+000ACFE9  cc                                  int3      
+000ACFEA  cc                                  int3      
+000ACFEB  cc                                  int3      
+000ACFEC  cc                                  int3      
+000ACFED  cc                                  int3      
+000ACFEE  cc                                  int3      
+000ACFEF  cc                                  int3      
+000ACFF0  48 83 c1 08                         add       rcx, 8
+000ACFF4  e9 67 fc ff ff                      jmp       0x1800acc60
+000ACFF9  cc                                  int3      
+000ACFFA  cc                                  int3      
+000ACFFB  cc                                  int3      
+000ACFFC  cc                                  int3      
+000ACFFD  cc                                  int3      
+000ACFFE  cc                                  int3      
+000ACFFF  cc                                  int3      
+000AD000  48 8d 41 08                         lea       rax, [rcx + 8]
+000AD004  c3                                  ret       
+000AD005  cc                                  int3      
+000AD006  cc                                  int3      
+000AD007  cc                                  int3      
+000AD008  cc                                  int3      
+000AD009  cc                                  int3      
+000AD00A  cc                                  int3      
+000AD00B  cc                                  int3      
+000AD00C  cc                                  int3      
+000AD00D  cc                                  int3      
+000AD00E  cc                                  int3      
+000AD00F  cc                                  int3      
+000AD010  48 8d 41 08                         lea       rax, [rcx + 8]
+000AD014  c3                                  ret       
+000AD015  cc                                  int3      
+000AD016  cc                                  int3      
+000AD017  cc                                  int3      
+000AD018  cc                                  int3      
+000AD019  cc                                  int3      
+000AD01A  cc                                  int3      
+000AD01B  cc                                  int3      
+000AD01C  cc                                  int3      
+000AD01D  cc                                  int3      
+000AD01E  cc                                  int3      
+000AD01F  cc                                  int3      
+000AD020  48 85 d2                            test      rdx, rdx
+000AD023  74 12                               je        0x1800ad037
+000AD025  48 8d 05 3c cc 0b 00                lea       rax, [rip + 0xbcc3c]
+000AD02C  48 89 02                            mov       qword ptr [rdx], rax
+000AD02F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000AD033  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000AD037  48 8b c2                            mov       rax, rdx
+000AD03A  c3                                  ret       
+000AD03B  cc                                  int3      
+000AD03C  cc                                  int3      
+000AD03D  cc                                  int3      
+000AD03E  cc                                  int3      
+000AD03F  cc                                  int3      
+000AD040  cc                                  int3      
+000AD041  cc                                  int3      
+000AD042  cc                                  int3      
+000AD043  cc                                  int3      
+000AD044  cc                                  int3      
+000AD045  cc                                  int3      
+000AD046  cc                                  int3      
+000AD047  cc                                  int3      
+000AD048  cc                                  int3      
+000AD049  cc                                  int3      
+000AD04A  cc                                  int3      
+000AD04B  cc                                  int3      
+000AD04C  cc                                  int3      
+000AD04D  cc                                  int3      
+000AD04E  cc                                  int3      
+000AD04F  cc                                  int3      
+000AD050  48 85 d2                            test      rdx, rdx
+000AD053  74 12                               je        0x1800ad067
+000AD055  48 8d 05 54 cc 0b 00                lea       rax, [rip + 0xbcc54]
+000AD05C  48 89 02                            mov       qword ptr [rdx], rax
+000AD05F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000AD063  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000AD067  48 8b c2                            mov       rax, rdx
+000AD06A  c3                                  ret       
+000AD06B  cc                                  int3      
+000AD06C  cc                                  int3      
+000AD06D  cc                                  int3      
+000AD06E  cc                                  int3      
+000AD06F  cc                                  int3      
+000AD070  cc                                  int3      
+000AD071  cc                                  int3      
+000AD072  cc                                  int3      
+000AD073  cc                                  int3      
+000AD074  cc                                  int3      
+000AD075  cc                                  int3      
+000AD076  cc                                  int3      
+000AD077  cc                                  int3      
+000AD078  cc                                  int3      
+000AD079  cc                                  int3      
+000AD07A  cc                                  int3      
+000AD07B  cc                                  int3      
+000AD07C  cc                                  int3      
+000AD07D  cc                                  int3      
+000AD07E  cc                                  int3      
+000AD07F  cc                                  int3      
+000AD080  48 8d 05 09 09 12 00                lea       rax, [rip + 0x120909]
+000AD087  c3                                  ret       
+000AD088  cc                                  int3      
+000AD089  cc                                  int3      
+000AD08A  cc                                  int3      
+000AD08B  cc                                  int3      
+000AD08C  cc                                  int3      
+000AD08D  cc                                  int3      
+000AD08E  cc                                  int3      
+000AD08F  cc                                  int3      
+000AD090  48 8d 05 a9 08 12 00                lea       rax, [rip + 0x1208a9]
+000AD097  c3                                  ret       
+000AD098  cc                                  int3      
+000AD099  cc                                  int3      
+000AD09A  cc                                  int3      
+000AD09B  cc                                  int3      
+000AD09C  cc                                  int3      
+000AD09D  cc                                  int3      
+000AD09E  cc                                  int3      
+000AD09F  cc                                  int3      
+000AD0A0  40 57                               push      rdi
+000AD0A2  48 83 ec 50                         sub       rsp, 0x50
+000AD0A6  48 c7 44 24 20 fe ff ff ff          mov       qword ptr [rsp + 0x20], 0xfffffffffffffffe
+000AD0AF  48 89 5c 24 60                      mov       qword ptr [rsp + 0x60], rbx
+000AD0B4  48 8b da                            mov       rbx, rdx
+000AD0B7  48 8b f9                            mov       rdi, rcx
+000AD0BA  e8 1d 63 f5 ff                      call      0x1800033dc
+000AD0BF  48 8b c8                            mov       rcx, rax
+000AD0C2  4c 8b c3                            mov       r8, rbx
+000AD0C5  48 8b d7                            mov       rdx, rdi
+000AD0C8  e8 1e 40 f5 ff                      call      0x1800010eb
+000AD0CD  84 c0                               test      al, al
+000AD0CF  75 4e                               jne       0x1800ad11f
+000AD0D1  4c 8d 0d 38 ca 0b 00                lea       r9, [rip + 0xbca38]
+000AD0D8  41 b8 70 00 00 00                   mov       r8d, 0x70
+000AD0DE  48 8d 15 7b c9 0b 00                lea       rdx, [rip + 0xbc97b]
+000AD0E5  48 8d 4c 24 28                      lea       rcx, [rsp + 0x28]
+000AD0EA  ff 15 90 71 14 00                   call      qword ptr [rip + 0x147190]
+000AD0F0  48 8b c8                            mov       rcx, rax
+000AD0F3  48 8d 54 24 70                      lea       rdx, [rsp + 0x70]
+000AD0F8  ff 15 ea 73 14 00                   call      qword ptr [rip + 0x1473ea]
+000AD0FE  90                                  nop       
+000AD0FF  48 8d 15 aa ca 0b 00                lea       rdx, [rip + 0xbcaaa]
+000AD106  48 8b c8                            mov       rcx, rax
+000AD109  ff 15 91 73 14 00                   call      qword ptr [rip + 0x147391]
+000AD10F  90                                  nop       
+000AD110  48 8d 4c 24 70                      lea       rcx, [rsp + 0x70]
+000AD115  ff 15 a5 73 14 00                   call      qword ptr [rip + 0x1473a5]
+000AD11B  32 c0                               xor       al, al
+000AD11D  eb 02                               jmp       0x1800ad121
+000AD11F  b0 01                               mov       al, 1
+000AD121  48 8b 5c 24 60                      mov       rbx, qword ptr [rsp + 0x60]
+000AD126  48 83 c4 50                         add       rsp, 0x50
+000AD12A  5f                                  pop       rdi
+000AD12B  c3                                  ret       
+000AD12C  cc                                  int3      
+000AD12D  cc                                  int3      
+000AD12E  cc                                  int3      
+000AD12F  cc                                  int3      
+000AD130  cc                                  int3      
+000AD131  cc                                  int3      
+000AD132  cc                                  int3      
+000AD133  cc                                  int3      
+000AD134  cc                                  int3      
+000AD135  cc                                  int3      
+000AD136  cc                                  int3      
+000AD137  cc                                  int3      
+000AD138  cc                                  int3      
+000AD139  cc                                  int3      
+000AD13A  cc                                  int3      
+000AD13B  cc                                  int3      
+000AD13C  cc                                  int3      
+000AD13D  cc                                  int3      
+000AD13E  cc                                  int3      
+000AD13F  cc                                  int3      
+000AD140  cc                                  int3      
+000AD141  cc                                  int3      
+000AD142  cc                                  int3      
+000AD143  cc                                  int3      
+000AD144  cc                                  int3      
+000AD145  cc                                  int3      
+000AD146  cc                                  int3      
+000AD147  cc                                  int3      
+000AD148  cc                                  int3      
+000AD149  cc                                  int3      
+000AD14A  cc                                  int3      
+000AD14B  cc                                  int3      
+000AD14C  cc                                  int3      
+000AD14D  cc                                  int3      
+000AD14E  cc                                  int3      
+000AD14F  cc                                  int3      
+000AD150  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD153  c3                                  ret       
+000AD154  cc                                  int3      
+000AD155  cc                                  int3      
+000AD156  cc                                  int3      
+000AD157  cc                                  int3      
+000AD158  cc                                  int3      
+000AD159  cc                                  int3      
+000AD15A  cc                                  int3      
+000AD15B  cc                                  int3      
+000AD15C  cc                                  int3      
+000AD15D  cc                                  int3      
+000AD15E  cc                                  int3      
+000AD15F  cc                                  int3      
+000AD160  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD164  c3                                  ret       
+000AD165  cc                                  int3      
+000AD166  cc                                  int3      
+000AD167  cc                                  int3      
+000AD168  cc                                  int3      
+000AD169  cc                                  int3      
+000AD16A  cc                                  int3      
+000AD16B  cc                                  int3      
+000AD16C  cc                                  int3      
+000AD16D  cc                                  int3      
+000AD16E  cc                                  int3      
+000AD16F  cc                                  int3      
+000AD170  48 83 ec 18                         sub       rsp, 0x18
+000AD174  48 8d 05 4d b8 0b 00                lea       rax, [rip + 0xbb84d]
+
+CALLS / JUMPS:
+  RVA 0xACFDD: jmp rax
+  RVA 0xACFF4: jmp 0x1800acc60
+  RVA 0xAD0BA: call 0x1800033dc
+  RVA 0xAD0C8: call 0x1800010eb
+  RVA 0xAD0EA: call qword ptr [rip + 0x147190]
+  RVA 0xAD0F8: call qword ptr [rip + 0x1473ea]
+  RVA 0xAD109: call qword ptr [rip + 0x147391]
+  RVA 0xAD115: call qword ptr [rip + 0x1473a5]
+  RVA 0xAD11D: jmp 0x1800ad121
+
+
+T1 | RVA=0xAD050 | SECTION=.text
+------------------------------------------------------------------------------------------
+000AD050  48 85 d2                            test      rdx, rdx
+000AD053  74 12                               je        0x1800ad067
+000AD055  48 8d 05 54 cc 0b 00                lea       rax, [rip + 0xbcc54]
+000AD05C  48 89 02                            mov       qword ptr [rdx], rax
+000AD05F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000AD063  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000AD067  48 8b c2                            mov       rax, rdx
+000AD06A  c3                                  ret       
+000AD06B  cc                                  int3      
+000AD06C  cc                                  int3      
+000AD06D  cc                                  int3      
+000AD06E  cc                                  int3      
+000AD06F  cc                                  int3      
+000AD070  cc                                  int3      
+000AD071  cc                                  int3      
+000AD072  cc                                  int3      
+000AD073  cc                                  int3      
+000AD074  cc                                  int3      
+000AD075  cc                                  int3      
+000AD076  cc                                  int3      
+000AD077  cc                                  int3      
+000AD078  cc                                  int3      
+000AD079  cc                                  int3      
+000AD07A  cc                                  int3      
+000AD07B  cc                                  int3      
+000AD07C  cc                                  int3      
+000AD07D  cc                                  int3      
+000AD07E  cc                                  int3      
+000AD07F  cc                                  int3      
+000AD080  48 8d 05 09 09 12 00                lea       rax, [rip + 0x120909]
+000AD087  c3                                  ret       
+000AD088  cc                                  int3      
+000AD089  cc                                  int3      
+000AD08A  cc                                  int3      
+000AD08B  cc                                  int3      
+000AD08C  cc                                  int3      
+000AD08D  cc                                  int3      
+000AD08E  cc                                  int3      
+000AD08F  cc                                  int3      
+000AD090  48 8d 05 a9 08 12 00                lea       rax, [rip + 0x1208a9]
+000AD097  c3                                  ret       
+000AD098  cc                                  int3      
+000AD099  cc                                  int3      
+000AD09A  cc                                  int3      
+000AD09B  cc                                  int3      
+000AD09C  cc                                  int3      
+000AD09D  cc                                  int3      
+000AD09E  cc                                  int3      
+000AD09F  cc                                  int3      
+000AD0A0  40 57                               push      rdi
+000AD0A2  48 83 ec 50                         sub       rsp, 0x50
+000AD0A6  48 c7 44 24 20 fe ff ff ff          mov       qword ptr [rsp + 0x20], 0xfffffffffffffffe
+000AD0AF  48 89 5c 24 60                      mov       qword ptr [rsp + 0x60], rbx
+000AD0B4  48 8b da                            mov       rbx, rdx
+000AD0B7  48 8b f9                            mov       rdi, rcx
+000AD0BA  e8 1d 63 f5 ff                      call      0x1800033dc
+000AD0BF  48 8b c8                            mov       rcx, rax
+000AD0C2  4c 8b c3                            mov       r8, rbx
+000AD0C5  48 8b d7                            mov       rdx, rdi
+000AD0C8  e8 1e 40 f5 ff                      call      0x1800010eb
+000AD0CD  84 c0                               test      al, al
+000AD0CF  75 4e                               jne       0x1800ad11f
+000AD0D1  4c 8d 0d 38 ca 0b 00                lea       r9, [rip + 0xbca38]
+000AD0D8  41 b8 70 00 00 00                   mov       r8d, 0x70
+000AD0DE  48 8d 15 7b c9 0b 00                lea       rdx, [rip + 0xbc97b]
+000AD0E5  48 8d 4c 24 28                      lea       rcx, [rsp + 0x28]
+000AD0EA  ff 15 90 71 14 00                   call      qword ptr [rip + 0x147190]
+000AD0F0  48 8b c8                            mov       rcx, rax
+000AD0F3  48 8d 54 24 70                      lea       rdx, [rsp + 0x70]
+000AD0F8  ff 15 ea 73 14 00                   call      qword ptr [rip + 0x1473ea]
+000AD0FE  90                                  nop       
+000AD0FF  48 8d 15 aa ca 0b 00                lea       rdx, [rip + 0xbcaaa]
+000AD106  48 8b c8                            mov       rcx, rax
+000AD109  ff 15 91 73 14 00                   call      qword ptr [rip + 0x147391]
+000AD10F  90                                  nop       
+000AD110  48 8d 4c 24 70                      lea       rcx, [rsp + 0x70]
+000AD115  ff 15 a5 73 14 00                   call      qword ptr [rip + 0x1473a5]
+000AD11B  32 c0                               xor       al, al
+000AD11D  eb 02                               jmp       0x1800ad121
+000AD11F  b0 01                               mov       al, 1
+000AD121  48 8b 5c 24 60                      mov       rbx, qword ptr [rsp + 0x60]
+000AD126  48 83 c4 50                         add       rsp, 0x50
+000AD12A  5f                                  pop       rdi
+000AD12B  c3                                  ret       
+000AD12C  cc                                  int3      
+000AD12D  cc                                  int3      
+000AD12E  cc                                  int3      
+000AD12F  cc                                  int3      
+000AD130  cc                                  int3      
+000AD131  cc                                  int3      
+000AD132  cc                                  int3      
+000AD133  cc                                  int3      
+000AD134  cc                                  int3      
+000AD135  cc                                  int3      
+000AD136  cc                                  int3      
+000AD137  cc                                  int3      
+000AD138  cc                                  int3      
+000AD139  cc                                  int3      
+000AD13A  cc                                  int3      
+000AD13B  cc                                  int3      
+000AD13C  cc                                  int3      
+000AD13D  cc                                  int3      
+000AD13E  cc                                  int3      
+000AD13F  cc                                  int3      
+000AD140  cc                                  int3      
+000AD141  cc                                  int3      
+000AD142  cc                                  int3      
+000AD143  cc                                  int3      
+000AD144  cc                                  int3      
+000AD145  cc                                  int3      
+000AD146  cc                                  int3      
+000AD147  cc                                  int3      
+000AD148  cc                                  int3      
+000AD149  cc                                  int3      
+000AD14A  cc                                  int3      
+000AD14B  cc                                  int3      
+000AD14C  cc                                  int3      
+000AD14D  cc                                  int3      
+000AD14E  cc                                  int3      
+000AD14F  cc                                  int3      
+000AD150  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD153  c3                                  ret       
+000AD154  cc                                  int3      
+000AD155  cc                                  int3      
+000AD156  cc                                  int3      
+000AD157  cc                                  int3      
+000AD158  cc                                  int3      
+000AD159  cc                                  int3      
+000AD15A  cc                                  int3      
+000AD15B  cc                                  int3      
+000AD15C  cc                                  int3      
+000AD15D  cc                                  int3      
+000AD15E  cc                                  int3      
+000AD15F  cc                                  int3      
+000AD160  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD164  c3                                  ret       
+000AD165  cc                                  int3      
+000AD166  cc                                  int3      
+000AD167  cc                                  int3      
+000AD168  cc                                  int3      
+000AD169  cc                                  int3      
+000AD16A  cc                                  int3      
+000AD16B  cc                                  int3      
+000AD16C  cc                                  int3      
+000AD16D  cc                                  int3      
+000AD16E  cc                                  int3      
+000AD16F  cc                                  int3      
+000AD170  48 83 ec 18                         sub       rsp, 0x18
+000AD174  48 8d 05 4d b8 0b 00                lea       rax, [rip + 0xbb84d]
+000AD17B  c7 04 24 00 00 00 00                mov       dword ptr [rsp], 0
+000AD182  48 89 02                            mov       qword ptr [rdx], rax
+000AD185  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD188  89 42 08                            mov       dword ptr [rdx + 8], eax
+000AD18B  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD18F  88 42 0c                            mov       byte ptr [rdx + 0xc], al
+000AD192  48 8b c2                            mov       rax, rdx
+000AD195  48 83 c4 18                         add       rsp, 0x18
+000AD199  c3                                  ret       
+000AD19A  cc                                  int3      
+000AD19B  cc                                  int3      
+000AD19C  cc                                  int3      
+000AD19D  cc                                  int3      
+000AD19E  cc                                  int3      
+000AD19F  cc                                  int3      
+000AD1A0  cc                                  int3      
+000AD1A1  cc                                  int3      
+000AD1A2  cc                                  int3      
+000AD1A3  cc                                  int3      
+000AD1A4  cc                                  int3      
+000AD1A5  cc                                  int3      
+000AD1A6  cc                                  int3      
+000AD1A7  cc                                  int3      
+000AD1A8  cc                                  int3      
+000AD1A9  cc                                  int3      
+000AD1AA  cc                                  int3      
+000AD1AB  cc                                  int3      
+000AD1AC  cc                                  int3      
+000AD1AD  cc                                  int3      
+000AD1AE  cc                                  int3      
+000AD1AF  cc                                  int3      
+000AD1B0  48 8b c4                            mov       rax, rsp
+000AD1B3  57                                  push      rdi
+000AD1B4  48 81 ec 10 01 00 00                sub       rsp, 0x110
+000AD1BB  48 c7 44 24 38 fe ff ff ff          mov       qword ptr [rsp + 0x38], 0xfffffffffffffffe
+000AD1C4  48 89 58 08                         mov       qword ptr [rax + 8], rbx
+000AD1C8  48 89 70 20                         mov       qword ptr [rax + 0x20], rsi
+000AD1CC  48 8b 05 cd d0 11 00                mov       rax, qword ptr [rip + 0x11d0cd]
+000AD1D3  48 33 c4                            xor       rax, rsp
+000AD1D6  48 89 84 24 00 01 00 00             mov       qword ptr [rsp + 0x100], rax
+000AD1DE  48 8b f2                            mov       rsi, rdx
+000AD1E1  48 8d 54 24 20                      lea       rdx, [rsp + 0x20]
+000AD1E6  49 8b c8                            mov       rcx, r8
+000AD1E9  e8 1f 4f f5 ff                      call      0x18000210d
+000AD1EE  90                                  nop       
+000AD1EF  48 8b 4c 24 20                      mov       rcx, qword ptr [rsp + 0x20]
+000AD1F4  48 85 c9                            test      rcx, rcx
+000AD1F7  0f 95 c0                            setne     al
+000AD1FA  84 c0                               test      al, al
+000AD1FC  75 51                               jne       0x1800ad24f
+000AD1FE  33 c0                               xor       eax, eax
+000AD200  48 89 06                            mov       qword ptr [rsi], rax
+000AD203  48 8b 4c 24 28                      mov       rcx, qword ptr [rsp + 0x28]
+000AD208  48 85 c9                            test      rcx, rcx
+000AD20B  0f 84 dd 00 00 00                   je        0x1800ad2ee
+000AD211  83 cf ff                            or        edi, 0xffffffff
+000AD214  8b c7                               mov       eax, edi
+000AD216  f0 0f c1 41 08                      lock xadd dword ptr [rcx + 8], eax
+000AD21B  83 f8 01                            cmp       eax, 1
+000AD21E  0f 85 ca 00 00 00                   jne       0x1800ad2ee
+000AD224  48 8b 5c 24 28                      mov       rbx, qword ptr [rsp + 0x28]
+000AD229  48 8b 13                            mov       rdx, qword ptr [rbx]
+000AD22C  48 8b cb                            mov       rcx, rbx
+000AD22F  ff 12                               call      qword ptr [rdx]
+000AD231  f0 0f c1 7b 0c                      lock xadd dword ptr [rbx + 0xc], edi
+000AD236  83 ff 01                            cmp       edi, 1
+000AD239  0f 85 af 00 00 00                   jne       0x1800ad2ee
+000AD23F  48 8b 4c 24 28                      mov       rcx, qword ptr [rsp + 0x28]
+000AD244  48 8b 11                            mov       rdx, qword ptr [rcx]
+000AD247  ff 52 08                            call      qword ptr [rdx + 8]
+000AD24A  e9 9f 00 00 00                      jmp       0x1800ad2ee
+000AD24F  33 d2                               xor       edx, edx
+000AD251  e8 f5 6f f5 ff                      call      0x18000424b
+000AD256  48 8b d8                            mov       rbx, rax
+000AD259  48 85 c0                            test      rax, rax
+000AD25C  75 05                               jne       0x1800ad263
+000AD25E  48 89 06                            mov       qword ptr [rsi], rax
+000AD261  eb 50                               jmp       0x1800ad2b3
+000AD263  48 8d 4c 24 40                      lea       rcx, [rsp + 0x40]
+000AD268  e8 c4 4d f5 ff                      call      0x180002031
+000AD26D  90                                  nop       
+
+CALLS / JUMPS:
+  RVA 0xAD0BA: call 0x1800033dc
+  RVA 0xAD0C8: call 0x1800010eb
+  RVA 0xAD0EA: call qword ptr [rip + 0x147190]
+  RVA 0xAD0F8: call qword ptr [rip + 0x1473ea]
+  RVA 0xAD109: call qword ptr [rip + 0x147391]
+  RVA 0xAD115: call qword ptr [rip + 0x1473a5]
+  RVA 0xAD11D: jmp 0x1800ad121
+  RVA 0xAD1E9: call 0x18000210d
+  RVA 0xAD22F: call qword ptr [rdx]
+  RVA 0xAD247: call qword ptr [rdx + 8]
+  RVA 0xAD24A: jmp 0x1800ad2ee
+  RVA 0xAD251: call 0x18000424b
+  RVA 0xAD261: jmp 0x1800ad2b3
+  RVA 0xAD268: call 0x180002031
+
+
+T2 | RVA=0xACFF0 | SECTION=.text
+------------------------------------------------------------------------------------------
+000ACFF0  48 83 c1 08                         add       rcx, 8
+000ACFF4  e9 67 fc ff ff                      jmp       0x1800acc60
+000ACFF9  cc                                  int3      
+000ACFFA  cc                                  int3      
+000ACFFB  cc                                  int3      
+000ACFFC  cc                                  int3      
+000ACFFD  cc                                  int3      
+000ACFFE  cc                                  int3      
+000ACFFF  cc                                  int3      
+000AD000  48 8d 41 08                         lea       rax, [rcx + 8]
+000AD004  c3                                  ret       
+000AD005  cc                                  int3      
+000AD006  cc                                  int3      
+000AD007  cc                                  int3      
+000AD008  cc                                  int3      
+000AD009  cc                                  int3      
+000AD00A  cc                                  int3      
+000AD00B  cc                                  int3      
+000AD00C  cc                                  int3      
+000AD00D  cc                                  int3      
+000AD00E  cc                                  int3      
+000AD00F  cc                                  int3      
+000AD010  48 8d 41 08                         lea       rax, [rcx + 8]
+000AD014  c3                                  ret       
+000AD015  cc                                  int3      
+000AD016  cc                                  int3      
+000AD017  cc                                  int3      
+000AD018  cc                                  int3      
+000AD019  cc                                  int3      
+000AD01A  cc                                  int3      
+000AD01B  cc                                  int3      
+000AD01C  cc                                  int3      
+000AD01D  cc                                  int3      
+000AD01E  cc                                  int3      
+000AD01F  cc                                  int3      
+000AD020  48 85 d2                            test      rdx, rdx
+000AD023  74 12                               je        0x1800ad037
+000AD025  48 8d 05 3c cc 0b 00                lea       rax, [rip + 0xbcc3c]
+000AD02C  48 89 02                            mov       qword ptr [rdx], rax
+000AD02F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000AD033  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000AD037  48 8b c2                            mov       rax, rdx
+000AD03A  c3                                  ret       
+000AD03B  cc                                  int3      
+000AD03C  cc                                  int3      
+000AD03D  cc                                  int3      
+000AD03E  cc                                  int3      
+000AD03F  cc                                  int3      
+000AD040  cc                                  int3      
+000AD041  cc                                  int3      
+000AD042  cc                                  int3      
+000AD043  cc                                  int3      
+000AD044  cc                                  int3      
+000AD045  cc                                  int3      
+000AD046  cc                                  int3      
+000AD047  cc                                  int3      
+000AD048  cc                                  int3      
+000AD049  cc                                  int3      
+000AD04A  cc                                  int3      
+000AD04B  cc                                  int3      
+000AD04C  cc                                  int3      
+000AD04D  cc                                  int3      
+000AD04E  cc                                  int3      
+000AD04F  cc                                  int3      
+000AD050  48 85 d2                            test      rdx, rdx
+000AD053  74 12                               je        0x1800ad067
+000AD055  48 8d 05 54 cc 0b 00                lea       rax, [rip + 0xbcc54]
+000AD05C  48 89 02                            mov       qword ptr [rdx], rax
+000AD05F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000AD063  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000AD067  48 8b c2                            mov       rax, rdx
+000AD06A  c3                                  ret       
+000AD06B  cc                                  int3      
+000AD06C  cc                                  int3      
+000AD06D  cc                                  int3      
+000AD06E  cc                                  int3      
+000AD06F  cc                                  int3      
+000AD070  cc                                  int3      
+000AD071  cc                                  int3      
+000AD072  cc                                  int3      
+000AD073  cc                                  int3      
+000AD074  cc                                  int3      
+000AD075  cc                                  int3      
+000AD076  cc                                  int3      
+000AD077  cc                                  int3      
+000AD078  cc                                  int3      
+000AD079  cc                                  int3      
+000AD07A  cc                                  int3      
+000AD07B  cc                                  int3      
+000AD07C  cc                                  int3      
+000AD07D  cc                                  int3      
+000AD07E  cc                                  int3      
+000AD07F  cc                                  int3      
+000AD080  48 8d 05 09 09 12 00                lea       rax, [rip + 0x120909]
+000AD087  c3                                  ret       
+000AD088  cc                                  int3      
+000AD089  cc                                  int3      
+000AD08A  cc                                  int3      
+000AD08B  cc                                  int3      
+000AD08C  cc                                  int3      
+000AD08D  cc                                  int3      
+000AD08E  cc                                  int3      
+000AD08F  cc                                  int3      
+000AD090  48 8d 05 a9 08 12 00                lea       rax, [rip + 0x1208a9]
+000AD097  c3                                  ret       
+000AD098  cc                                  int3      
+000AD099  cc                                  int3      
+000AD09A  cc                                  int3      
+000AD09B  cc                                  int3      
+000AD09C  cc                                  int3      
+000AD09D  cc                                  int3      
+000AD09E  cc                                  int3      
+000AD09F  cc                                  int3      
+000AD0A0  40 57                               push      rdi
+000AD0A2  48 83 ec 50                         sub       rsp, 0x50
+000AD0A6  48 c7 44 24 20 fe ff ff ff          mov       qword ptr [rsp + 0x20], 0xfffffffffffffffe
+000AD0AF  48 89 5c 24 60                      mov       qword ptr [rsp + 0x60], rbx
+000AD0B4  48 8b da                            mov       rbx, rdx
+000AD0B7  48 8b f9                            mov       rdi, rcx
+000AD0BA  e8 1d 63 f5 ff                      call      0x1800033dc
+000AD0BF  48 8b c8                            mov       rcx, rax
+000AD0C2  4c 8b c3                            mov       r8, rbx
+000AD0C5  48 8b d7                            mov       rdx, rdi
+000AD0C8  e8 1e 40 f5 ff                      call      0x1800010eb
+000AD0CD  84 c0                               test      al, al
+000AD0CF  75 4e                               jne       0x1800ad11f
+000AD0D1  4c 8d 0d 38 ca 0b 00                lea       r9, [rip + 0xbca38]
+000AD0D8  41 b8 70 00 00 00                   mov       r8d, 0x70
+000AD0DE  48 8d 15 7b c9 0b 00                lea       rdx, [rip + 0xbc97b]
+000AD0E5  48 8d 4c 24 28                      lea       rcx, [rsp + 0x28]
+000AD0EA  ff 15 90 71 14 00                   call      qword ptr [rip + 0x147190]
+000AD0F0  48 8b c8                            mov       rcx, rax
+000AD0F3  48 8d 54 24 70                      lea       rdx, [rsp + 0x70]
+000AD0F8  ff 15 ea 73 14 00                   call      qword ptr [rip + 0x1473ea]
+000AD0FE  90                                  nop       
+000AD0FF  48 8d 15 aa ca 0b 00                lea       rdx, [rip + 0xbcaaa]
+000AD106  48 8b c8                            mov       rcx, rax
+000AD109  ff 15 91 73 14 00                   call      qword ptr [rip + 0x147391]
+000AD10F  90                                  nop       
+000AD110  48 8d 4c 24 70                      lea       rcx, [rsp + 0x70]
+000AD115  ff 15 a5 73 14 00                   call      qword ptr [rip + 0x1473a5]
+000AD11B  32 c0                               xor       al, al
+000AD11D  eb 02                               jmp       0x1800ad121
+000AD11F  b0 01                               mov       al, 1
+000AD121  48 8b 5c 24 60                      mov       rbx, qword ptr [rsp + 0x60]
+000AD126  48 83 c4 50                         add       rsp, 0x50
+000AD12A  5f                                  pop       rdi
+000AD12B  c3                                  ret       
+000AD12C  cc                                  int3      
+000AD12D  cc                                  int3      
+000AD12E  cc                                  int3      
+000AD12F  cc                                  int3      
+000AD130  cc                                  int3      
+000AD131  cc                                  int3      
+000AD132  cc                                  int3      
+000AD133  cc                                  int3      
+000AD134  cc                                  int3      
+000AD135  cc                                  int3      
+000AD136  cc                                  int3      
+000AD137  cc                                  int3      
+000AD138  cc                                  int3      
+000AD139  cc                                  int3      
+000AD13A  cc                                  int3      
+000AD13B  cc                                  int3      
+000AD13C  cc                                  int3      
+000AD13D  cc                                  int3      
+000AD13E  cc                                  int3      
+000AD13F  cc                                  int3      
+000AD140  cc                                  int3      
+000AD141  cc                                  int3      
+000AD142  cc                                  int3      
+000AD143  cc                                  int3      
+000AD144  cc                                  int3      
+000AD145  cc                                  int3      
+000AD146  cc                                  int3      
+000AD147  cc                                  int3      
+000AD148  cc                                  int3      
+000AD149  cc                                  int3      
+000AD14A  cc                                  int3      
+000AD14B  cc                                  int3      
+000AD14C  cc                                  int3      
+000AD14D  cc                                  int3      
+000AD14E  cc                                  int3      
+000AD14F  cc                                  int3      
+000AD150  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD153  c3                                  ret       
+000AD154  cc                                  int3      
+000AD155  cc                                  int3      
+000AD156  cc                                  int3      
+000AD157  cc                                  int3      
+000AD158  cc                                  int3      
+000AD159  cc                                  int3      
+000AD15A  cc                                  int3      
+000AD15B  cc                                  int3      
+000AD15C  cc                                  int3      
+000AD15D  cc                                  int3      
+000AD15E  cc                                  int3      
+000AD15F  cc                                  int3      
+000AD160  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD164  c3                                  ret       
+000AD165  cc                                  int3      
+000AD166  cc                                  int3      
+000AD167  cc                                  int3      
+000AD168  cc                                  int3      
+000AD169  cc                                  int3      
+000AD16A  cc                                  int3      
+000AD16B  cc                                  int3      
+000AD16C  cc                                  int3      
+000AD16D  cc                                  int3      
+000AD16E  cc                                  int3      
+000AD16F  cc                                  int3      
+000AD170  48 83 ec 18                         sub       rsp, 0x18
+000AD174  48 8d 05 4d b8 0b 00                lea       rax, [rip + 0xbb84d]
+000AD17B  c7 04 24 00 00 00 00                mov       dword ptr [rsp], 0
+000AD182  48 89 02                            mov       qword ptr [rdx], rax
+000AD185  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD188  89 42 08                            mov       dword ptr [rdx + 8], eax
+000AD18B  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD18F  88 42 0c                            mov       byte ptr [rdx + 0xc], al
+000AD192  48 8b c2                            mov       rax, rdx
+000AD195  48 83 c4 18                         add       rsp, 0x18
+000AD199  c3                                  ret       
+000AD19A  cc                                  int3      
+000AD19B  cc                                  int3      
+000AD19C  cc                                  int3      
+000AD19D  cc                                  int3      
+000AD19E  cc                                  int3      
+000AD19F  cc                                  int3      
+000AD1A0  cc                                  int3      
+000AD1A1  cc                                  int3      
+000AD1A2  cc                                  int3      
+000AD1A3  cc                                  int3      
+000AD1A4  cc                                  int3      
+000AD1A5  cc                                  int3      
+000AD1A6  cc                                  int3      
+000AD1A7  cc                                  int3      
+000AD1A8  cc                                  int3      
+000AD1A9  cc                                  int3      
+000AD1AA  cc                                  int3      
+000AD1AB  cc                                  int3      
+000AD1AC  cc                                  int3      
+000AD1AD  cc                                  int3      
+000AD1AE  cc                                  int3      
+000AD1AF  cc                                  int3      
+000AD1B0  48 8b c4                            mov       rax, rsp
+000AD1B3  57                                  push      rdi
+000AD1B4  48 81 ec 10 01 00 00                sub       rsp, 0x110
+000AD1BB  48 c7 44 24 38 fe ff ff ff          mov       qword ptr [rsp + 0x38], 0xfffffffffffffffe
+000AD1C4  48 89 58 08                         mov       qword ptr [rax + 8], rbx
+000AD1C8  48 89 70 20                         mov       qword ptr [rax + 0x20], rsi
+000AD1CC  48 8b 05 cd d0 11 00                mov       rax, qword ptr [rip + 0x11d0cd]
+000AD1D3  48 33 c4                            xor       rax, rsp
+000AD1D6  48 89 84 24 00 01 00 00             mov       qword ptr [rsp + 0x100], rax
+000AD1DE  48 8b f2                            mov       rsi, rdx
+000AD1E1  48 8d 54 24 20                      lea       rdx, [rsp + 0x20]
+000AD1E6  49 8b c8                            mov       rcx, r8
+000AD1E9  e8 1f 4f f5 ff                      call      0x18000210d
+000AD1EE  90                                  nop       
+000AD1EF  48 8b 4c 24 20                      mov       rcx, qword ptr [rsp + 0x20]
+000AD1F4  48 85 c9                            test      rcx, rcx
+000AD1F7  0f 95 c0                            setne     al
+000AD1FA  84 c0                               test      al, al
+000AD1FC  75 51                               jne       0x1800ad24f
+000AD1FE  33 c0                               xor       eax, eax
+000AD200  48 89 06                            mov       qword ptr [rsi], rax
+000AD203  48 8b 4c 24 28                      mov       rcx, qword ptr [rsp + 0x28]
+000AD208  48 85 c9                            test      rcx, rcx
+
+CALLS / JUMPS:
+  RVA 0xACFF4: jmp 0x1800acc60
+  RVA 0xAD0BA: call 0x1800033dc
+  RVA 0xAD0C8: call 0x1800010eb
+  RVA 0xAD0EA: call qword ptr [rip + 0x147190]
+  RVA 0xAD0F8: call qword ptr [rip + 0x1473ea]
+  RVA 0xAD109: call qword ptr [rip + 0x147391]
+  RVA 0xAD115: call qword ptr [rip + 0x1473a5]
+  RVA 0xAD11D: jmp 0x1800ad121
+  RVA 0xAD1E9: call 0x18000210d
+
+
+T3 | RVA=0xAD090 | SECTION=.text
+------------------------------------------------------------------------------------------
+000AD090  48 8d 05 a9 08 12 00                lea       rax, [rip + 0x1208a9]
+000AD097  c3                                  ret       
+000AD098  cc                                  int3      
+000AD099  cc                                  int3      
+000AD09A  cc                                  int3      
+000AD09B  cc                                  int3      
+000AD09C  cc                                  int3      
+000AD09D  cc                                  int3      
+000AD09E  cc                                  int3      
+000AD09F  cc                                  int3      
+000AD0A0  40 57                               push      rdi
+000AD0A2  48 83 ec 50                         sub       rsp, 0x50
+000AD0A6  48 c7 44 24 20 fe ff ff ff          mov       qword ptr [rsp + 0x20], 0xfffffffffffffffe
+000AD0AF  48 89 5c 24 60                      mov       qword ptr [rsp + 0x60], rbx
+000AD0B4  48 8b da                            mov       rbx, rdx
+000AD0B7  48 8b f9                            mov       rdi, rcx
+000AD0BA  e8 1d 63 f5 ff                      call      0x1800033dc
+000AD0BF  48 8b c8                            mov       rcx, rax
+000AD0C2  4c 8b c3                            mov       r8, rbx
+000AD0C5  48 8b d7                            mov       rdx, rdi
+000AD0C8  e8 1e 40 f5 ff                      call      0x1800010eb
+000AD0CD  84 c0                               test      al, al
+000AD0CF  75 4e                               jne       0x1800ad11f
+000AD0D1  4c 8d 0d 38 ca 0b 00                lea       r9, [rip + 0xbca38]
+000AD0D8  41 b8 70 00 00 00                   mov       r8d, 0x70
+000AD0DE  48 8d 15 7b c9 0b 00                lea       rdx, [rip + 0xbc97b]
+000AD0E5  48 8d 4c 24 28                      lea       rcx, [rsp + 0x28]
+000AD0EA  ff 15 90 71 14 00                   call      qword ptr [rip + 0x147190]
+000AD0F0  48 8b c8                            mov       rcx, rax
+000AD0F3  48 8d 54 24 70                      lea       rdx, [rsp + 0x70]
+000AD0F8  ff 15 ea 73 14 00                   call      qword ptr [rip + 0x1473ea]
+000AD0FE  90                                  nop       
+000AD0FF  48 8d 15 aa ca 0b 00                lea       rdx, [rip + 0xbcaaa]
+000AD106  48 8b c8                            mov       rcx, rax
+000AD109  ff 15 91 73 14 00                   call      qword ptr [rip + 0x147391]
+000AD10F  90                                  nop       
+000AD110  48 8d 4c 24 70                      lea       rcx, [rsp + 0x70]
+000AD115  ff 15 a5 73 14 00                   call      qword ptr [rip + 0x1473a5]
+000AD11B  32 c0                               xor       al, al
+000AD11D  eb 02                               jmp       0x1800ad121
+000AD11F  b0 01                               mov       al, 1
+000AD121  48 8b 5c 24 60                      mov       rbx, qword ptr [rsp + 0x60]
+000AD126  48 83 c4 50                         add       rsp, 0x50
+000AD12A  5f                                  pop       rdi
+000AD12B  c3                                  ret       
+000AD12C  cc                                  int3      
+000AD12D  cc                                  int3      
+000AD12E  cc                                  int3      
+000AD12F  cc                                  int3      
+000AD130  cc                                  int3      
+000AD131  cc                                  int3      
+000AD132  cc                                  int3      
+000AD133  cc                                  int3      
+000AD134  cc                                  int3      
+000AD135  cc                                  int3      
+000AD136  cc                                  int3      
+000AD137  cc                                  int3      
+000AD138  cc                                  int3      
+000AD139  cc                                  int3      
+000AD13A  cc                                  int3      
+000AD13B  cc                                  int3      
+000AD13C  cc                                  int3      
+000AD13D  cc                                  int3      
+000AD13E  cc                                  int3      
+000AD13F  cc                                  int3      
+000AD140  cc                                  int3      
+000AD141  cc                                  int3      
+000AD142  cc                                  int3      
+000AD143  cc                                  int3      
+000AD144  cc                                  int3      
+000AD145  cc                                  int3      
+000AD146  cc                                  int3      
+000AD147  cc                                  int3      
+000AD148  cc                                  int3      
+000AD149  cc                                  int3      
+000AD14A  cc                                  int3      
+000AD14B  cc                                  int3      
+000AD14C  cc                                  int3      
+000AD14D  cc                                  int3      
+000AD14E  cc                                  int3      
+000AD14F  cc                                  int3      
+000AD150  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD153  c3                                  ret       
+000AD154  cc                                  int3      
+000AD155  cc                                  int3      
+000AD156  cc                                  int3      
+000AD157  cc                                  int3      
+000AD158  cc                                  int3      
+000AD159  cc                                  int3      
+000AD15A  cc                                  int3      
+000AD15B  cc                                  int3      
+000AD15C  cc                                  int3      
+000AD15D  cc                                  int3      
+000AD15E  cc                                  int3      
+000AD15F  cc                                  int3      
+000AD160  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD164  c3                                  ret       
+000AD165  cc                                  int3      
+000AD166  cc                                  int3      
+000AD167  cc                                  int3      
+000AD168  cc                                  int3      
+000AD169  cc                                  int3      
+000AD16A  cc                                  int3      
+000AD16B  cc                                  int3      
+000AD16C  cc                                  int3      
+000AD16D  cc                                  int3      
+000AD16E  cc                                  int3      
+000AD16F  cc                                  int3      
+000AD170  48 83 ec 18                         sub       rsp, 0x18
+000AD174  48 8d 05 4d b8 0b 00                lea       rax, [rip + 0xbb84d]
+000AD17B  c7 04 24 00 00 00 00                mov       dword ptr [rsp], 0
+000AD182  48 89 02                            mov       qword ptr [rdx], rax
+000AD185  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD188  89 42 08                            mov       dword ptr [rdx + 8], eax
+000AD18B  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD18F  88 42 0c                            mov       byte ptr [rdx + 0xc], al
+000AD192  48 8b c2                            mov       rax, rdx
+000AD195  48 83 c4 18                         add       rsp, 0x18
+000AD199  c3                                  ret       
+000AD19A  cc                                  int3      
+000AD19B  cc                                  int3      
+000AD19C  cc                                  int3      
+000AD19D  cc                                  int3      
+000AD19E  cc                                  int3      
+000AD19F  cc                                  int3      
+000AD1A0  cc                                  int3      
+000AD1A1  cc                                  int3      
+000AD1A2  cc                                  int3      
+000AD1A3  cc                                  int3      
+000AD1A4  cc                                  int3      
+000AD1A5  cc                                  int3      
+000AD1A6  cc                                  int3      
+000AD1A7  cc                                  int3      
+000AD1A8  cc                                  int3      
+000AD1A9  cc                                  int3      
+000AD1AA  cc                                  int3      
+000AD1AB  cc                                  int3      
+000AD1AC  cc                                  int3      
+000AD1AD  cc                                  int3      
+000AD1AE  cc                                  int3      
+000AD1AF  cc                                  int3      
+000AD1B0  48 8b c4                            mov       rax, rsp
+000AD1B3  57                                  push      rdi
+000AD1B4  48 81 ec 10 01 00 00                sub       rsp, 0x110
+000AD1BB  48 c7 44 24 38 fe ff ff ff          mov       qword ptr [rsp + 0x38], 0xfffffffffffffffe
+000AD1C4  48 89 58 08                         mov       qword ptr [rax + 8], rbx
+000AD1C8  48 89 70 20                         mov       qword ptr [rax + 0x20], rsi
+000AD1CC  48 8b 05 cd d0 11 00                mov       rax, qword ptr [rip + 0x11d0cd]
+000AD1D3  48 33 c4                            xor       rax, rsp
+000AD1D6  48 89 84 24 00 01 00 00             mov       qword ptr [rsp + 0x100], rax
+000AD1DE  48 8b f2                            mov       rsi, rdx
+000AD1E1  48 8d 54 24 20                      lea       rdx, [rsp + 0x20]
+000AD1E6  49 8b c8                            mov       rcx, r8
+000AD1E9  e8 1f 4f f5 ff                      call      0x18000210d
+000AD1EE  90                                  nop       
+000AD1EF  48 8b 4c 24 20                      mov       rcx, qword ptr [rsp + 0x20]
+000AD1F4  48 85 c9                            test      rcx, rcx
+000AD1F7  0f 95 c0                            setne     al
+000AD1FA  84 c0                               test      al, al
+000AD1FC  75 51                               jne       0x1800ad24f
+000AD1FE  33 c0                               xor       eax, eax
+000AD200  48 89 06                            mov       qword ptr [rsi], rax
+000AD203  48 8b 4c 24 28                      mov       rcx, qword ptr [rsp + 0x28]
+000AD208  48 85 c9                            test      rcx, rcx
+000AD20B  0f 84 dd 00 00 00                   je        0x1800ad2ee
+000AD211  83 cf ff                            or        edi, 0xffffffff
+000AD214  8b c7                               mov       eax, edi
+000AD216  f0 0f c1 41 08                      lock xadd dword ptr [rcx + 8], eax
+000AD21B  83 f8 01                            cmp       eax, 1
+000AD21E  0f 85 ca 00 00 00                   jne       0x1800ad2ee
+000AD224  48 8b 5c 24 28                      mov       rbx, qword ptr [rsp + 0x28]
+000AD229  48 8b 13                            mov       rdx, qword ptr [rbx]
+000AD22C  48 8b cb                            mov       rcx, rbx
+000AD22F  ff 12                               call      qword ptr [rdx]
+000AD231  f0 0f c1 7b 0c                      lock xadd dword ptr [rbx + 0xc], edi
+000AD236  83 ff 01                            cmp       edi, 1
+000AD239  0f 85 af 00 00 00                   jne       0x1800ad2ee
+000AD23F  48 8b 4c 24 28                      mov       rcx, qword ptr [rsp + 0x28]
+000AD244  48 8b 11                            mov       rdx, qword ptr [rcx]
+000AD247  ff 52 08                            call      qword ptr [rdx + 8]
+000AD24A  e9 9f 00 00 00                      jmp       0x1800ad2ee
+000AD24F  33 d2                               xor       edx, edx
+000AD251  e8 f5 6f f5 ff                      call      0x18000424b
+000AD256  48 8b d8                            mov       rbx, rax
+000AD259  48 85 c0                            test      rax, rax
+000AD25C  75 05                               jne       0x1800ad263
+000AD25E  48 89 06                            mov       qword ptr [rsi], rax
+000AD261  eb 50                               jmp       0x1800ad2b3
+000AD263  48 8d 4c 24 40                      lea       rcx, [rsp + 0x40]
+000AD268  e8 c4 4d f5 ff                      call      0x180002031
+000AD26D  90                                  nop       
+000AD26E  48 8d 54 24 40                      lea       rdx, [rsp + 0x40]
+000AD273  48 8b cb                            mov       rcx, rbx
+000AD276  e8 ff 77 f5 ff                      call      0x180004a7a
+000AD27B  f3 0f 10 44 24 60                   movss     xmm0, dword ptr [rsp + 0x60]
+000AD281  f3 0f 59 05 03 30 0b 00             mulss     xmm0, dword ptr [rip + 0xb3003]
+000AD289  f3 0f 2c c8                         cvttss2si ecx, xmm0
+000AD28D  89 4c 24 30                         mov       dword ptr [rsp + 0x30], ecx
+000AD291  f3 0f 10 44 24 70                   movss     xmm0, dword ptr [rsp + 0x70]
+000AD297  f3 0f 59 05 ed 2f 0b 00             mulss     xmm0, dword ptr [rip + 0xb2fed]
+000AD29F  f3 0f 2c c0                         cvttss2si eax, xmm0
+000AD2A3  89 06                               mov       dword ptr [rsi], eax
+000AD2A5  89 4e 04                            mov       dword ptr [rsi + 4], ecx
+000AD2A8  48 8d 4c 24 40                      lea       rcx, [rsp + 0x40]
+
+CALLS / JUMPS:
+  RVA 0xAD0BA: call 0x1800033dc
+  RVA 0xAD0C8: call 0x1800010eb
+  RVA 0xAD0EA: call qword ptr [rip + 0x147190]
+  RVA 0xAD0F8: call qword ptr [rip + 0x1473ea]
+  RVA 0xAD109: call qword ptr [rip + 0x147391]
+  RVA 0xAD115: call qword ptr [rip + 0x1473a5]
+  RVA 0xAD11D: jmp 0x1800ad121
+  RVA 0xAD1E9: call 0x18000210d
+  RVA 0xAD22F: call qword ptr [rdx]
+  RVA 0xAD247: call qword ptr [rdx + 8]
+  RVA 0xAD24A: jmp 0x1800ad2ee
+  RVA 0xAD251: call 0x18000424b
+  RVA 0xAD261: jmp 0x1800ad2b3
+  RVA 0xAD268: call 0x180002031
+  RVA 0xAD276: call 0x180004a7a
+
+
+T4 | RVA=0xACFB0 | SECTION=.text
+------------------------------------------------------------------------------------------
+000ACFB0  48 8d 05 69 cc 0b 00                lea       rax, [rip + 0xbcc69]
+000ACFB7  48 89 01                            mov       qword ptr [rcx], rax
+000ACFBA  84 d2                               test      dl, dl
+000ACFBC  0f 85 b4 4c f5 ff                   jne       0x180001c76
+000ACFC2  c3                                  ret       
+000ACFC3  cc                                  int3      
+000ACFC4  cc                                  int3      
+000ACFC5  cc                                  int3      
+000ACFC6  cc                                  int3      
+000ACFC7  cc                                  int3      
+000ACFC8  cc                                  int3      
+000ACFC9  cc                                  int3      
+000ACFCA  cc                                  int3      
+000ACFCB  cc                                  int3      
+000ACFCC  cc                                  int3      
+000ACFCD  cc                                  int3      
+000ACFCE  cc                                  int3      
+000ACFCF  cc                                  int3      
+000ACFD0  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000ACFD4  4c 8b ca                            mov       r9, rdx
+000ACFD7  49 8b c9                            mov       rcx, r9
+000ACFDA  49 8b d0                            mov       rdx, r8
+000ACFDD  48 ff e0                            jmp       rax
+000ACFE0  cc                                  int3      
+000ACFE1  cc                                  int3      
+000ACFE2  cc                                  int3      
+000ACFE3  cc                                  int3      
+000ACFE4  cc                                  int3      
+000ACFE5  cc                                  int3      
+000ACFE6  cc                                  int3      
+000ACFE7  cc                                  int3      
+000ACFE8  cc                                  int3      
+000ACFE9  cc                                  int3      
+000ACFEA  cc                                  int3      
+000ACFEB  cc                                  int3      
+000ACFEC  cc                                  int3      
+000ACFED  cc                                  int3      
+000ACFEE  cc                                  int3      
+000ACFEF  cc                                  int3      
+000ACFF0  48 83 c1 08                         add       rcx, 8
+000ACFF4  e9 67 fc ff ff                      jmp       0x1800acc60
+000ACFF9  cc                                  int3      
+000ACFFA  cc                                  int3      
+000ACFFB  cc                                  int3      
+000ACFFC  cc                                  int3      
+000ACFFD  cc                                  int3      
+000ACFFE  cc                                  int3      
+000ACFFF  cc                                  int3      
+000AD000  48 8d 41 08                         lea       rax, [rcx + 8]
+000AD004  c3                                  ret       
+000AD005  cc                                  int3      
+000AD006  cc                                  int3      
+000AD007  cc                                  int3      
+000AD008  cc                                  int3      
+000AD009  cc                                  int3      
+000AD00A  cc                                  int3      
+000AD00B  cc                                  int3      
+000AD00C  cc                                  int3      
+000AD00D  cc                                  int3      
+000AD00E  cc                                  int3      
+000AD00F  cc                                  int3      
+000AD010  48 8d 41 08                         lea       rax, [rcx + 8]
+000AD014  c3                                  ret       
+000AD015  cc                                  int3      
+000AD016  cc                                  int3      
+000AD017  cc                                  int3      
+000AD018  cc                                  int3      
+000AD019  cc                                  int3      
+000AD01A  cc                                  int3      
+000AD01B  cc                                  int3      
+000AD01C  cc                                  int3      
+000AD01D  cc                                  int3      
+000AD01E  cc                                  int3      
+000AD01F  cc                                  int3      
+000AD020  48 85 d2                            test      rdx, rdx
+000AD023  74 12                               je        0x1800ad037
+000AD025  48 8d 05 3c cc 0b 00                lea       rax, [rip + 0xbcc3c]
+000AD02C  48 89 02                            mov       qword ptr [rdx], rax
+000AD02F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000AD033  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000AD037  48 8b c2                            mov       rax, rdx
+000AD03A  c3                                  ret       
+000AD03B  cc                                  int3      
+000AD03C  cc                                  int3      
+000AD03D  cc                                  int3      
+000AD03E  cc                                  int3      
+000AD03F  cc                                  int3      
+000AD040  cc                                  int3      
+000AD041  cc                                  int3      
+000AD042  cc                                  int3      
+000AD043  cc                                  int3      
+000AD044  cc                                  int3      
+000AD045  cc                                  int3      
+000AD046  cc                                  int3      
+000AD047  cc                                  int3      
+000AD048  cc                                  int3      
+000AD049  cc                                  int3      
+000AD04A  cc                                  int3      
+000AD04B  cc                                  int3      
+000AD04C  cc                                  int3      
+000AD04D  cc                                  int3      
+000AD04E  cc                                  int3      
+000AD04F  cc                                  int3      
+000AD050  48 85 d2                            test      rdx, rdx
+000AD053  74 12                               je        0x1800ad067
+000AD055  48 8d 05 54 cc 0b 00                lea       rax, [rip + 0xbcc54]
+000AD05C  48 89 02                            mov       qword ptr [rdx], rax
+000AD05F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000AD063  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000AD067  48 8b c2                            mov       rax, rdx
+000AD06A  c3                                  ret       
+000AD06B  cc                                  int3      
+000AD06C  cc                                  int3      
+000AD06D  cc                                  int3      
+000AD06E  cc                                  int3      
+000AD06F  cc                                  int3      
+000AD070  cc                                  int3      
+000AD071  cc                                  int3      
+000AD072  cc                                  int3      
+000AD073  cc                                  int3      
+000AD074  cc                                  int3      
+000AD075  cc                                  int3      
+000AD076  cc                                  int3      
+000AD077  cc                                  int3      
+000AD078  cc                                  int3      
+000AD079  cc                                  int3      
+000AD07A  cc                                  int3      
+000AD07B  cc                                  int3      
+000AD07C  cc                                  int3      
+000AD07D  cc                                  int3      
+000AD07E  cc                                  int3      
+000AD07F  cc                                  int3      
+000AD080  48 8d 05 09 09 12 00                lea       rax, [rip + 0x120909]
+000AD087  c3                                  ret       
+000AD088  cc                                  int3      
+000AD089  cc                                  int3      
+000AD08A  cc                                  int3      
+000AD08B  cc                                  int3      
+000AD08C  cc                                  int3      
+000AD08D  cc                                  int3      
+000AD08E  cc                                  int3      
+000AD08F  cc                                  int3      
+000AD090  48 8d 05 a9 08 12 00                lea       rax, [rip + 0x1208a9]
+000AD097  c3                                  ret       
+000AD098  cc                                  int3      
+000AD099  cc                                  int3      
+000AD09A  cc                                  int3      
+000AD09B  cc                                  int3      
+000AD09C  cc                                  int3      
+000AD09D  cc                                  int3      
+000AD09E  cc                                  int3      
+000AD09F  cc                                  int3      
+000AD0A0  40 57                               push      rdi
+000AD0A2  48 83 ec 50                         sub       rsp, 0x50
+000AD0A6  48 c7 44 24 20 fe ff ff ff          mov       qword ptr [rsp + 0x20], 0xfffffffffffffffe
+000AD0AF  48 89 5c 24 60                      mov       qword ptr [rsp + 0x60], rbx
+000AD0B4  48 8b da                            mov       rbx, rdx
+000AD0B7  48 8b f9                            mov       rdi, rcx
+000AD0BA  e8 1d 63 f5 ff                      call      0x1800033dc
+000AD0BF  48 8b c8                            mov       rcx, rax
+000AD0C2  4c 8b c3                            mov       r8, rbx
+000AD0C5  48 8b d7                            mov       rdx, rdi
+000AD0C8  e8 1e 40 f5 ff                      call      0x1800010eb
+000AD0CD  84 c0                               test      al, al
+000AD0CF  75 4e                               jne       0x1800ad11f
+000AD0D1  4c 8d 0d 38 ca 0b 00                lea       r9, [rip + 0xbca38]
+000AD0D8  41 b8 70 00 00 00                   mov       r8d, 0x70
+000AD0DE  48 8d 15 7b c9 0b 00                lea       rdx, [rip + 0xbc97b]
+000AD0E5  48 8d 4c 24 28                      lea       rcx, [rsp + 0x28]
+000AD0EA  ff 15 90 71 14 00                   call      qword ptr [rip + 0x147190]
+000AD0F0  48 8b c8                            mov       rcx, rax
+000AD0F3  48 8d 54 24 70                      lea       rdx, [rsp + 0x70]
+000AD0F8  ff 15 ea 73 14 00                   call      qword ptr [rip + 0x1473ea]
+000AD0FE  90                                  nop       
+000AD0FF  48 8d 15 aa ca 0b 00                lea       rdx, [rip + 0xbcaaa]
+000AD106  48 8b c8                            mov       rcx, rax
+000AD109  ff 15 91 73 14 00                   call      qword ptr [rip + 0x147391]
+000AD10F  90                                  nop       
+000AD110  48 8d 4c 24 70                      lea       rcx, [rsp + 0x70]
+000AD115  ff 15 a5 73 14 00                   call      qword ptr [rip + 0x1473a5]
+000AD11B  32 c0                               xor       al, al
+000AD11D  eb 02                               jmp       0x1800ad121
+000AD11F  b0 01                               mov       al, 1
+000AD121  48 8b 5c 24 60                      mov       rbx, qword ptr [rsp + 0x60]
+000AD126  48 83 c4 50                         add       rsp, 0x50
+000AD12A  5f                                  pop       rdi
+000AD12B  c3                                  ret       
+000AD12C  cc                                  int3      
+000AD12D  cc                                  int3      
+000AD12E  cc                                  int3      
+000AD12F  cc                                  int3      
+000AD130  cc                                  int3      
+000AD131  cc                                  int3      
+000AD132  cc                                  int3      
+000AD133  cc                                  int3      
+000AD134  cc                                  int3      
+000AD135  cc                                  int3      
+000AD136  cc                                  int3      
+000AD137  cc                                  int3      
+000AD138  cc                                  int3      
+000AD139  cc                                  int3      
+000AD13A  cc                                  int3      
+000AD13B  cc                                  int3      
+000AD13C  cc                                  int3      
+000AD13D  cc                                  int3      
+000AD13E  cc                                  int3      
+000AD13F  cc                                  int3      
+000AD140  cc                                  int3      
+000AD141  cc                                  int3      
+000AD142  cc                                  int3      
+000AD143  cc                                  int3      
+000AD144  cc                                  int3      
+000AD145  cc                                  int3      
+000AD146  cc                                  int3      
+000AD147  cc                                  int3      
+000AD148  cc                                  int3      
+000AD149  cc                                  int3      
+000AD14A  cc                                  int3      
+000AD14B  cc                                  int3      
+000AD14C  cc                                  int3      
+000AD14D  cc                                  int3      
+000AD14E  cc                                  int3      
+000AD14F  cc                                  int3      
+000AD150  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD153  c3                                  ret       
+000AD154  cc                                  int3      
+000AD155  cc                                  int3      
+000AD156  cc                                  int3      
+000AD157  cc                                  int3      
+000AD158  cc                                  int3      
+000AD159  cc                                  int3      
+000AD15A  cc                                  int3      
+000AD15B  cc                                  int3      
+000AD15C  cc                                  int3      
+000AD15D  cc                                  int3      
+000AD15E  cc                                  int3      
+000AD15F  cc                                  int3      
+000AD160  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD164  c3                                  ret       
+000AD165  cc                                  int3      
+000AD166  cc                                  int3      
+000AD167  cc                                  int3      
+000AD168  cc                                  int3      
+000AD169  cc                                  int3      
+000AD16A  cc                                  int3      
+000AD16B  cc                                  int3      
+000AD16C  cc                                  int3      
+000AD16D  cc                                  int3      
+000AD16E  cc                                  int3      
+000AD16F  cc                                  int3      
+000AD170  48 83 ec 18                         sub       rsp, 0x18
+000AD174  48 8d 05 4d b8 0b 00                lea       rax, [rip + 0xbb84d]
+000AD17B  c7 04 24 00 00 00 00                mov       dword ptr [rsp], 0
+000AD182  48 89 02                            mov       qword ptr [rdx], rax
+000AD185  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD188  89 42 08                            mov       dword ptr [rdx + 8], eax
+000AD18B  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD18F  88 42 0c                            mov       byte ptr [rdx + 0xc], al
+000AD192  48 8b c2                            mov       rax, rdx
+000AD195  48 83 c4 18                         add       rsp, 0x18
+000AD199  c3                                  ret       
+000AD19A  cc                                  int3      
+000AD19B  cc                                  int3      
+000AD19C  cc                                  int3      
+000AD19D  cc                                  int3      
+000AD19E  cc                                  int3      
+000AD19F  cc                                  int3      
+000AD1A0  cc                                  int3      
+000AD1A1  cc                                  int3      
+000AD1A2  cc                                  int3      
+000AD1A3  cc                                  int3      
+000AD1A4  cc                                  int3      
+000AD1A5  cc                                  int3      
+000AD1A6  cc                                  int3      
+000AD1A7  cc                                  int3      
+000AD1A8  cc                                  int3      
+000AD1A9  cc                                  int3      
+000AD1AA  cc                                  int3      
+000AD1AB  cc                                  int3      
+000AD1AC  cc                                  int3      
+000AD1AD  cc                                  int3      
+000AD1AE  cc                                  int3      
+000AD1AF  cc                                  int3      
+000AD1B0  48 8b c4                            mov       rax, rsp
+000AD1B3  57                                  push      rdi
+000AD1B4  48 81 ec 10 01 00 00                sub       rsp, 0x110
+000AD1BB  48 c7 44 24 38 fe ff ff ff          mov       qword ptr [rsp + 0x38], 0xfffffffffffffffe
+000AD1C4  48 89 58 08                         mov       qword ptr [rax + 8], rbx
+000AD1C8  48 89 70 20                         mov       qword ptr [rax + 0x20], rsi
+
+CALLS / JUMPS:
+  RVA 0xACFDD: jmp rax
+  RVA 0xACFF4: jmp 0x1800acc60
+  RVA 0xAD0BA: call 0x1800033dc
+  RVA 0xAD0C8: call 0x1800010eb
+  RVA 0xAD0EA: call qword ptr [rip + 0x147190]
+  RVA 0xAD0F8: call qword ptr [rip + 0x1473ea]
+  RVA 0xAD109: call qword ptr [rip + 0x147391]
+  RVA 0xAD115: call qword ptr [rip + 0x1473a5]
+  RVA 0xAD11D: jmp 0x1800ad121
+
+
+T5 | RVA=0xAD010 | SECTION=.text
+------------------------------------------------------------------------------------------
+000AD010  48 8d 41 08                         lea       rax, [rcx + 8]
+000AD014  c3                                  ret       
+000AD015  cc                                  int3      
+000AD016  cc                                  int3      
+000AD017  cc                                  int3      
+000AD018  cc                                  int3      
+000AD019  cc                                  int3      
+000AD01A  cc                                  int3      
+000AD01B  cc                                  int3      
+000AD01C  cc                                  int3      
+000AD01D  cc                                  int3      
+000AD01E  cc                                  int3      
+000AD01F  cc                                  int3      
+000AD020  48 85 d2                            test      rdx, rdx
+000AD023  74 12                               je        0x1800ad037
+000AD025  48 8d 05 3c cc 0b 00                lea       rax, [rip + 0xbcc3c]
+000AD02C  48 89 02                            mov       qword ptr [rdx], rax
+000AD02F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000AD033  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000AD037  48 8b c2                            mov       rax, rdx
+000AD03A  c3                                  ret       
+000AD03B  cc                                  int3      
+000AD03C  cc                                  int3      
+000AD03D  cc                                  int3      
+000AD03E  cc                                  int3      
+000AD03F  cc                                  int3      
+000AD040  cc                                  int3      
+000AD041  cc                                  int3      
+000AD042  cc                                  int3      
+000AD043  cc                                  int3      
+000AD044  cc                                  int3      
+000AD045  cc                                  int3      
+000AD046  cc                                  int3      
+000AD047  cc                                  int3      
+000AD048  cc                                  int3      
+000AD049  cc                                  int3      
+000AD04A  cc                                  int3      
+000AD04B  cc                                  int3      
+000AD04C  cc                                  int3      
+000AD04D  cc                                  int3      
+000AD04E  cc                                  int3      
+000AD04F  cc                                  int3      
+000AD050  48 85 d2                            test      rdx, rdx
+000AD053  74 12                               je        0x1800ad067
+000AD055  48 8d 05 54 cc 0b 00                lea       rax, [rip + 0xbcc54]
+000AD05C  48 89 02                            mov       qword ptr [rdx], rax
+000AD05F  48 8b 41 08                         mov       rax, qword ptr [rcx + 8]
+000AD063  48 89 42 08                         mov       qword ptr [rdx + 8], rax
+000AD067  48 8b c2                            mov       rax, rdx
+000AD06A  c3                                  ret       
+000AD06B  cc                                  int3      
+000AD06C  cc                                  int3      
+000AD06D  cc                                  int3      
+000AD06E  cc                                  int3      
+000AD06F  cc                                  int3      
+000AD070  cc                                  int3      
+000AD071  cc                                  int3      
+000AD072  cc                                  int3      
+000AD073  cc                                  int3      
+000AD074  cc                                  int3      
+000AD075  cc                                  int3      
+000AD076  cc                                  int3      
+000AD077  cc                                  int3      
+000AD078  cc                                  int3      
+000AD079  cc                                  int3      
+000AD07A  cc                                  int3      
+000AD07B  cc                                  int3      
+000AD07C  cc                                  int3      
+000AD07D  cc                                  int3      
+000AD07E  cc                                  int3      
+000AD07F  cc                                  int3      
+000AD080  48 8d 05 09 09 12 00                lea       rax, [rip + 0x120909]
+000AD087  c3                                  ret       
+000AD088  cc                                  int3      
+000AD089  cc                                  int3      
+000AD08A  cc                                  int3      
+000AD08B  cc                                  int3      
+000AD08C  cc                                  int3      
+000AD08D  cc                                  int3      
+000AD08E  cc                                  int3      
+000AD08F  cc                                  int3      
+000AD090  48 8d 05 a9 08 12 00                lea       rax, [rip + 0x1208a9]
+000AD097  c3                                  ret       
+000AD098  cc                                  int3      
+000AD099  cc                                  int3      
+000AD09A  cc                                  int3      
+000AD09B  cc                                  int3      
+000AD09C  cc                                  int3      
+000AD09D  cc                                  int3      
+000AD09E  cc                                  int3      
+000AD09F  cc                                  int3      
+000AD0A0  40 57                               push      rdi
+000AD0A2  48 83 ec 50                         sub       rsp, 0x50
+000AD0A6  48 c7 44 24 20 fe ff ff ff          mov       qword ptr [rsp + 0x20], 0xfffffffffffffffe
+000AD0AF  48 89 5c 24 60                      mov       qword ptr [rsp + 0x60], rbx
+000AD0B4  48 8b da                            mov       rbx, rdx
+000AD0B7  48 8b f9                            mov       rdi, rcx
+000AD0BA  e8 1d 63 f5 ff                      call      0x1800033dc
+000AD0BF  48 8b c8                            mov       rcx, rax
+000AD0C2  4c 8b c3                            mov       r8, rbx
+000AD0C5  48 8b d7                            mov       rdx, rdi
+000AD0C8  e8 1e 40 f5 ff                      call      0x1800010eb
+000AD0CD  84 c0                               test      al, al
+000AD0CF  75 4e                               jne       0x1800ad11f
+000AD0D1  4c 8d 0d 38 ca 0b 00                lea       r9, [rip + 0xbca38]
+000AD0D8  41 b8 70 00 00 00                   mov       r8d, 0x70
+000AD0DE  48 8d 15 7b c9 0b 00                lea       rdx, [rip + 0xbc97b]
+000AD0E5  48 8d 4c 24 28                      lea       rcx, [rsp + 0x28]
+000AD0EA  ff 15 90 71 14 00                   call      qword ptr [rip + 0x147190]
+000AD0F0  48 8b c8                            mov       rcx, rax
+000AD0F3  48 8d 54 24 70                      lea       rdx, [rsp + 0x70]
+000AD0F8  ff 15 ea 73 14 00                   call      qword ptr [rip + 0x1473ea]
+000AD0FE  90                                  nop       
+000AD0FF  48 8d 15 aa ca 0b 00                lea       rdx, [rip + 0xbcaaa]
+000AD106  48 8b c8                            mov       rcx, rax
+000AD109  ff 15 91 73 14 00                   call      qword ptr [rip + 0x147391]
+000AD10F  90                                  nop       
+000AD110  48 8d 4c 24 70                      lea       rcx, [rsp + 0x70]
+000AD115  ff 15 a5 73 14 00                   call      qword ptr [rip + 0x1473a5]
+000AD11B  32 c0                               xor       al, al
+000AD11D  eb 02                               jmp       0x1800ad121
+000AD11F  b0 01                               mov       al, 1
+000AD121  48 8b 5c 24 60                      mov       rbx, qword ptr [rsp + 0x60]
+000AD126  48 83 c4 50                         add       rsp, 0x50
+000AD12A  5f                                  pop       rdi
+000AD12B  c3                                  ret       
+000AD12C  cc                                  int3      
+000AD12D  cc                                  int3      
+000AD12E  cc                                  int3      
+000AD12F  cc                                  int3      
+000AD130  cc                                  int3      
+000AD131  cc                                  int3      
+000AD132  cc                                  int3      
+000AD133  cc                                  int3      
+000AD134  cc                                  int3      
+000AD135  cc                                  int3      
+000AD136  cc                                  int3      
+000AD137  cc                                  int3      
+000AD138  cc                                  int3      
+000AD139  cc                                  int3      
+000AD13A  cc                                  int3      
+000AD13B  cc                                  int3      
+000AD13C  cc                                  int3      
+000AD13D  cc                                  int3      
+000AD13E  cc                                  int3      
+000AD13F  cc                                  int3      
+000AD140  cc                                  int3      
+000AD141  cc                                  int3      
+000AD142  cc                                  int3      
+000AD143  cc                                  int3      
+000AD144  cc                                  int3      
+000AD145  cc                                  int3      
+000AD146  cc                                  int3      
+000AD147  cc                                  int3      
+000AD148  cc                                  int3      
+000AD149  cc                                  int3      
+000AD14A  cc                                  int3      
+000AD14B  cc                                  int3      
+000AD14C  cc                                  int3      
+000AD14D  cc                                  int3      
+000AD14E  cc                                  int3      
+000AD14F  cc                                  int3      
+000AD150  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD153  c3                                  ret       
+000AD154  cc                                  int3      
+000AD155  cc                                  int3      
+000AD156  cc                                  int3      
+000AD157  cc                                  int3      
+000AD158  cc                                  int3      
+000AD159  cc                                  int3      
+000AD15A  cc                                  int3      
+000AD15B  cc                                  int3      
+000AD15C  cc                                  int3      
+000AD15D  cc                                  int3      
+000AD15E  cc                                  int3      
+000AD15F  cc                                  int3      
+000AD160  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD164  c3                                  ret       
+000AD165  cc                                  int3      
+000AD166  cc                                  int3      
+000AD167  cc                                  int3      
+000AD168  cc                                  int3      
+000AD169  cc                                  int3      
+000AD16A  cc                                  int3      
+000AD16B  cc                                  int3      
+000AD16C  cc                                  int3      
+000AD16D  cc                                  int3      
+000AD16E  cc                                  int3      
+000AD16F  cc                                  int3      
+000AD170  48 83 ec 18                         sub       rsp, 0x18
+000AD174  48 8d 05 4d b8 0b 00                lea       rax, [rip + 0xbb84d]
+000AD17B  c7 04 24 00 00 00 00                mov       dword ptr [rsp], 0
+000AD182  48 89 02                            mov       qword ptr [rdx], rax
+000AD185  8b 41 20                            mov       eax, dword ptr [rcx + 0x20]
+000AD188  89 42 08                            mov       dword ptr [rdx + 8], eax
+000AD18B  0f b6 41 24                         movzx     eax, byte ptr [rcx + 0x24]
+000AD18F  88 42 0c                            mov       byte ptr [rdx + 0xc], al
+000AD192  48 8b c2                            mov       rax, rdx
+000AD195  48 83 c4 18                         add       rsp, 0x18
+000AD199  c3                                  ret       
+000AD19A  cc                                  int3      
+000AD19B  cc                                  int3      
+000AD19C  cc                                  int3      
+000AD19D  cc                                  int3      
+000AD19E  cc                                  int3      
+000AD19F  cc                                  int3      
+000AD1A0  cc                                  int3      
+000AD1A1  cc                                  int3      
+000AD1A2  cc                                  int3      
+000AD1A3  cc                                  int3      
+000AD1A4  cc                                  int3      
+000AD1A5  cc                                  int3      
+000AD1A6  cc                                  int3      
+000AD1A7  cc                                  int3      
+000AD1A8  cc                                  int3      
+000AD1A9  cc                                  int3      
+000AD1AA  cc                                  int3      
+000AD1AB  cc                                  int3      
+000AD1AC  cc                                  int3      
+000AD1AD  cc                                  int3      
+000AD1AE  cc                                  int3      
+000AD1AF  cc                                  int3      
+000AD1B0  48 8b c4                            mov       rax, rsp
+000AD1B3  57                                  push      rdi
+000AD1B4  48 81 ec 10 01 00 00                sub       rsp, 0x110
+000AD1BB  48 c7 44 24 38 fe ff ff ff          mov       qword ptr [rsp + 0x38], 0xfffffffffffffffe
+000AD1C4  48 89 58 08                         mov       qword ptr [rax + 8], rbx
+000AD1C8  48 89 70 20                         mov       qword ptr [rax + 0x20], rsi
+000AD1CC  48 8b 05 cd d0 11 00                mov       rax, qword ptr [rip + 0x11d0cd]
+000AD1D3  48 33 c4                            xor       rax, rsp
+000AD1D6  48 89 84 24 00 01 00 00             mov       qword ptr [rsp + 0x100], rax
+000AD1DE  48 8b f2                            mov       rsi, rdx
+000AD1E1  48 8d 54 24 20                      lea       rdx, [rsp + 0x20]
+000AD1E6  49 8b c8                            mov       rcx, r8
+000AD1E9  e8 1f 4f f5 ff                      call      0x18000210d
+000AD1EE  90                                  nop       
+000AD1EF  48 8b 4c 24 20                      mov       rcx, qword ptr [rsp + 0x20]
+000AD1F4  48 85 c9                            test      rcx, rcx
+000AD1F7  0f 95 c0                            setne     al
+000AD1FA  84 c0                               test      al, al
+000AD1FC  75 51                               jne       0x1800ad24f
+000AD1FE  33 c0                               xor       eax, eax
+000AD200  48 89 06                            mov       qword ptr [rsi], rax
+000AD203  48 8b 4c 24 28                      mov       rcx, qword ptr [rsp + 0x28]
+000AD208  48 85 c9                            test      rcx, rcx
+000AD20B  0f 84 dd 00 00 00                   je        0x1800ad2ee
+000AD211  83 cf ff                            or        edi, 0xffffffff
+000AD214  8b c7                               mov       eax, edi
+000AD216  f0 0f c1 41 08                      lock xadd dword ptr [rcx + 8], eax
+000AD21B  83 f8 01                            cmp       eax, 1
+000AD21E  0f 85 ca 00 00 00                   jne       0x1800ad2ee
+000AD224  48 8b 5c 24 28                      mov       rbx, qword ptr [rsp + 0x28]
+000AD229  48 8b 13                            mov       rdx, qword ptr [rbx]
+000AD22C  48 8b cb                            mov       rcx, rbx
+
+CALLS / JUMPS:
+  RVA 0xAD0BA: call 0x1800033dc
+  RVA 0xAD0C8: call 0x1800010eb
+  RVA 0xAD0EA: call qword ptr [rip + 0x147190]
+  RVA 0xAD0F8: call qword ptr [rip + 0x1473ea]
+  RVA 0xAD109: call qword ptr [rip + 0x147391]
+  RVA 0xAD115: call qword ptr [rip + 0x1473a5]
+  RVA 0xAD11D: jmp 0x1800ad121
+  RVA 0xAD1E9: call 0x18000210d
+
+
+REFERENCES TO SIX ORIGINAL THUNKS
+==========================================================================================
+
+Thunk RVA 0x1235:
+  No direct CALL/JMP reference found
+
+Thunk RVA 0x23F6:
+  No direct CALL/JMP reference found
+
+Thunk RVA 0x1EB0:
+  No direct CALL/JMP reference found
+
+Thunk RVA 0x1811:
+  No direct CALL/JMP reference found
+
+Thunk RVA 0x33BE:
+  No direct CALL/JMP reference found
+
+Thunk RVA 0x4868:
+  No direct CALL/JMP reference found
