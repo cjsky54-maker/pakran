@@ -1,0 +1,1805 @@
+>> import re
+>> from pathlib import Path
+>>
+>> root = Path(r"C:\Program Files\Engineering\HIKMICRO Analyzer\HIKMICRO Analyzer")
+>>
+>> keywords = [
+>>     "superir", "super ir", "super_resolution",
+>>     "superresolution", "enhance", "interpol",
+>>     "upscale", "imageprocess", "image_process",
+>>     "resolution", "fusion", "thermal"
+>> ]
+>>
+>> if not root.exists():
+>>     raise SystemExit(f"Analyzer folder not found: {root}")
+>>
+>> dlls = list(root.rglob("*.dll"))
+>> print("DLL files found:", len(dlls))
+>>
+>> for path in dlls:
+>>     try:
+>>         data = path.read_bytes()
+>>     except Exception:
+>>         continue
+>>
+>>     found = set()
+>>
+>>     # ASCII strings
+>>     ascii_strings = re.findall(rb"[\x20-\x7e]{5,}", data)
+>>
+>>     # UTF-16 little-endian strings
+>>     wide_strings = re.findall(rb"(?:[\x20-\x7e]\x00){5,}", data)
+>>
+>>     strings = [
+>>         s.decode("ascii", errors="ignore")
+>>         for s in ascii_strings
+>>     ]
+>>     strings += [
+>>         s.decode("utf-16le", errors="ignore")
+>>         for s in wide_strings
+>>     ]
+>>
+>>     for s in strings:
+>>         low = s.lower()
+>>         if any(k in low for k in keywords):
+>>             found.add(s[:250])
+>>
+>>     if found:
+>>         print("\n" + "=" * 70)
+>>         print(path.name)
+>>         for s in sorted(found):
+>>             print(" ", s)
+>>
+>> '@ | python -
+DLL files found: 106
+
+======================================================================
+chartdir60.dll
+  /BitsPerComponent 8/Interpolate true/ColorSpace/DeviceGray
+  /BitsPerComponent 8/Interpolate true/ColorSpace/DeviceRGB
+  CContourLayer_setSmoothInterpolation
+  CSurfaceChart_setInterpolation
+  ContourLayer.setSmoothInterpolation
+  RESOLUTION
+  RESOLUTION_X
+  RESOLUTION_Y
+  SurfaceChart.setInterpolation
+
+======================================================================
+ColorAlarm_PcProc.dll
+  CE_ImageEnhance_Process
+
+======================================================================
+DataTracking_Release_x64.dll
+  ?THERMAL_ANALYSIS@FeatureCategories@DATATRACKING@@3VQString@@B
+  ?THERMAL_IMAGE_ANALYZER@Features@FeatureCategories@DATATRACKING@@3VQString@@B
+  ?THERMAL_VIDEO_ANALYSIS@FeatureCategories@DATATRACKING@@3VQString@@B
+  ?THERMAL_VIDEO_ANALYZER@Features@FeatureCategories@DATATRACKING@@3VQString@@B
+  thermal_analysis
+  thermal_image_analyzer
+  thermal_video_analysis
+  thermal_video_analyzer
+
+======================================================================
+FormatConversion.dll
+  CIDMXManager::GetMfiCodecResolution
+  RESOLUTION
+  RESOLUTION_X
+  RESOLUTION_Y
+  The maximum resolution is 7680x4320!
+  image resolution changed.
+
+======================================================================
+HCNetSDK.dll
+  4K output resolution does not support 9/16 split screen
+  COM_PreviewWndResolutionChange
+  Channel resolution is not supported
+  DVI does not support 4K output resolution
+  Deleting failed. Turn off HTTPS and Enhanced SDK Service on Network Service page first.
+  Deleting failed. Turn off HTTPS, Enhanced SDK Service and Websockets on Network Service page first.
+  Disable target cropping before adjusting resolution
+  Display resolution is less than smallest resolution
+  High resolution mode is not open
+  Image resolution is unreasonable.
+  LCD/LED output not support single resolution configuration when binded
+  LED resolution greater than output resolution
+  LED resolution not support
+  NET_DVR_ChangeWndResolution
+  Output does not support videowall resolution
+  Picture resolution invalid error.
+  Signal source does not support this custom resolution
+  The IPC resolution is overflow
+  The resolution of each output port on the TV wall is inconsistent
+  The resolution of each output port on the TV wall is inconsistent. Please unbind the output port first
+  basemap picture resolution error
+  even video output channel not support the resolution
+  odd video output channel not support the resolution
+  resolution not match current frame
+  resolution over limit
+  screen input resolution error
+  screen output resolution error
+  the LED output resolution is mismatched with other LED output resolution
+  the resolution of LED area output changes, the device has already closed all LED windows in this area
+
+======================================================================
+HCOTAPDCM.dll
+  /EnhanceSecurity/LoginLinkNumCfg
+  videoResolutionHeight=%d
+  videoResolutionWidth=%d
+
+======================================================================
+HCUSBSDK.dll
+  ---------------------------------------------------Thermal---------------------------------------------------
+  ..\..\src\access\device\model\CUsbDeviceThermal.cpp
+  ..\..\src\interface\InterfaceThermalOld.cpp
+  .?AV?$CUsbCommandConfig@$0HOK@XUtagUSB_IMAGE_ENHANCEMENT@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0HOL@UtagUSB_IMAGE_ENHANCEMENT@HCUSBSDK@@X@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0HPE@XUtagUSB_THERMAL_ALG_VERSION@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0HPG@XUtagUSB_THERMAL_STREAM_PARAM@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0HPH@UtagUSB_THERMAL_STREAM_PARAM@HCUSBSDK@@X@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IBD@XUtagUSB_SYSTEM_FUSION_BIN_FILE@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IBG@XUtagUSB_VIDEO_FUSION@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IBH@UtagUSB_VIDEO_FUSION@HCUSBSDK@@X@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IBL@XUtagUSB_IMAGE_ENHANCEMENT_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IBM@XUtagUSB_THERMAL_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0ICA@XUtagUSB_IMAGE_ENHANCEMENT_EX@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0ICB@UtagUSB_IMAGE_ENHANCEMENT_EX@HCUSBSDK@@X@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0ICC@XUtagUSB_THERMAL_STREAM_PARAM_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0ICN@XUtagUSB_THERMAL_THERMOMETRY_MODE_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0ICO@XUtagUSB_THERMAL_THERMOMETRY_REGIONS_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0ICP@XUtagUSB_THERMAL_TEMPERATURE_CORRECT_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IDA@XUtagUSB_THERMAL_BLACK_BODY_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IDB@XUtagUSB_THERMAL_BODYTEMP_COMPENSATION_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IDC@XUtagUSB_THERMAL_ROI_MAX_TEMPERATURE_SEARCH_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IDD@XUtagUSB_THERMAL_THERMOMETRY_CALIBRATION_FILE_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IDE@XUtagUSB_THERMAL_THERMOMETRY_EXPERT_REGIONS_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IDF@XUtagUSB_THERMAL_THERMOMETRY_EXPERT_CORRECTION_PARAM_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IDO@XUtagUSB_CTRL_THERMAL_STREAM_PARAM@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IDP@UtagUSB_CTRL_THERMAL_STREAM_PARAM@HCUSBSDK@@X@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IFD@XUtagUSB_THERMAL_STREAM_YUV_RESOLUTION@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IFE@UtagUSB_THERMAL_STREAM_YUV_RESOLUTION@HCUSBSDK@@X@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IFF@XUtagUSB_THERMAL_STREAM_YUV_RESOLUTION_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IFJ@XUtagUSB_THERMAL_CLIENT_ACCESS_CAPABILITIES@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IGO@XUtagUSB_THERMAL_HOTSPOT_TRACK_CONFIG@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IGP@UtagUSB_THERMAL_HOTSPOT_TRACK_CONFIG@HCUSBSDK@@X@AccessCommand@HCUSBSDK@@
+  .?AV?$CUsbCommandConfig@$0IHA@XUtagUSB_THERMAL_HOTSPOT_TRACK_CONFIG_CAP@HCUSBSDK@@@AccessCommand@HCUSBSDK@@
+  .?AVCUsbDeviceThermalV2@AccessDeviceModel@HCUSBSDK@@
+  CUsbDeviceBuilder::FilerAndCreateThermalDevices, Thermal deivce num[%d]
+  CUsbDeviceFilter::FilterThermalWithID, USB_THERMAL_UVC_TYPE vid[0x%04X] pid[0x%04X]
+  CUsbDeviceFilter::FilterThermalWithID, USB_THERMAL_UVC_V20_TYPE dwVid[0x%04X] dwPid[0x%04X]
+  CUsbDeviceFilter::FilterThermalWithID, iResultCount[%d]
+  CUsbDeviceFilter::FilterThermalWithID, pDevices == NULL || iCount == 0
+  CUsbDeviceFilter::FilterTransmissionWithID, USB_THERMAL_UVC_TYPE vid[0x%04X] pid[0x%04X]
+  CUsbDeviceThermalV2::Open, Init protocol [%d] failed!
+  CUsbDeviceThermalV2::Open, V10 Thermal device not support access Windows!
+  CUsbDeviceThermalV2::OpenEx , Init protocol [%d] failed!
+  CUsbDeviceThermalV2::OpenEx , V10 Thermal device not support access Windows!
+  CUsbProtocolUVC::ConvertData<INTER_THERMAL_STREAM_YUV_RESOLUTION>, send buffer not enough[%d], real size[%d]
+  CUsbProtocolUVCBase::ConvertData<INTER_CTRL_THERMAL_STREAM_PARAM>, send buffer not enough[%d], real size[%d]
+  CUsbProtocolUVCBase::ConvertData<USB_CTRL_THERMAL_STREAM_PARAM>, byEnable[%d]
+  CUsbProtocolUVCBase::ConvertData<USB_IMAGE_ENHANCEMENT>, send buffer not enough[%d], real size[%d]
+  CUsbProtocolUVCBase::ConvertData<USB_IMAGE_ENHANCEMENT_EX>, send buffer not enough[%d], real size[%d]
+  CUsbProtocolUVCBase::ConvertData<USB_THERMAL_HOTSPOT_TRACK_CONFIG>, send buffer not enough[%d], real size[%d]
+  CUsbProtocolUVCBase::ConvertData<USB_THERMAL_STREAM_PARAM>, send buffer not enough[%d], real size[%d]
+  CUsbProtocolUVCBase::ConvertData<USB_VIDEO_FUSION>, send buffer not enough[%d], real size[%d]
+  CUsbProtocolUVCBase::ParseRecvData<LPUSB_CTRL_THERMAL_STREAM_PARAM>, byEnable[%d]
+  CUsbProtocolUVCBase::ParseRecvData<USB_SYSTEM_FUSION_BIN_FILE>, dwFileLenth[%d], device ret data total len[%d]
+  CUsbProtocolUVCBase::ParseRecvData<USB_SYSTEM_FUSION_BIN_FILE>, user offered buffer len[%d], pCalibrationFile[0x%X], real len[%d]
+  CUsbProtocolUVCBase::ParseRecvData<USB_THERMAL_STREAM_YUV_RESOLUTION>, byYUVResolution[%d]
+  CUsbProtocolUVCBase::ParseRecvData<USB_THERMAL_STREAM_YUV_RESOLUTION>, dwSize[%d] byYUVResolution[%d]
+  FC The resolution of the exception
+  HC_USBCamera_GetConfig, USBCAMERA_GET_RESOLUTION USB_ERROR_NOT_SUPPORTED!
+  HC_USBCamera_GetConfig, USB_GET_IMAGE_ENHANCEMENT failed!
+  HC_USBCamera_GetConfig, USB_GET_THERMAL_ALG_VERSION failed!
+  HC_USBCamera_GetConfig, USB_GET_THERMAL_STREAM_PARAM failed!
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_IMAGE_ENHANCEMENT)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_BLACK_BODY)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_BODYTEMP_COMPENSATION)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_DOUBLE_LIGHTS_CORRECT_POINTS_CTRL)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_JPEGPIC_WITH_APPENDDATA)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_P2P_PARAM)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_TEMPERATURE_CORRECT)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_BASIC_PARAM)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_EXPERT_CORRECTION_PARAM)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_EXPERT_REGIONS)
+  HC_USBCamera_GetConfig,lpConfig->pCondBuf == NULL || lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_MODE)
+  HC_USBCamera_GetConfig,lpConfig->pOutBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_CALIBRATION_FILE)
+  HC_USBCamera_SetConfig, USBCAMERA_SET_RESOLUTION USB_ERROR_NOT_SUPPORTED!
+  HC_USBCamera_SetConfig, USBCAMERA_SET_THERMAL_ROI_MAX_TEMPERATURE_SEARCH safe_new_array failed!
+  HC_USBCamera_SetConfig, USB_SET_IMAGE_ENHANCEMENT failed!
+  HC_USBCamera_SetConfig, USB_SET_THERMAL_STREAM_PARAM failed!
+  HC_USBCamera_SetConfig, lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_P2P_PARAM)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_IMAGE_ENHANCEMENT)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_BLACK_BODY)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_BODYTEMP_COMPENSATION)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_STREAM_PARAM)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_TEMPERATURE_CORRECT)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_BASIC_PARAM)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_CALIBRATION_FILE)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_EXPERT_CORRECTION_PARAM)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_EXPERT_REGIONS)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwInSize != sizeof(USB_CAMERA_THERMAL_THERMOMETRY_MODE)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->dwOutSize != sizeof(USB_CAMERA_THERMAL_DOUBLE_LIGHTS_CORRECT_POINTS_CTRL)
+  HC_USBCamera_SetConfig,lpConfig->pInBuf == NULL || lpConfig->pOutBuf == NULL ||                                                                   
+  HIA Resolution Data Changed
+  HIA Unsupported Resolution
+  USB_CTRL_THERMAL_STREAM_PARAM
+  USB_IMAGE_ENHANCEMENT
+  USB_IMAGE_ENHANCEMENT_CAPABILITIES
+  USB_IMAGE_ENHANCEMENT_EX
+  USB_SYSTEM_FUSION_BIN_FILE
+  USB_THERMAL_ALG_VERSION
+  USB_THERMAL_BLACK_BODY_CAPABILITIES
+  USB_THERMAL_BODYTEMP_COMPENSATION_CAPABILITIES
+  USB_THERMAL_CAPABILITIES
+  USB_THERMAL_CLIENT_ACCESS_CAPABILITIES
+  USB_THERMAL_HOTSPOT_TRACK_CONFIG
+  USB_THERMAL_HOTSPOT_TRACK_CONFIG_CAP
+  USB_THERMAL_ROI_MAX_TEMPERATURE_SEARCH_CAPABILITIES
+  USB_THERMAL_STREAM_PARAM
+  USB_THERMAL_STREAM_PARAM_CAPABILITIES
+  USB_THERMAL_STREAM_YUV_RESOLUTION
+  USB_THERMAL_STREAM_YUV_RESOLUTION_CAPABILITIES
+  USB_THERMAL_TEMPERATURE_CORRECT_CAPABILITIES
+  USB_THERMAL_THERMOMETRY_CALIBRATION_FILE_CAPABILITIES
+  USB_THERMAL_THERMOMETRY_EXPERT_CORRECTION_PARAM_CAPABILITIES
+  USB_THERMAL_THERMOMETRY_EXPERT_REGIONS_CAPABILITIES
+  USB_THERMAL_THERMOMETRY_MODE_CAPABILITIES
+  USB_THERMAL_THERMOMETRY_REGIONS_CAPABILITIES
+  USB_VIDEO_FUSION
+  com.hikvision.HikThermalDevice
+
+======================================================================
+HUIControl.dll
+  ?interpolated@QVariantAnimation@@MEBA?AVQVariant@@AEBV2@0N@Z
+
+======================================================================
+libcrypto-1_1-x64.dll
+  enhancedSearchGuide
+
+======================================================================
+libcrypto-3-x64.dll
+  enhancedSearchGuide
+
+======================================================================
+libxml2.dll
+  -//OASIS//DTD Entity Resolution XML Catalog V1.0//EN
+
+======================================================================
+MicroAnalytics_Release_x64.dll
+          <g id="08_Common_Default/default_thermal_image">
+      <title>08_Common_Default/default_thermal_image</title>
+  .?AUFusionMatchParamList@iVMS4800@@
+  .?AV?$_Binder@U_Unforced@std@@P8AdjustFusionScene@MicroAnalytics@@EAAXAEBVQRectF@@@ZQEAV34@AEBU?$_Ph@$00@2@@std@@
+  .?AV?$_Func_impl@V?$_Binder@U_Unforced@std@@P8AdjustFusionScene@MicroAnalytics@@EAAXAEBVQRectF@@@ZQEAV34@AEBU?$_Ph@$00@2@@std@@V?$allocator@H@2@XAEBVQRectF@@@std@@
+  .?AVAdjustFusionDialog@MicroAnalytics@@
+  .?AVAdjustFusionScene@MicroAnalytics@@
+  .?AVChangeFusionParamCommand@MICROPIXELER@@
+  .?AVThermalPicWindow@MicroAnalytics@@
+  3DThermalImagingName
+  3DThermalMatrix
+  3DThermalPic
+  :/res/Images/Default/default_offline_thermal_image_4.svg
+  :/res/Images/Illustration/img_fusion_pic_ir.jpeg
+  ??0AdjustFusionDialog@MicroAnalytics@@QEAA@PEAVQWidget@@@Z
+  ??0AdjustFusionDialog@MicroAnalytics@@QEAA@V?$shared_ptr@VTakedMaterial@MICROPIXELER@@@std@@PEAVQWidget@@@Z
+  ??0ChangeAdvParamCommand@MICROPIXELER@@QEAA@V?$shared_ptr@VTakedMaterial@MICROPIXELER@@@std@@AEBUDNRParams@MicroSDK@@AEBUEnhancementParams@5@@Z
+  ??0ChangeFusionParamCommand@MICROPIXELER@@QEAA@V?$shared_ptr@VTakedMaterial@MICROPIXELER@@@std@@AEBUImageFusionParams@MicroSDK@@@Z
+  ??0SuperIRCertificate@MicroAnalytics@@QEAA@XZ
+  ??1AdjustFusionDialog@MicroAnalytics@@UEAA@XZ
+  ??1ChangeFusionParamCommand@MICROPIXELER@@UEAA@XZ
+  ??1SuperIRCertificate@MicroAnalytics@@QEAA@XZ
+  ??4SuperIRCertificate@MicroAnalytics@@QEAAAEAV01@AEBV01@@Z
+  ??_7AdjustFusionDialog@MicroAnalytics@@6BQObject@@@
+  ??_7AdjustFusionDialog@MicroAnalytics@@6BQPaintDevice@@@
+  ??_FAdjustFusionDialog@MicroAnalytics@@QEAAXXZ
+  ?THERMAL_ANALYSIS@FeatureCategories@DATATRACKING@@3VQString@@B
+  ?actionDescribtion@ChangeFusionParamCommand@MICROPIXELER@@UEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ
+  ?applyGeometry@RuleMeasureItemHelper@MicroAnalytics@@SAXPEAVMeasureItem@2@AEBUGeometricVertex@iVMS4800@@AEBUResolution@5@2@Z
+  ?base64ToVector@SuperIRCertificate@MicroAnalytics@@AEAA?AV?$vector@EV?$allocator@E@std@@@std@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z
+  ?buildThermalRuleOverlayImage@MaterialImagePainter@MicroAnalytics@@IEAA?AVQImage@@_N@Z
+  ?containsS1@SuperIRCertificate@MicroAnalytics@@AEAA_NAEBV?$vector@EV?$allocator@E@std@@@std@@0@Z
+  ?coordinateResolution@InsulatorRule@MICROPIXELER@@QEBA?AUmResolution@MicroSDK@@XZ
+  ?createMaterial@FileParseFactory@MicroAnalytics@@QEAAPEAVTakedMaterial@MICROPIXELER@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iVMS4800@@@std@@
+  ?createMaterial@MaterialParseFactory@MICROPIXELER@@QEAAPEAVTakedMaterial@2@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iVMS4800@@@std@@@5@_N@Z
+  ?createMaterialQ@FileParseFactory@MicroAnalytics@@SAPEAVTakedMaterial@MICROPIXELER@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iVMS4800@@@std@@@
+  ?createMaterialQ@FileParseFactory@MicroAnalytics@@SAPEAVTakedMaterial@MICROPIXELER@@W4MaterialType@iVMS4800@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMat
+  ?createMaterialQ@MaterialParseFactory@MICROPIXELER@@SAPEAVTakedMaterial@2@W4MaterialType@iVMS4800@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iV
+  ?createNewArithmeticRuleID@ThermalPicInterface@MICROPIXELER@@QEAAIXZ
+  ?currentThermalDisplayTargetResolution@WorkWidget@MicroAnalytics@@AEBA?AUResolution@iVMS4800@@AEBUResolutionInfo@4@@Z
+  ?currentThermalDisplayTargetSize@WorkWidget@MicroAnalytics@@AEBA?AVQSize@@AEBUResolutionInfo@iVMS4800@@@Z
+  ?decryptS1S2@SuperIRCertificate@MicroAnalytics@@AEAA_NAEAV?$vector@EV?$allocator@E@std@@@std@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@AEBV34@@Z
+  ?deobfuscateWithStringKey@SuperIRCertificate@MicroAnalytics@@AEAA?AVQString@@AEBV3@0@Z
+  ?doAdvanceImageParamsChanged@BaseAnalyzeWidgetMag@MicroAnalytics@@UEAA_NAEBUDNRParams@MicroSDK@@AEBUEnhancementParams@4@@Z
+  ?doShowModeChanged@BaseAnalyzeWidgetMag@MicroAnalytics@@UEAA_NAEBUImageFusionParams@MicroSDK@@@Z
+  ?doStreamAdvanceImageParamsChanged@BaseAnalyzeWidgetMag@MicroAnalytics@@UEAA_NAEBUDNRParams@MicroSDK@@AEBUEnhancementParams@4@@Z
+  ?doStreamShowModeChanged@BaseAnalyzeWidgetMag@MicroAnalytics@@UEAA_NAEBUImageFusionParams@MicroSDK@@@Z
+  ?done@AdjustFusionDialog@MicroAnalytics@@MEAAXH@Z
+  ?encryptS1@SuperIRCertificate@MicroAnalytics@@AEAA_NAEAV?$vector@EV?$allocator@E@std@@@std@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@AEBV34@@Z
+  ?encryptUseS1S2@SuperIRCertificate@MicroAnalytics@@AEAA_NAEAV?$vector@EV?$allocator@E@std@@@std@@AEBV34@1@Z
+  ?fusionItemInfoToParam@AdjustFusionDialog@MicroAnalytics@@CA_NAEAUImageMatchParam@iVMS4800@@AEBUFusionItemInfo@12@@Z
+  ?fusionParamToItemInfo@AdjustFusionDialog@MicroAnalytics@@CA_NAEAUFusionItemInfo@12@AEBUImageMatchParam@iVMS4800@@@Z
+  ?generateRandomNum@SuperIRCertificate@MicroAnalytics@@AEAA_NAEAV?$vector@EV?$allocator@E@std@@@std@@H@Z
+  ?getAllFusionParam@SettingCommInterface@iVMS4800@@QEBA_NAEAV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iVMS4800@@@std@@@std@@@Z
+  ?getAreaMeasureParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUAreaMeasureParam@iVMS4800@@@Z
+  ?getArithmeticRule@ThermalPicInterface@MICROPIXELER@@QEAAPEAVArithmeticRule@2@I@Z
+  ?getArithmeticRuleSet@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$map@IPEAVArithmeticRule@MICROPIXELER@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIPEAVArithmeticRule@MICROPIXELER@@@std@@@4@@std@@XZ
+  ?getColorBarImg@ThermalPicInterface@MICROPIXELER@@QEBA?AVQImage@@XZ
+  ?getCustomFusionMatchParam@AdjustFusionDialog@MicroAnalytics@@QEBA_NAEAUCustomFusionMatchParam@iVMS4800@@@Z
+  ?getDefaultImageMatchParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUImageMatchParam@iVMS4800@@@Z
+  ?getDiagnoseInsulatorInfoVect@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$vector@UInsulatorInfo@iVMS4800@@V?$allocator@UInsulatorInfo@iVMS4800@@@std@@@std@@XZ
+  ?getDifferentRuleName@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@std@@XZ
+  ?getDisplayBaseImageSize@ProcessedThmImgModel@MicroAnalytics@@QEBA_NAEAUResolution@iVMS4800@@@Z
+  ?getEnhancementParam@ParamSettingModel@MicroAnalytics@@QEBA_NAEAUEnhancementParams@MicroSDK@@@Z
+  ?getFusionParams@AdjustFusionDialog@MicroAnalytics@@QEBA_NAEAUImageFusionParams@MicroSDK@@@Z
+  ?getFusionParams@PIPDialog@MicroAnalytics@@QEBAXAEAUImageFusionParams@MicroSDK@@@Z
+  ?getFusionParams@ParamSettingModel@MicroAnalytics@@QEBA_NAEAUFusionParams@MicroSDK@@@Z
+  ?getGeographicInfo@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUGeographicInfo@iVMS4800@@@Z
+  ?getGlobeTempParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUGlobeTempParam@iVMS4800@@@Z
+  ?getISPImageParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUISPImageParam@iVMS4800@@@Z
+  ?getImageFusionParams@ParamSettingModel@MicroAnalytics@@QEBA_NAEAUImageFusionParams@MicroSDK@@@Z
+  ?getImageMatchParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUImageMatchParam@iVMS4800@@@Z
+  ?getIntelligentRule@ThermalPicInterface@MICROPIXELER@@QEBAPEAVInsulatorRule@2@I@Z
+  ?getIntelligentRuleSet@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$map@IPEAVInsulatorRule@MICROPIXELER@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIPEAVInsulatorRule@MICROPIXELER@@@std@@@4@@std@@XZ
+  ?getMainPreviewPic@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUPictureInfo@iVMS4800@@@Z
+  ?getMeasureRule@Rule@MICROPIXELER@@QEBAXAEAUMeasureRule@MicroSDK@@AEAUmResolution@4@@Z
+  ?getMeasureRule@Rule@MICROPIXELER@@QEBAXAEAUMeasureRule@MicroSDK@@PEBVThermalPicInterface@2@@Z
+  ?getPIPParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUPIPParam@iVMS4800@@@Z
+  ?getRawResolution@AcousticResultModel@MicroAnalytics@@QEBA_NAEAUmResolution@MicroSDK@@@Z
+  ?getRawResolution@StaticInfoModel@MicroAnalytics@@QEBA_NAEAUmResolution@MicroSDK@@@Z
+  ?getRawResolution@StaticInfoModel@MicroAnalytics@@QEBA_NAEAVQSize@@@Z
+  ?getResolutionInfo@StaticInfoModel@MicroAnalytics@@QEBA_NAEAUResolutionInfo@iVMS4800@@@Z
+  ?getResolutionInfo@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUResolutionInfo@iVMS4800@@@Z
+  ?getRotateVisPicture@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$shared_ptr@UPictureInfo@iVMS4800@@@std@@M@Z
+  ?getRule@ThermalPicInterface@MICROPIXELER@@QEAAPEAVRule@2@I@Z
+  ?getRule@ThermalPicInterface@MICROPIXELER@@QEBAPEBVRule@2@I@Z
+  ?getRuleSet@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$map@IPEAVRule@MICROPIXELER@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIPEAVRule@MICROPIXELER@@@std@@@4@@std@@XZ
+  ?getShootInfo@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUShootInfo@iVMS4800@@@Z
+  ?getSouceParamData@ThermalPicInterface@MICROPIXELER@@QEBA?AUSourceParamData@2@XZ
+  ?getSuperposeThermalEnable@SettingCommInterface@iVMS4800@@QEBA_NXZ
+  ?getSuperposeThermalReportLogoEnable@SettingCommInterface@iVMS4800@@QEBA_NXZ
+  ?getSuperposeThermalReportTimeEnable@SettingCommInterface@iVMS4800@@QEBA_NXZ
+  ?getTakedMaterialDevInfo@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUTakedMaterialDevInfo@iVMS4800@@@Z
+  ?getTempDiffRuleDisplayLine@MaterialImagePainter@MicroAnalytics@@AEBA_NAEAVQPoint@@0AEBUArithmeticRuleParam@iVMS4800@@PEBVThermalPicInterface@MICROPIXELER@@AEBUResolutionInfo@5@AEBUResolution@5@@Z
+  ?getTempDiffRuleThermResult@MaterialImagePainter@MicroAnalytics@@AEBA_NAEAURuleThermResult@iVMS4800@@AEAUResolution@4@IPEBVThermalPicInterface@MICROPIXELER@@AEBUResolutionInfo@4@@Z
+  ?getThermalGeoCompassFont@MaterialImagePainter@MicroAnalytics@@IEBA?AVQFont@@XZ
+  ?getThermalGeoCompassFontMetrics@MaterialImagePainter@MicroAnalytics@@IEBA?AVQFontMetricsF@@XZ
+  ?getThermalImage@MicroSDK@@YA_NAEAUImage@1@QEAX@Z
+  ?getThermalOverlayRuleNameFontPixelSize@MaterialImagePainter@MicroAnalytics@@IEBAHXZ
+  ?getThermalPic@ThermalPicInterface@MICROPIXELER@@QEBA?AUImage@MicroSDK@@XZ
+  ?getThermalPic@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUImage@MicroSDK@@@Z
+  ?getThermalPicInterface@TakedMaterial@MICROPIXELER@@QEAA?AV?$shared_ptr@VThermalPicInterface@MICROPIXELER@@@std@@XZ
+  ?getThermalPicInterface@TakedMaterial@MICROPIXELER@@QEBA?AV?$shared_ptr@$$CBVThermalPicInterface@MICROPIXELER@@@std@@XZ
+  ?getThermalPseudoColorLimitFont@MaterialImagePainter@MicroAnalytics@@IEBA?AVQFont@@XZ
+  ?getThermalPseudoColorLimitFontMetrics@MaterialImagePainter@MicroAnalytics@@IEBA?AVQFontMetricsF@@XZ
+  ?getThermalPseudoColorLimitFontPixelSize@MaterialImagePainter@MicroAnalytics@@IEBAHXZ
+  ?getThermalShortSideFontPixelSize@MaterialImagePainter@MicroAnalytics@@IEBAHH@Z
+  ?getThermalTimeFont@MaterialImagePainter@MicroAnalytics@@IEBA?AVQFont@@XZ
+  ?getThermalTimeFontMetrics@MaterialImagePainter@MicroAnalytics@@IEBA?AVQFontMetricsF@@XZ
+  ?getThermalTimeFontPixelSize@MaterialImagePainter@MicroAnalytics@@IEBAHXZ
+  ?getThmResolution@StaticInfoModel@MicroAnalytics@@QEBA_NAEAUmResolution@MicroSDK@@@Z
+  ?getVisPicResolution@StaticInfoModel@MicroAnalytics@@QEBA_NAEAUmResolution@MicroSDK@@@Z
+  ?getVisPicture@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$shared_ptr@UPictureInfo@iVMS4800@@@std@@XZ
+  ?increaseTaskNum@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?initConnect@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?initUi@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?intelligentRuleOverlaySourceResolution@MaterialImagePainter@MicroAnalytics@@AEBA?AUResolution@iVMS4800@@AEBVInsulatorRule@MICROPIXELER@@AEBUResolutionInfo@4@@Z
+  ?intelligentRuleOverlaySourceResolution@WorkWidget@MicroAnalytics@@AEBA?AUResolution@iVMS4800@@AEBVInsulatorRule@MICROPIXELER@@@Z
+  ?isCanZoomIn@AdjustFusionDialog@MicroAnalytics@@AEAA_NXZ
+  ?isItemInfoValid@AdjustFusionDialog@MicroAnalytics@@AEAA_NAEBUFusionItemInfo@12@@Z
+  ?isOpenSuperIRSuc@SuperIRCertificate@MicroAnalytics@@AEAA_N_N@Z
+  ?isZoomOutValid@AdjustFusionDialog@MicroAnalytics@@AEAA_NAEBUFusionItemInfo@12@@Z
+  ?keyPressEvent@AdjustFusionDialog@MicroAnalytics@@MEAAXPEAVQKeyEvent@@@Z
+  ?keyReleaseEvent@AdjustFusionDialog@MicroAnalytics@@MEAAXPEAVQKeyEvent@@@Z
+  ?makeNormalTempMeasureRule@PubFunc@@YA_NAEAUMeasureRule@MicroSDK@@AEBURuleParam@iVMS4800@@W4RuleTypeEnum@5@AEBUResolution@5@@Z
+  ?metaObject@AdjustFusionDialog@MicroAnalytics@@UEBAPEBUQMetaObject@@XZ
+  ?obfuscateWithStringKey@SuperIRCertificate@MicroAnalytics@@AEAA?AVQString@@AEBV3@0@Z
+  ?onBottomBtnClicked@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onCancelBtnClicked@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onConfirmBtnClicked@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onDefaultBtnClicked@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onImgAnalyzeTimer@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onItemChange@AdjustFusionDialog@MicroAnalytics@@AEAAXAEBVQRectF@@@Z
+  ?onItemChangedTimer@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onLeftBtnClicked@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onRightBtnClicked@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onTopBtnClicked@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onUpdateZoomInBtn@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onZoomInBtnClicked@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?onZoomOutBtnClicked@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?openSuperIR@SuperIRCertificate@MicroAnalytics@@QEAA_N_N@Z
+  ?paintAllIntelligentRuleOverlays@WorkWidget@MicroAnalytics@@AEAAXPEAVDiagramScene@2@AEBUResolution@iVMS4800@@1@Z
+  ?pullUpAISuperProcess@StreamAISuperControl@MicroAnalytics@@SAXAEBUmResolution@MicroSDK@@@Z
+  ?qt_metacall@AdjustFusionDialog@MicroAnalytics@@UEAAHW4Call@QMetaObject@@HPEAPEAX@Z
+  ?qt_metacast@AdjustFusionDialog@MicroAnalytics@@UEAAPEAXPEBD@Z
+  ?qt_static_metacall@AdjustFusionDialog@MicroAnalytics@@CAXPEAVQObject@@W4Call@QMetaObject@@HPEAPEAX@Z
+  ?queryAllFusionMatchParam@SettingCommInterface@iVMS4800@@QEAA?AV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iVMS4800@@@std@@@std@@XZ
+  ?reduceTaskNum@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?refreshArithmeticRuleResult@ThermalPicInterface@MICROPIXELER@@QEAAXW4TempUnitEnum@InternationalSetting@Chameleon@@@Z
+  ?refreshFusionParam@SettingCommInterface@iVMS4800@@QEAA_NXZ
+  ?resolution@HMRVPlayer@MicroSDK@@QEBA?AUmResolution@2@XZ
+  ?restoreCommand@ChangeFusionParamCommand@MICROPIXELER@@UEAA_NXZ
+  ?runCommand@ChangeFusionParamCommand@MICROPIXELER@@UEAA_NXZ
+  ?scene@AdjustFusionDialog@MicroAnalytics@@QEBAPEAVAdjustFusionScene@2@XZ
+  ?setEffectiveVideoDisplayResolution@WorkWidget@MicroAnalytics@@QEAAXHH@Z
+  ?setEnhancementParams@HMRVPlayer@MicroSDK@@QEAA_NAEBUEnhancementParams@2@@Z
+  ?setFusionParam@SettingCommInterface@iVMS4800@@QEAA_NAEBUCustomFusionMatchParam@2@@Z
+  ?setImageMatchParam@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUImageMatchParam@iVMS4800@@@Z
+  ?setImgMatchParam@AdjustFusionDialog@MicroAnalytics@@QEAAXAEBUImageMatchParam@iVMS4800@@@Z
+  ?setInsulatorRuleItemGeo@MaterialImagePainter@MicroAnalytics@@IEAAXPEAVMeasureItem@2@PEBV32@UGeometricVertex@iVMS4800@@UResolution@5@3@Z
+  ?setInsulatorRuleItemGeo@WorkWidget@MicroAnalytics@@CAXPEAVMeasureItem@2@PEBV32@UGeometricVertex@iVMS4800@@UResolution@5@3@Z
+  ?setMainPreviewPic@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUPictureInfo@iVMS4800@@@Z
+  ?setMicroThmPicInterface@ProcessedThmImgModel@MicroAnalytics@@QEAAXV?$shared_ptr@VThermalPicInterface@MICROPIXELER@@@std@@@Z
+  ?setPreviewMode@ThermalPicInterface@MICROPIXELER@@QEAAXAEBW4ShowMode@iVMS4800@@@Z
+  ?setResolutionInfo@TempMartixInfoCache@MicroAnalytics@@QEAAXAEBUResolutionInfo@iVMS4800@@M@Z
+  ?setRuleItemGeo@MaterialImagePainter@MicroAnalytics@@IEAAXPEAVMeasureItem@2@UGeometricVertex@iVMS4800@@UResolution@5@2@Z
+  ?setRuleItemGeo@WorkWidget@MicroAnalytics@@CAXPEAVMeasureItem@2@UGeometricVertex@iVMS4800@@UResolution@5@2@Z
+  ?setScaleBaseResolution@InfraredDiagram@MicroAnalytics@@QEAAXAEBVQSize@@@Z
+  ?setTakedMaterial@AdjustFusionDialog@MicroAnalytics@@QEAAXV?$shared_ptr@VTakedMaterial@MICROPIXELER@@@std@@@Z
+  ?setTermaluPicInterface@ParamSettingModel@MicroAnalytics@@QEAA_NV?$shared_ptr@VThermalPicInterface@MICROPIXELER@@@std@@@Z
+  ?setThermalJPEG@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUImage@MicroSDK@@@Z
+  ?setThermalPic@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUImage@MicroSDK@@@Z
+  ?setThermalPicInterface@StaticInfoModel@MicroAnalytics@@QEAAXV?$shared_ptr@VThermalPicInterface@MICROPIXELER@@@std@@@Z
+  ?showMessage@AdjustFusionDialog@MicroAnalytics@@AEAAXAEBVQString@@W4AlertState@MNomalMessage@2@_N2@Z
+  ?signalImgAnalyzeSuc@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?signalReportSuperpositionThermalChanged@SettingCommInterface@iVMS4800@@QEAAXXZ
+  ?signalShowModeChanged@AnalyzController@MicroAnalytics@@QEAAXAEBUImageFusionParams@MicroSDK@@@Z
+  ?staticMetaObject@AdjustFusionDialog@MicroAnalytics@@2UQMetaObject@@B
+  ?stringOfResolution@PubFunc@@YA?AVQString@@HH@Z
+  ?supportsThermalRuleOverlayEdit@WorkWidget@MicroAnalytics@@AEBA_NW4MaterialType@iVMS4800@@@Z
+  ?thermalJPEG@ThermalPicInterface@MICROPIXELER@@QEBA?AUImage@MicroSDK@@XZ
+  ?thermalPicInterface@TakedMaterial@MICROPIXELER@@QEBAPEBVThermalPicInterface@2@XZ
+  ?tr@AdjustFusionDialog@MicroAnalytics@@SA?AVQString@@PEBD0H@Z
+  ?trUtf8@AdjustFusionDialog@MicroAnalytics@@SA?AVQString@@PEBD0H@Z
+  ?updateControlBtnState@AdjustFusionDialog@MicroAnalytics@@AEAAXXZ
+  ?updateThermalOverlayRuleNameFontPixelSize@MaterialImagePainter@MicroAnalytics@@IEAAXAEBVQSizeF@@I@Z
+  ?vectorToBase64@SuperIRCertificate@MicroAnalytics@@AEAA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@EV?$allocator@E@std@@@4@@Z
+  ?view@AdjustFusionDialog@MicroAnalytics@@QEBAPEAVQGraphicsView@@XZ
+  ?visibleJPEG@ThermalPicInterface@MICROPIXELER@@QEBA?AUImage@MicroSDK@@XZ
+  Add3DThermalImagiName
+  AddThermalImagingButton
+  AdjustFusionDialog
+  CSurfaceChart_setInterpolation
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\MicroAnalytics_Release_x64.pdb
+  EnhancedIR
+  Fusion1
+  Fusion2
+  FusionName
+  Gdefault_offline_thermal_image_4.svg
+  IR ResolutionName
+  ImageAreaEnhancement
+  ImageEnhancement
+  ImageEnhancementLabel
+  MicroAnalytics::AdjustFusionDialog
+  MicroAnalytics::AdjustFusionScene
+  MicroAnalytics::ThermalPicWindow
+  MicroSDK::ImageFusionParams
+  No thermal dock widget to activate.
+  SelectAritRule,thermal window.
+  SuperIR
+  SuperpositionThermalSetting/ThermalEnable
+  SuperpositionThermalSetting/ThermalReportLogo
+  SuperpositionThermalSetting/ThermalReportTime
+  TheFusion
+  ThermalImageAnalysName
+  ThermalImaging
+  ThermalImagingResoluoIhMFML
+  ThermalPicWindow
+  ThermalResolutionLabel
+  VisionResolutionLabel
+  VisionResolutionLabelValue
+  VisionResolutionLabel_2
+  Wimg_fusion_pic_ir.jpeg
+  [ThermalPicWindow][initRuleSignalForwarding] heat source widget is not WorkWidget
+  frameImageEnhancement
+  fusion
+  fusion_1
+  fusion_2
+  fusion_blending
+  getRawResolution is error
+  getResolutionInfo error.
+  getResolutionInfo failed.
+  imageFusionParams
+  jpgResolutionLabel
+  jpgResolutionLabelValue
+  pThermalPicInterfacePtr null
+  reportSuperposeThermalEnable
+  reportSuperposeThermalLogoEnable
+  reportSuperposeThermalTimeEnable
+  signalReportSuperpositionThermalChanged
+  thermal
+
+======================================================================
+MicroChameleon_Release_x64.dll
+  ?legalResolution@BaseServer@Chameleon@@QEAA_NAEAVQSize@@@Z
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\MicroChameleon_Release_x64.pdb
+  Fusion1
+  Fusion2
+
+======================================================================
+MicroChart_Release_x64.dll
+  ColorInterpolation
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\MicroChart_Release_x64.pdb
+  ResolutionUnit
+  gpThermal
+  interpolate
+  interpolating
+
+======================================================================
+MicroDC_Release_x64.dll
+   </ThermalStreamParam>
+  </videoCodingType></ThermalStreamParam>
+  <?xml version="1.0" encoding="UTF-8"?><ThermalStreamParam version="2.0">
+  <ThermalStreamParam version="2.0">
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroDC_Release_x64.pdb
+  Fusion1
+  Fusion2
+  GET /ISAPI/Thermal/AlgVersion
+  GET /ISAPI/Thermal/GetClientAccessCapabilities?format=json
+  GET /ISAPI/Thermal/channels/%s/streamParam
+  GET /ISAPI/Thermal/channels/%s/streamParam/capabilities
+  GET /ISAPI/Thermal/channels/%s/thermometry/%s/capabilities
+  GET /ISAPI/Thermal/channels/%s/thermometry/basicParam
+  GET /ISAPI/Thermal/channels/%s/thermometry/basicParam/capabilities
+  GET /ISAPI/Thermal/channels/%s/thermometry/pixelToPixelParam
+  POST /ISAPI/Thermal/ExportThermalCalibrationFile?format=json
+  POST /ISAPI/Thermal/GetMultiRemoteAlbumPicture?format=json
+  PUT /ISAPI/Thermal/channels/%s/streamParam
+  PUT /ISAPI/Thermal/channels/%s/thermometry/basicParam
+  Thermal
+  ThermalStream
+  ThermalStreamParam
+  ThermalStreamParamCap
+  USB_GetDeviceConfig  USB_GET_THERMAL_CAPABILITIES failed !!! --- ErrorCode:
+  USB_GetDeviceConfig  USB_GET_THERMAL_CAPABILITIES failed !!! --- ErrorCode: Device not support!
+  USB_GetDeviceConfig  USB_GET_THERMAL_IMAGE_FOCUS failed !!! --- ErrorCode:
+  USB_GetDeviceConfig  USB_GET_THERMAL_IMAGE_FOCUS failed !!! --- ErrorCode: Device not support!
+  USB_GetDeviceConfig USB_GET_THERMAL_ALG_VERSION failed !!! --- ErrorCode:
+  USB_GetDeviceConfig USB_GET_THERMAL_ALG_VERSION success !!!
+  USB_GetDeviceConfig USB_GET_THERMAL_CAPABILITIES success !!!
+  USB_GetDeviceConfig USB_GET_THERMAL_IMAGE_FOCUS success !!!
+  USB_GetDeviceConfig USB_GET_THERMAL_STREAM_PARAM_CAPABILITIES failed !!! --- ErrorCode:
+  USB_GetDeviceConfig USB_GET_THERMAL_STREAM_PARAM_CAPABILITIES success !!!
+  USB_GetDeviceConfig USB_IMAGE_ENHANCEMENT_EX failed !!! --- ErrorCode:
+  USB_GetDeviceConfig USB_IMAGE_ENHANCEMENT_EX success !!!
+  USB_GetDeviceConfig USB_SET_THERMAL_IMAGE_FOCUS success !!!
+  USB_SET_THERMAL_IMAGE_FOCUS getDeviceCommandState failed !!!
+  USB_SET_THERMAL_STREAM_PARAM getDeviceCommandState failed !!!
+  USB_SetDeviceConfig  USB_SET_THERMAL_IMAGE_FOCUS failed !!! --- ErrorCode:
+  USB_SetDeviceConfig  USB_SET_THERMAL_STREAM_PARAM failed !!! --- ErrorCode:
+  USB_SetDeviceConfig USB_SET_THERMAL_STREAM_PARAM success !!!
+  bool __cdecl MicroSDK::APPDeviceVersion::getImageProcessingParams(struct MicroSDK::ImageProcessingParams &,const int)
+  bool __cdecl MicroSDK::FPGADeviceVersion::getImageProcessingParams(struct MicroSDK::ImageProcessingParams &,const int)
+  bool __cdecl MicroSDK::NetControl::getRawDataInfoParam(struct MicroSDK::mResolution &,const int,const int)
+  bool __cdecl MicroSDK::NetControl::isThermalTypeRight(const int,const int)
+  bool __cdecl MicroSDK::USBControl::getImageEnhancementParamEx(struct tagUSB_IMAGE_ENHANCEMENT_EX &,const int)
+  bool __cdecl MicroSDK::USBControl::getRawResolutionType(unsigned int &,unsigned int &,unsigned int &,const int)
+  bool __cdecl MicroSDK::USBControl::getThermalAlgVersion(struct tagUSB_THERMAL_ALG_VERSION &,const int)
+  bool __cdecl MicroSDK::USBControl::getThermalBitStreamParamSettingCap(struct tagUSB_THERMAL_STREAM_PARAM_CAPABILITIES &,const int)
+  bool __cdecl MicroSDK::USBControl::getThermalCap(struct tagUSB_THERMAL_CAPABILITIES &,const int)
+  bool __cdecl MicroSDK::USBControl::getThermalClientAccessCap(struct tagUSB_THERMAL_CLIENT_ACCESS_CAPABILITIES &,const int)
+  bool __cdecl MicroSDK::USBControl::setThermalStreamParam(struct tagUSB_THERMAL_STREAM_PARAM &,const int)
+  enhanceLevel
+  enhanceMode
+  find resolution in USB_VIDEO_CAPACITY failed. --- ErrorCode:
+  getImageProcessingParams failed. --- ErrorCode:
+  getRawResolutionType  failed !!! errorCode =
+  getRawResolutionType  success !!!
+  set Device tongdao Resolution:  width =
+  thermalOpticalTransmittance
+
+======================================================================
+MicroElecPicTA_Release_x64.dll
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\MicroElecPicTA_Release_x64.pdb
+  Fusion1
+  Fusion2
+
+======================================================================
+MicroIA_Release_x64.dll
+  .?AVFusionProcess@MicroSDK@@
+  ??0BlendingProcess@MicroSDK@@QEAA@AEBUmResolution@1@0@Z
+  ??0ContextTestISPProcessing@MicroSDK@@QEAA@AEBUmResolution@1@AEBUImageISPInitParameters@1@W4Caculator@ISPProcess@1@@Z
+  ??0ContextTestPaletteProcessing@MicroSDK@@QEAA@AEBUmResolution@1@0W4Caculator@ISPProcess@1@@Z
+  ??0FusionProcess@MicroSDK@@QEAA@AEBUmResolution@1@0AEBUImageFusionParams@1@@Z
+  ??0ISPProcess@MicroSDK@@QEAA@AEBUmResolution@1@AEBUTempRange@1@AEBUImageISPInitParameters@1@_N3@Z
+  ??0MatchProcess@MicroSDK@@QEAA@AEBUmResolution@1@0@Z
+  ??1FusionProcess@MicroSDK@@UEAA@XZ
+  ??_7FusionProcess@MicroSDK@@6B@
+  ?AGC_RUN@ContextTestISPProcessing@MicroSDK@@QEAA_NAEAUSharedBlock@2@0AEAURawDataInfo@2@AEAU?$mRange@G@2@2AEAU?$mRange@E@2@AEBUBareBlock@2@AEBUmResolution@2@AEBULevelSpanParams@2@AEBUEnhancementParams@2@@Z
+  ?DDE_V3_AddHfDetail@ContextTestISPProcessing@MicroSDK@@QEAA_NAEAUSharedBlock@2@AEBUBareBlock@2@11AEBUmResolution@2@@Z
+  ?DDE_V3_GetRawDetail@ContextTestISPProcessing@MicroSDK@@QEAA_NAEAUSharedBlock@2@AEBUBareBlock@2@AEBUmResolution@2@@Z
+  ?NR_V2_1_Filter14bit@ContextTestISPProcessing@MicroSDK@@QEAA_NAEAUSharedBlock@2@AEBUBareBlock@2@AEBUmResolution@2@AEBUDNRParams@2@@Z
+  ?NR_V2_1_Filter8bit@ContextTestISPProcessing@MicroSDK@@QEAA_NAEAUSharedBlock@2@AEBUBareBlock@2@AEBUmResolution@2@@Z
+  ?__autoclassinit2@FusionProcess@MicroSDK@@QEAAX_K@Z
+  ?clone@BlendingProcess@MicroSDK@@UEBAPEAVFusionProcess@2@XZ
+  ?clone@FusionProcess@MicroSDK@@UEBAPEAV12@XZ
+  ?converToProcMode@FusionProcess@MicroSDK@@CAHW4FusionDisplayMode@2@W4FusionType@2@@Z
+  ?fusionProcess@FusionProcess@MicroSDK@@QEAA_NAEAUIRImage@2@AEBU32@@Z
+  ?getMatchVisibleImg@FusionProcess@MicroSDK@@QEAA_NAEAUImage@2@@Z
+  ?getThmRes@FusionProcess@MicroSDK@@QEBA?AUmResolution@2@XZ
+  ?setEnhancementConfig@ISPProcess@MicroSDK@@QEAA_NAEBUEnhancementParams@2@@Z
+  ?setFusionArea@BlendingProcess@MicroSDK@@UEAA_NAEBUmRect@2@@Z
+  ?setFusionArea@FusionProcess@MicroSDK@@UEAA_NAEBUmRect@2@@Z
+  ?setMatchConfig@MatchProcess@MicroSDK@@QEAA_NAEBUFusionParams@2@@Z
+  ?setMatchVisibleImg@FusionProcess@MicroSDK@@QEAA_NAEBUImage@2@@Z
+  ?setPIPConfig@FusionProcess@MicroSDK@@QEAA_NAEBUPIPParams@2@@Z
+  ?setSuperIREnabled@ISPProcess@MicroSDK@@QEAA_N_N@Z
+  ?setSuperIRFunc@ISPProcess@MicroSDK@@QEAA_NV?$function@$$A6A_NAEAUImage@MicroSDK@@AEBU12@@Z@std@@@Z
+  ?thermalImageResolution@MatchProcess@MicroSDK@@SA?AUmResolution@2@AEBU32@0AEBUmRect@2@0@Z
+  ?tranformEnhancementParams@ISPProcess@MicroSDK@@AEAA_NAEAUEnhancementParams@2@AEBU32@@Z
+  CE_ImageEnhance_Process
+  CE_PSEUDOCOLOR_PROCESS ce_imageenhance_process done.
+  Create fusion handle failed!
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\MicroIA\../cplugin/utils/HandlePool.h
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroIA_Release_x64.pdb
+  Fusion handle is invalid!
+  Fusion is not initialized!
+  Fusion process failed!
+  Fusion1
+  Fusion2
+  Fusion\FusionProcess.cpp
+  ISPProcess\SuperIR\AISuperResWindowsHelper.cpp
+  Match rectangle or thermal resolution is invalid!
+  Raw resolution is invalid!
+  Run ce_imageenhance_process failed.
+  Set fusion bin params failed!
+  Set thermal or visible image resolution failed!
+  Set thermal resolution failed!
+  Temperature matrix resolution is not equal with palette!
+  Thermal image is invalid!
+  Thermal or visible image resolution is invalid!
+  Turn PIP fusion on failed!
+  Using default fusion bin file.
+  __cdecl MicroSDK::BlendingProcess::BlendingProcess(const struct MicroSDK::mResolution &,const struct MicroSDK::mResolution &)
+  __cdecl MicroSDK::FusionProcess::FusionProcess(const struct MicroSDK::mResolution &,const struct MicroSDK::mResolution &,const struct MicroSDK::ImageFusionParams &)
+  __cdecl MicroSDK::MatchProcess::MatchProcess(const struct MicroSDK::mResolution &,const struct MicroSDK::mResolution &)
+  bool __cdecl MicroSDK::CppPaletteStrategy::ce_imageenhance_process(void *,unsigned char *,signed char *,unsigned char *)
+  bool __cdecl MicroSDK::FusionProcess::fusionProcess(struct MicroSDK::IRImage &,const struct MicroSDK::IRImage &)
+  bool __cdecl MicroSDK::FusionProcess::getMatchVisibleImg(struct MicroSDK::Image &)
+  bool __cdecl MicroSDK::FusionProcess::setFusionArea(const struct MicroSDK::mRect &)
+  bool __cdecl MicroSDK::FusionProcess::setMatchVisibleImg(const struct MicroSDK::Image &)
+  bool __cdecl MicroSDK::FusionProcess::setPIPConfig(const struct MicroSDK::PIPParams &)
+  bool __cdecl MicroSDK::ISPHandle::setEnhancementConfig(const struct MicroSDK::EnhancementParams &)
+  bool __cdecl MicroSDK::LibPaletteStrategy::ce_imageenhance_process(void *,unsigned char *,signed char *,unsigned char *)
+  bool __cdecl MicroSDK::MatchProcess::setMatchConfig(const struct MicroSDK::FusionParams &)
+  bool __cdecl MicroSDK::PaletteHandle::setResolution(const struct MicroSDK::mResolution &,const struct MicroSDK::mResolution &)
+  change EnhancementConfig.
+
+======================================================================
+MicroIPA_Release_x64.dll
+                  __global signed char *pHfDetailEnhanced,
+                  pHfDetailEnhanced[i] = TIPG_CLIP(temp * tmpValue, -dde3DetailMaxNeg, dde3DetailMaxPos);
+              __kernel void detailWeightEnhance(
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroIPA_Release_x64.pdb
+  detailWeightEnhance
+
+======================================================================
+MicroIPC_Release_x64.dll
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\MicroIPC_Release_x64.pdb
+
+======================================================================
+MicroJITA_Release_x64.dll
+  .?AVBaseImageProcessor@MicroSDK@@
+  .?AVFusionProcess@MicroSDK@@
+  .?AVImageFusion@MicroSDK@@
+  .?AVImageProcessor@MicroSDK@@
+  .?AVThermalImage@MicroSDK@@
+  ??0BlendingProcess@MicroSDK@@QEAA@AEBUmResolution@1@0@Z
+  ??0FusionProcess@MicroSDK@@QEAA@AEBUmResolution@1@0AEBUImageFusionParams@1@@Z
+  ??0ISPProcess@MicroSDK@@QEAA@AEBUmResolution@1@AEBUTempRange@1@AEBUImageISPInitParameters@1@_N3@Z
+  ??0MatchProcess@MicroSDK@@QEAA@AEBUmResolution@1@0@Z
+  ??1FusionProcess@MicroSDK@@UEAA@XZ
+  ?clone@BlendingProcess@MicroSDK@@UEBAPEAVFusionProcess@2@XZ
+  ?clone@FusionProcess@MicroSDK@@UEBAPEAV12@XZ
+  ?clone@MicroRImageV2@MicroSDK@@UEBAPEAVThermalImage@2@XZ
+  ?exportThermalJPEGV2@MicroSDK@@YA_NAEAUSharedBlock@1@AEBUImage@1@_NQEAX@Z
+  ?fusionProcess@FusionProcess@MicroSDK@@QEAA_NAEAUIRImage@2@AEBU32@@Z
+  ?getEnhancementParams@MicroSDK@@YA_NAEAUEnhancementParams@1@QEAX@Z
+  ?getFusionParams@MicroSDK@@YA_NAEAUFusionParams@1@QEAX@Z
+  ?getImageFusionParams@MicroSDK@@YA_NAEAUImageFusionParams@1@QEAX@Z
+  ?getImageProcessAlgParams@MicroSDK@@YA_NAEAUImageProcessAlgParams@1@QEAX@Z
+  ?getMatchVisibleImg@FusionProcess@MicroSDK@@QEAA_NAEAUImage@2@@Z
+  ?getOptimalScaledResolution@MicroSDK@@YA_NAEAUmResolution@1@QEAX@Z
+  ?getSuperIRConfig@MicroSDK@@YA_NAEAV?$map@UmResolution@MicroSDK@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UResolutionCompare@2@V?$allocator@U?$pair@$$CBUmResolution@MicroSDK@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@
+  ?getSupportedBrands@ThermalImage@MicroSDK@@SA?AV?$vector@W4BrandType@MicroSDK@@V?$allocator@W4BrandType@MicroSDK@@@std@@@std@@XZ
+  ?getThermalImage@MicroSDK@@YA_NAEAUImage@1@QEAX@Z
+  ?getThmRes@FusionProcess@MicroSDK@@QEBA?AUmResolution@2@XZ
+  ?imageFusionParams@MicroRImageV2@MicroSDK@@UEBA?AUImageFusionParams@2@XZ
+  ?imageProcessAlgParams@BaseImage@MicroSDK@@UEBA?AUImageProcessAlgParams@2@XZ
+  ?imageProcessModeInfo@MicroRImageV2@MicroSDK@@UEBA?AUImageProcessModeInfo@2@XZ
+  ?isSuperIREnabled@MicroSDK@@YA_NQEAX@Z
+  ?registerScaledFunction@MicroSDK@@YA_NAEBV?$function@$$A6A_NAEAUImage@MicroSDK@@AEBU12@@Z@std@@AEBUmResolution@1@PEAX@Z
+  ?registerSuperIR@MicroSDK@@YA_NV?$function@$$A6A_NAEAUImage@MicroSDK@@AEBU12@@Z@std@@PEAX@Z
+  ?setEnhancementConfig@ISPProcess@MicroSDK@@QEAA_NAEBUEnhancementParams@2@@Z
+  ?setEnhancementParams@MicroSDK@@YA_NAEBUEnhancementParams@1@PEAX@Z
+  ?setFusionArea@BlendingProcess@MicroSDK@@UEAA_NAEBUmRect@2@@Z
+  ?setFusionArea@FusionProcess@MicroSDK@@UEAA_NAEBUmRect@2@@Z
+  ?setFusionParams@MicroSDK@@YA_NAEBUFusionParams@1@PEAX@Z
+  ?setImageFusionParams@MicroRImageV2@MicroSDK@@UEAA_NAEBUImageFusionParams@2@@Z
+  ?setImageFusionParams@MicroSDK@@YA_NAEBUImageFusionParams@1@PEAX@Z
+  ?setImageProcessAlgParams@BaseImage@MicroSDK@@UEAA_NAEBUImageProcessAlgParams@2@@Z
+  ?setImageProcessModeInfo@MicroRImageV2@MicroSDK@@UEAA_NAEBUImageProcessModeInfo@2@@Z
+  ?setMatchConfig@MatchProcess@MicroSDK@@QEAA_NAEBUFusionParams@2@@Z
+  ?setMatchVisibleImg@FusionProcess@MicroSDK@@QEAA_NAEBUImage@2@@Z
+  ?setPIPConfig@FusionProcess@MicroSDK@@QEAA_NAEBUPIPParams@2@@Z
+  ?setSuperIRConfig@MicroSDK@@YA_NAEBV?$map@UmResolution@MicroSDK@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UResolutionCompare@2@V?$allocator@U?$pair@$$CBUmResolution@MicroSDK@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@
+  ?setSuperIREnabled@ISPProcess@MicroSDK@@QEAA_N_N@Z
+  ?setSuperIREnabled@MicroSDK@@YA_N_NPEAX@Z
+  ?setSuperIRFunc@ISPProcess@MicroSDK@@QEAA_NV?$function@$$A6A_NAEAUImage@MicroSDK@@AEBU12@@Z@std@@@Z
+  ?setSupportedBrands@ThermalImage@MicroSDK@@SA_NAEBV?$vector@W4BrandType@MicroSDK@@V?$allocator@W4BrandType@MicroSDK@@@std@@@std@@@Z
+  ?setThermalJPEG@MicroRImageV2@MicroSDK@@UEAA_NAEBUImage@2@@Z
+  ?thermalImageResolution@MatchProcess@MicroSDK@@SA?AUmResolution@2@AEBU32@0AEBUmRect@2@0@Z
+  ?thermalJPEG@MicroRImageV2@MicroSDK@@UEBA?AUImage@2@XZ
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroJITA_Release_x64.pdb
+  Enhancement parameter exception!
+  Fusion process object is invalid
+  Fusion1
+  Fusion2
+  Image resolution:
+  MicroSDK::exportThermalJPEGV2
+  MicroSDK::getEnhancementParams
+  MicroSDK::getFusionParams
+  MicroSDK::getImageFusionParams
+  MicroSDK::getImageProcessAlgParams
+  MicroSDK::getOptimalScaledResolution
+  MicroSDK::getSuperIRConfig
+  MicroSDK::getThermalImage
+  MicroSDK::isSuperIREnabled
+  MicroSDK::registerSuperIR
+  MicroSDK::setEnhancementParams
+  MicroSDK::setFusionParams
+  MicroSDK::setImageFusionParams
+  MicroSDK::setSuperIRConfig
+  MicroSDK::setSuperIREnabled
+  Set SuperIR enabled failed!
+  Set enhancement failed!
+  Temperature process mode not support SuperIR.
+  Temperature process mode not support scaled. Please close SuperIR or unregister scaled function first.
+  The PIP area exceeds the raw resolution range!
+  The coordinates exceeds the max resolution!
+  Use default AI super IR function.
+  bool __cdecl JITA::initImageProcessor(void)
+  bool __cdecl JITA::isLevelSpanRegionValid(const struct MicroSDK::mRegion &,const struct MicroSDK::mResolution &)
+  bool __cdecl JITA::isRegionValid(const struct MicroSDK::mRegion &,const struct MicroSDK::mResolution &)
+  bool __cdecl JITA::setSuperIREnabled(const bool)
+  bool __cdecl MicroSDK::exportThermalJPEGV2(struct MicroSDK::SharedBlock &,const struct MicroSDK::Image &,const bool,void *const )
+  bool __cdecl MicroSDK::getEnhancementParams(struct MicroSDK::EnhancementParams &,void *const )
+  bool __cdecl MicroSDK::getFusionParams(struct MicroSDK::FusionParams &,void *const )
+  bool __cdecl MicroSDK::getImageFusionParams(struct MicroSDK::ImageFusionParams &,void *const )
+  bool __cdecl MicroSDK::getImageProcessAlgParams(struct MicroSDK::ImageProcessAlgParams &,void *const )
+  bool __cdecl MicroSDK::getOptimalScaledResolution(struct MicroSDK::mResolution &,void *const )
+  bool __cdecl MicroSDK::getSuperIRConfig(class std::map<struct MicroSDK::mResolution,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,struct MicroSDK::ResolutionCompare,class std::allocator<struct std::pair<struc
+  bool __cdecl MicroSDK::getThermalImage(struct MicroSDK::Image &,void *const )
+  bool __cdecl MicroSDK::isSuperIREnabled(void *const )
+  bool __cdecl MicroSDK::registerScaledFunction(const class std::function<bool __cdecl(struct MicroSDK::Image &,struct MicroSDK::Image const &)> &,const struct MicroSDK::mResolution &,void *)
+  bool __cdecl MicroSDK::registerSuperIR(class std::function<bool __cdecl(struct MicroSDK::Image &,struct MicroSDK::Image const &)>,void *)
+  bool __cdecl MicroSDK::setEnhancementParams(const struct MicroSDK::EnhancementParams &,void *)
+  bool __cdecl MicroSDK::setFusionParams(const struct MicroSDK::FusionParams &,void *)
+  bool __cdecl MicroSDK::setImageFusionParams(const struct MicroSDK::ImageFusionParams &,void *)
+  bool __cdecl MicroSDK::setSuperIRConfig(const class std::map<struct MicroSDK::mResolution,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,struct MicroSDK::ResolutionCompare,class std::allocator<struct std::pair
+  bool __cdecl MicroSDK::setSuperIREnabled(const bool,void *)
+  image_processor.log
+  struImageFusionParams exception!
+  super_resolution
+
+======================================================================
+MicroJPEG_Release_x64.dll
+  .?AUFusionJSON@MicroSDK@@
+  .?AV?$_Func_base@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FusionDisplayMode@MicroSDK@@@std@@
+  .?AV?$_Func_base@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FusionType@MicroSDK@@@std@@
+  .?AV?$_Func_base@W4FusionDisplayMode@MicroSDK@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@
+  .?AV?$_Func_base@W4FusionType@MicroSDK@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@
+  .?AV?$_Func_impl@P6A?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FusionDisplayMode@MicroSDK@@@ZV?$allocator@H@2@V12@W434@@std@@
+  .?AV?$_Func_impl@P6A?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FusionType@MicroSDK@@@ZV?$allocator@H@2@V12@W434@@std@@
+  .?AV?$_Func_impl@P6A?AW4FusionDisplayMode@MicroSDK@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@ZV?$allocator@H@4@W412@AEBV34@@std@@
+  .?AV?$_Func_impl@P6A?AW4FusionType@MicroSDK@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@ZV?$allocator@H@4@W412@AEBV34@@std@@
+  .?AVThermalImage@MicroSDK@@
+  .P6A?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FusionDisplayMode@MicroSDK@@@Z
+  .P6A?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FusionType@MicroSDK@@@Z
+  .P6A?AW4FusionDisplayMode@MicroSDK@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
+  .P6A?AW4FusionType@MicroSDK@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
+  ??0ThermalImage@MicroSDK@@AEAA@AEAV01@@Z
+  ??0ThermalImage@MicroSDK@@IEAA@W4FileType@1@@Z
+  ??1ThermalImage@MicroSDK@@UEAA@XZ
+  ??4ThermalImage@MicroSDK@@QEAAAEAV01@AEBV01@@Z
+  ??_7ThermalImage@MicroSDK@@6B@
+  ??_FThermalImage@MicroSDK@@QEAAXXZ
+  ?ALDParams@ThermalImage@MicroSDK@@UEBA?AUAcousticLeakDetectorParams@2@XZ
+  ?OsdParams@ThermalImage@MicroSDK@@UEBA?AUOSDParams@2@XZ
+  ?__autoclassinit2@ThermalImage@MicroSDK@@QEAAX_K@Z
+  ?alarmGearInfo@ThermalImage@MicroSDK@@UEBA?AUAlarmGearInfo@2@XZ
+  ?arithmeticRuleDict@ThermalImage@MicroSDK@@UEBA?AV?$map@IUArithmeticRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUArithmeticRule@MicroSDK@@@std@@@4@@std@@XZ
+  ?arithmeticRules@ThermalImage@MicroSDK@@UEBA?AUArithmeticRules@2@XZ
+  ?brandType@ThermalImage@MicroSDK@@UEBA?AW4BrandType@2@XZ
+  ?capability@ThermalImage@MicroSDK@@QEBAAEBUIRCapabilities@2@XZ
+  ?clone@MicroRImageV1@MicroSDK@@UEBAPEAVThermalImage@2@XZ
+  ?clone@MicroRImageV2@MicroSDK@@UEBAPEAVThermalImage@2@XZ
+  ?clone@StandardRImage@MicroSDK@@UEBAPEAVThermalImage@2@XZ
+  ?colorAlarmPrivateParams@ThermalImage@MicroSDK@@UEBA?AUColorAlarmPrivateParams@2@XZ
+  ?createFromOfflineV1AddInfo@ImageFactory@MicroSDK@@SA?AV?$shared_ptr@VThermalImage@MicroSDK@@@std@@AEBUBareBlock@2@AEBUmResolution@2@@Z
+  ?createFromOfflineV1AddInfoRawPtr@ImageFactory@MicroSDK@@SAPEAVMicroRImageV1@2@AEBUBareBlock@2@AEBUmResolution@2@@Z
+  ?debugInformation@ThermalImage@MicroSDK@@UEBA?AUDebugInformation@2@XZ
+  ?deltaMeasureRuleDict@ThermalImage@MicroSDK@@UEBA?AV?$map@IUDeltaMeasureRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUDeltaMeasureRule@MicroSDK@@@std@@@4@@std@@XZ
+  ?deviceInfo@ThermalImage@MicroSDK@@UEBA?AUDeviceInfo@2@XZ
+  ?deviceInterInfo@ThermalImage@MicroSDK@@UEBA?AUDeviceInterInfo@2@XZ
+  ?diagnosisInfoParams@ThermalImage@MicroSDK@@UEBA?AUDiagnosisInfoParams@2@XZ
+  ?diagnosisiFuncList@ThermalImage@MicroSDK@@UEBA?AUDiagnosisiFuncList@2@XZ
+  ?getSupportedBrands@ThermalImage@MicroSDK@@SA?AV?$vector@W4BrandType@MicroSDK@@V?$allocator@W4BrandType@MicroSDK@@@std@@@std@@XZ
+  ?getThermalImage@AcousticRImage@MicroSDK@@QEBAPEBVThermalImage@2@XZ
+  ?imageCapabilitySet@ThermalImage@MicroSDK@@UEBA?AUIRCapabilities@2@XZ
+  ?imageFeatureInfo@ThermalImage@MicroSDK@@UEBA?AUImageFeatureInfo@2@XZ
+  ?imageFusionParams@AcousticRImage@MicroSDK@@UEBA?AUImageFusionParams@2@XZ
+  ?imageFusionParams@BaseImage@MicroSDK@@UEBA?AUImageFusionParams@2@XZ
+  ?imageFusionParams@MicroRImageV1@MicroSDK@@QEAAAEBUImageFusionParams@2@XZ
+  ?imageFusionParams@MicroRImageV1@MicroSDK@@UEBA?AUImageFusionParams@2@XZ
+  ?imageFusionParams@MicroRImageV2@MicroSDK@@QEAAAEBUImageFusionParams@2@XZ
+  ?imageFusionParams@MicroRImageV2@MicroSDK@@UEBA?AUImageFusionParams@2@XZ
+  ?imageFusionParams@ThermalImage@MicroSDK@@UEBA?AUImageFusionParams@2@XZ
+  ?imageISPParams@ThermalImage@MicroSDK@@UEBA?AUImageISPParameters@2@XZ
+  ?imagePaletteParams@ThermalImage@MicroSDK@@UEBA?AUImagePaletteParams@2@XZ
+  ?imageProcessAlgParams@AcousticImage@MicroSDK@@UEBA?AUImageProcessAlgParams@2@XZ
+  ?imageProcessAlgParams@AcousticRImage@MicroSDK@@UEBA?AUImageProcessAlgParams@2@XZ
+  ?imageProcessAlgParams@BaseImage@MicroSDK@@UEBA?AUImageProcessAlgParams@2@XZ
+  ?imageProcessAlgParams@MicroAcousticV1@MicroSDK@@UEBA?AUImageProcessAlgParams@2@XZ
+  ?imageProcessModeInfo@AcousticRImage@MicroSDK@@UEBA?AUImageProcessModeInfo@2@XZ
+  ?imageProcessModeInfo@BaseImage@MicroSDK@@UEBA?AUImageProcessModeInfo@2@XZ
+  ?imageProcessModeInfo@MicroRImageV1@MicroSDK@@UEBA?AUImageProcessModeInfo@2@XZ
+  ?imageProcessModeInfo@MicroRImageV2@MicroSDK@@UEBA?AUImageProcessModeInfo@2@XZ
+  ?imageProcessModeInfo@ThermalImage@MicroSDK@@UEBA?AUImageProcessModeInfo@2@XZ
+  ?intelligentParams@ThermalImage@MicroSDK@@UEBA?AUIntelligentParams@2@XZ
+  ?measureResults@ThermalImage@MicroSDK@@UEBA?AUMeasureResults@2@XZ
+  ?rawDataInfo@ThermalImage@MicroSDK@@UEBA?AURawDataInfo@2@XZ
+  ?setALDParams@ThermalImage@MicroSDK@@UEAA_NAEBUAcousticLeakDetectorParams@2@@Z
+  ?setAlarmGearInfo@ThermalImage@MicroSDK@@UEAA_NAEBUAlarmGearInfo@2@@Z
+  ?setArithmeticRuleDict@ThermalImage@MicroSDK@@UEAA_NAEBV?$map@IUArithmeticRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUArithmeticRule@MicroSDK@@@std@@@4@@std@@@Z
+  ?setArithmeticRules@ThermalImage@MicroSDK@@UEAA_NAEBUArithmeticRules@2@@Z
+  ?setBrandType@ThermalImage@MicroSDK@@UEAA_NAEBW4BrandType@2@@Z
+  ?setCapability@ThermalImage@MicroSDK@@QEAA_NAEBUIRCapabilities@2@@Z
+  ?setColorAlarmPrivateParams@ThermalImage@MicroSDK@@UEAA_NAEBUColorAlarmPrivateParams@2@@Z
+  ?setDeltaMeasureRuleDict@ThermalImage@MicroSDK@@UEAA_NAEBV?$map@IUDeltaMeasureRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUDeltaMeasureRule@MicroSDK@@@std@@@4@@std@@@Z
+  ?setDeviceInfo@ThermalImage@MicroSDK@@UEAA_NAEBUDeviceInfo@2@@Z
+  ?setDeviceInterInfo@ThermalImage@MicroSDK@@UEAA_NAEBUDeviceInterInfo@2@@Z
+  ?setDiagnosisInfoParams@ThermalImage@MicroSDK@@UEAA_NAEBUDiagnosisInfoParams@2@@Z
+  ?setDiagnosisiFuncList@ThermalImage@MicroSDK@@UEAA_NAEBUDiagnosisiFuncList@2@@Z
+  ?setImageCapabilitySet@ThermalImage@MicroSDK@@UEAA_NAEBUIRCapabilities@2@@Z
+  ?setImageFeatureInfo@ThermalImage@MicroSDK@@UEAA_NAEBUImageFeatureInfo@2@@Z
+  ?setImageFusionParams@AcousticRImage@MicroSDK@@UEAA_NAEBUImageFusionParams@2@@Z
+  ?setImageFusionParams@BaseImage@MicroSDK@@UEAA_NAEBUImageFusionParams@2@@Z
+  ?setImageFusionParams@MicroRImageV1@MicroSDK@@UEAA_NAEBUImageFusionParams@2@@Z
+  ?setImageFusionParams@MicroRImageV2@MicroSDK@@UEAA_NAEBUImageFusionParams@2@@Z
+  ?setImageFusionParams@ThermalImage@MicroSDK@@UEAA_NAEBUImageFusionParams@2@@Z
+  ?setImageISPParams@ThermalImage@MicroSDK@@UEAA_NAEBUImageISPParameters@2@@Z
+  ?setImagePaletteParams@ThermalImage@MicroSDK@@UEAA_NAEBUImagePaletteParams@2@@Z
+  ?setImageProcessAlgParams@AcousticImage@MicroSDK@@UEAA_NAEBUImageProcessAlgParams@2@@Z
+  ?setImageProcessAlgParams@AcousticRImage@MicroSDK@@UEAA_NAEBUImageProcessAlgParams@2@@Z
+  ?setImageProcessAlgParams@BaseImage@MicroSDK@@UEAA_NAEBUImageProcessAlgParams@2@@Z
+  ?setImageProcessAlgParams@MicroAcousticV1@MicroSDK@@UEAA_NAEBUImageProcessAlgParams@2@@Z
+  ?setImageProcessModeInfo@AcousticRImage@MicroSDK@@UEAA_NAEBUImageProcessModeInfo@2@@Z
+  ?setImageProcessModeInfo@BaseImage@MicroSDK@@UEAA_NAEBUImageProcessModeInfo@2@@Z
+  ?setImageProcessModeInfo@MicroRImageV1@MicroSDK@@UEAA_NAEBUImageProcessModeInfo@2@@Z
+  ?setImageProcessModeInfo@MicroRImageV2@MicroSDK@@UEAA_NAEBUImageProcessModeInfo@2@@Z
+  ?setImageProcessModeInfo@ThermalImage@MicroSDK@@UEAA_NAEBUImageProcessModeInfo@2@@Z
+  ?setIntelligentParams@ThermalImage@MicroSDK@@UEAA_NAEBUIntelligentParams@2@@Z
+  ?setMeasureResults@ThermalImage@MicroSDK@@UEAA_NAEBUMeasureResults@2@@Z
+  ?setOSDParams@ThermalImage@MicroSDK@@UEAA_NAEBUOSDParams@2@@Z
+  ?setRawDataInfo@ThermalImage@MicroSDK@@UEAA_NAEBURawDataInfo@2@@Z
+  ?setShieldedAreaInfo@ThermalImage@MicroSDK@@UEAA_NAEBUShieldedAreaInfo@2@@Z
+  ?setSubRuleSetConfigParams@ThermalImage@MicroSDK@@UEAA_NAEBUSubRuleSetConfigParams@2@@Z
+  ?setSupportedBrands@ThermalImage@MicroSDK@@SA_NAEBV?$vector@W4BrandType@MicroSDK@@V?$allocator@W4BrandType@MicroSDK@@@std@@@std@@@Z
+  ?setTempDeviceConfigParams@ThermalImage@MicroSDK@@UEAA_NAEBUTempDeviceConfigParams@2@@Z
+  ?setTempMeasurementParams@ThermalImage@MicroSDK@@UEAA_NAEBUTempMeasurementParameters@2@@Z
+  ?setThermalData@MicroAcousticV1@MicroSDK@@QEAA_NAEBUSharedBlock@2@@Z
+  ?setThermalImage@AcousticRImage@MicroSDK@@QEAA_NV?$unique_ptr@VThermalImage@MicroSDK@@U?$default_delete@VThermalImage@MicroSDK@@@std@@@std@@@Z
+  ?setThermalJPEG@AcousticRImage@MicroSDK@@UEAA_NAEBUImage@2@@Z
+  ?setThermalJPEG@BaseImage@MicroSDK@@UEAA_NAEBUImage@2@@Z
+  ?setThermalJPEG@MicroRImageV1@MicroSDK@@UEAA_NAEBUImage@2@@Z
+  ?setThermalJPEG@MicroRImageV2@MicroSDK@@UEAA_NAEBUImage@2@@Z
+  ?setThermalJPEG@StandardRImage@MicroSDK@@UEAA_NAEBUImage@2@@Z
+  ?setThermalJPEG@ThermalImage@MicroSDK@@UEAA_NAEBUImage@2@@Z
+  ?setVisibleJPEG@ThermalImage@MicroSDK@@UEAA_NAEBUImage@2@@Z
+  ?shieldedAreaInfo@ThermalImage@MicroSDK@@UEBA?AUShieldedAreaInfo@2@XZ
+  ?subRuleSetConfigParams@ThermalImage@MicroSDK@@UEBA?AUSubRuleSetConfigParams@2@XZ
+  ?tempDeviceConfigParams@ThermalImage@MicroSDK@@UEBA?AUTempDeviceConfigParams@2@XZ
+  ?tempMeasurementParams@ThermalImage@MicroSDK@@UEBA?AUTempMeasurementParameters@2@XZ
+  ?thermalJPEG@AcousticRImage@MicroSDK@@UEBA?AUImage@2@XZ
+  ?thermalJPEG@BaseImage@MicroSDK@@UEBA?AUImage@2@XZ
+  ?thermalJPEG@MicroRImageV1@MicroSDK@@QEAAAEBUImage@2@XZ
+  ?thermalJPEG@MicroRImageV1@MicroSDK@@UEBA?AUImage@2@XZ
+  ?thermalJPEG@MicroRImageV2@MicroSDK@@QEAAAEBUImage@2@XZ
+  ?thermalJPEG@MicroRImageV2@MicroSDK@@UEBA?AUImage@2@XZ
+  ?thermalJPEG@StandardRImage@MicroSDK@@UEBA?AUImage@2@XZ
+  ?thermalJPEG@ThermalImage@MicroSDK@@UEBA?AUImage@2@XZ
+  ?type@ThermalImage@MicroSDK@@QEBA?AW4FileType@2@XZ
+  ?visibleJPEG@ThermalImage@MicroSDK@@UEBA?AUImage@2@XZ
+  Compose enhance region failed!
+  Compose enhance region info failed!
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroJPEG_Release_x64.pdb
+  EnhancementMode
+  Failed to compose the thermal offline block.
+  Failed to parse the thermal offline block in the AcousticRImage format.
+  Fusion
+  Fusion1
+  Fusion2
+  FusionDisplayMode
+  FusionMode
+  FusionType
+  Parse enhance region failed.
+  Parse enhance region points failed!
+  Parse isothermal failed.
+  Parse jpeg resolution failed!
+  Parse main image resolution failed!
+  Parse thermal image resolution failed.
+  Parse visible image resolution failed.
+  The isothermal information size is zero or the block pointer is nullptr.
+  The isothermal information size is zero.
+  Thermal
+  ThermalPercentage
+  bool __cdecl MicroSDK::JPEGImageOperator::createFakeJpeg(struct MicroSDK::Image &,const struct MicroSDK::mResolution &)
+  bool __cdecl MicroSDK::OfflineV1DataBlockOperator::composeEnhanceRegion(struct MicroSDK::SharedBlock &,const class std::vector<struct MicroSDK::Coordinate2D,class std::allocator<struct MicroSDK::Coordinate2D> > &,const enum MicroSDK::RegionType &)
+  bool __cdecl MicroSDK::OfflineV1DataBlockOperator::parseEnhanceRegion(class std::vector<struct MicroSDK::Coordinate2D,class std::allocator<struct MicroSDK::Coordinate2D> > &,const struct MicroSDK::BareBlock &,const enum MicroSDK::RegionType &)
+  bool __cdecl MicroSDK::OfflineV1DataBlockOperator::parseSingleIsothermal(struct MicroSDK::ColorAlarmParams &,unsigned int &,const unsigned char *,const unsigned int)
+  bool __cdecl MicroSDK::SDMPJpegParser::compose(struct MicroSDK::SharedBlock &,const class MicroSDK::ThermalImage *,const struct MicroSDK::Image &)
+  bool __cdecl MicroSDK::SDMPJpegParser::createBuiltInTagNoteJSSDData(class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &,const class MicroSDK::ThermalImage *,const bool)
+  bool __cdecl MicroSDK::SDMPJpegParser::createCapabilityJSSDData(class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &,const class MicroSDK::ThermalImage *,const bool)
+  bool __cdecl MicroSDK::SDMPJpegParser::createExif(struct MicroSDK::APPn &,const class std::vector<struct MicroSDK::APPn,class std::allocator<struct MicroSDK::APPn> > &,const class MicroSDK::ThermalImage *)
+  bool __cdecl MicroSDK::SDMPJpegParser::createLeakDetectorJSSDData(class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &,const class MicroSDK::ThermalImage *,const bool)
+  bool __cdecl MicroSDK::SDMPJpegParser::createNonBuiltInTagNoteJSSDData(class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &,const class MicroSDK::ThermalImage *,const bool)
+  bool __cdecl MicroSDK::SDMPJpegParser::createRadiometricJSSDData(class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &,const class MicroSDK::ThermalImage *,const bool)
+  bool __cdecl MicroSDK::SDMPJpegParser::getBuiltInTagNoteJSSDData(class MicroSDK::ThermalImage *,class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &)
+  bool __cdecl MicroSDK::SDMPJpegParser::getCapabilityJSSDData(class MicroSDK::ThermalImage *,class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &)
+  bool __cdecl MicroSDK::SDMPJpegParser::getLeakDetectorJSSDData(class MicroSDK::ThermalImage *,class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &)
+  bool __cdecl MicroSDK::SDMPJpegParser::getMMFResData(class MicroSDK::ThermalImage *,class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &)
+  bool __cdecl MicroSDK::SDMPJpegParser::getNonBuiltInTagNoteJSSDData(class MicroSDK::ThermalImage *,class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &)
+  bool __cdecl MicroSDK::SDMPJpegParser::getRadiometricJSSDData(class MicroSDK::ThermalImage *,class std::vector<struct MicroSDK::MMFResourceData,class std::allocator<struct MicroSDK::MMFResourceData> > &)
+
+======================================================================
+MicroOdfWriter_Release_x64.dll
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\MicroOdfWriter_Release_x64.pdb
+
+======================================================================
+MicroParallel_Release_x64.dll
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroParallel_Release_x64.pdb
+
+======================================================================
+MicroPixeler_Release_x64.dll
+  .?AV?$_Ref_count@VThermalPicMetaTakedMaterial@MICROPIXELER@@@std@@
+  .?AVChangeFusionParamCommand@MICROPIXELER@@
+  .?AVThermalPicInterface@MICROPIXELER@@
+  .?AVThermalPicMetaTakedMaterial@MICROPIXELER@@
+  ??0ChangeAdvParamCommand@MICROPIXELER@@QEAA@V?$shared_ptr@VTakedMaterial@MICROPIXELER@@@std@@AEBUDNRParams@MicroSDK@@AEBUEnhancementParams@5@@Z
+  ??0ChangeFusionParamCommand@MICROPIXELER@@QEAA@AEBV01@@Z
+  ??0ChangeFusionParamCommand@MICROPIXELER@@QEAA@V?$shared_ptr@VTakedMaterial@MICROPIXELER@@@std@@AEBUImageFusionParams@MicroSDK@@@Z
+  ??0InsulatorAreaRule@MICROPIXELER@@QEAA@AEBUIntelligentRule@MicroSDK@@AEBUOSDAttributes@3@AEBUDiagnosisInfo@3@URuleSetConfig@3@AEBURawDataInfo@3@AEBUmResolution@3@@Z
+  ??0InsulatorCapRule@MICROPIXELER@@QEAA@AEBUIntelligentRule@MicroSDK@@AEBUOSDAttributes@3@AEBUDiagnosisInfo@3@AEBURawDataInfo@3@AEBUmResolution@3@@Z
+  ??0InsulatorRule@MICROPIXELER@@QEAA@AEBUIntelligentRule@MicroSDK@@AEBUOSDAttributes@3@AEBUDiagnosisInfo@3@AEBURawDataInfo@3@AEBUmResolution@3@@Z
+  ??0IntelligentRectRule@MICROPIXELER@@QEAA@AEBUIntelligentRule@MicroSDK@@AEBUOSDAttributes@3@AEBUDiagnosisInfo@3@AEBURawDataInfo@3@AEBUmResolution@3@@Z
+  ??0Rule@MICROPIXELER@@QEAA@AEBUMeasureRule@MicroSDK@@AEBUOSDAttributes@3@AEBUmResolution@3@AEAUMeasurementStats@3@AEBUTempRange@3@@Z
+  ??0Rule@MICROPIXELER@@QEAA@AEBV01@PEAVThermalPicInterface@1@@Z
+  ??0ThermalPicInterface@MICROPIXELER@@QEAA@AEBV01@@Z
+  ??0ThermalPicInterface@MICROPIXELER@@QEAA@XZ
+  ??1ChangeFusionParamCommand@MICROPIXELER@@UEAA@XZ
+  ??1ThermalPicInterface@MICROPIXELER@@QEAA@XZ
+  ??4ChangeFusionParamCommand@MICROPIXELER@@QEAAAEAV01@AEBV01@@Z
+  ??4ThermalPicInterface@MICROPIXELER@@QEAAAEAV01@AEBV01@@Z
+  ??_7ChangeFusionParamCommand@MICROPIXELER@@6B@
+  ??_7ThermalPicInterface@MICROPIXELER@@6B@
+  ?actionDescribtion@ChangeFusionParamCommand@MICROPIXELER@@UEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ
+  ?addArithmeticRule@ThermalPicInterface@MICROPIXELER@@QEAA_NPEAVArithmeticRule@2@@Z
+  ?addIntelligentRule@ThermalPicInterface@MICROPIXELER@@QEAA_NPEAVInsulatorRule@2@@Z
+  ?addRule@ThermalPicInterface@MICROPIXELER@@QEAA_NPEAVRule@2@@Z
+  ?cleanArithmeticRule@ThermalPicInterface@MICROPIXELER@@QEAAXXZ
+  ?cleanRule@ThermalPicInterface@MICROPIXELER@@QEAAXXZ
+  ?clearAllIntelligentRule@ThermalPicInterface@MICROPIXELER@@QEAAXXZ
+  ?cloneData@ThermalPicInterface@MICROPIXELER@@QEBA_NPEAV12@@Z
+  ?convert@Rule@MICROPIXELER@@AEAA?AURuleParam@iVMS4800@@AEBUMeasureRule@MicroSDK@@AEBUmResolution@6@@Z
+  ?convertFromMatchParam@PubFunc@@YA?AUFusionParams@MicroSDK@@AEBUImageMatchParam@iVMS4800@@AEBUmResolution@3@AEBU23@@Z
+  ?convertFromMatchParamPreserveDisplayMode@PubFunc@@YA?AUFusionParams@MicroSDK@@AEBUImageMatchParam@iVMS4800@@AEBUmResolution@3@AEBU23@@Z
+  ?convertThermalImageFormat@ElecThumPicTakedMaterial@MICROPIXELER@@AEAA_NAEAUImage@MicroSDK@@0@Z
+  ?convertToMatchParam@PubFunc@@YA?AUImageMatchParam@iVMS4800@@AEBUFusionParams@MicroSDK@@AEBUmResolution@5@@Z
+  ?coordinateResolution@InsulatorRule@MICROPIXELER@@QEBA?AUmResolution@MicroSDK@@XZ
+  ?createAcousticThermalCombinedAnalysisCmdGroup@AnalysisCmdGroupFactory@MICROPIXELER@@SA?AV?$unique_ptr@VDealTakedMateCommand@MICROPIXELER@@U?$default_delete@VDealTakedMateCommand@MICROPIXELER@@@std@@@std@@V?$shared_ptr@VTakedMaterial@MICROPIXELER@@@4
+  ?createMaterial@MaterialParseFactory@MICROPIXELER@@QEAAPEAVTakedMaterial@2@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iVMS4800@@@std@@@5@_N@Z
+  ?createMaterialQ@MaterialParseFactory@MICROPIXELER@@SAPEAVTakedMaterial@2@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iVMS4800@@@std@@@5@@Z
+  ?createMaterialQ@MaterialParseFactory@MICROPIXELER@@SAPEAVTakedMaterial@2@W4MaterialType@iVMS4800@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iV
+  ?createNewArithmeticRuleID@ThermalPicInterface@MICROPIXELER@@QEAAIXZ
+  ?createNewRuleID@ThermalPicInterface@MICROPIXELER@@QEAAIXZ
+  ?createThermalAnalysisCmdGroup@AnalysisCmdGroupFactory@MICROPIXELER@@SA?AV?$unique_ptr@VDealTakedMateCommand@MICROPIXELER@@U?$default_delete@VDealTakedMateCommand@MICROPIXELER@@@std@@@std@@V?$shared_ptr@VTakedMaterial@MICROPIXELER@@@4@V?$shared_ptr@V
+  ?deleteArithmeticRule@ThermalPicInterface@MICROPIXELER@@QEAA_NI@Z
+  ?deleteIntelligentRule@ThermalPicInterface@MICROPIXELER@@QEAA_NI@Z
+  ?deleteRule@ThermalPicInterface@MICROPIXELER@@QEAA_NI@Z
+  ?exportAnalyzableThermalPic@MaterialParseFactory@MICROPIXELER@@SA_NV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$shared_ptr@VTakedMaterial@MICROPIXELER@@@4@@Z
+  ?exportThermalJPEGV2@MicroSDK@@YA_NAEAUSharedBlock@1@AEBUImage@1@_NQEAX@Z
+  ?getAreaMeasureParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUAreaMeasureParam@iVMS4800@@@Z
+  ?getAreaROIID@ThermalPicInterface@MICROPIXELER@@QEBAHXZ
+  ?getArithmeticOperandThermResult@ThermalPicInterface@MICROPIXELER@@AEBA_NAEAURuleThermResult@iVMS4800@@I@Z
+  ?getArithmeticRule@ThermalPicInterface@MICROPIXELER@@QEAAPEAVArithmeticRule@2@I@Z
+  ?getArithmeticRuleNum@ThermalPicInterface@MICROPIXELER@@QEBAIXZ
+  ?getArithmeticRuleSet@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$map@IPEAVArithmeticRule@MICROPIXELER@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIPEAVArithmeticRule@MICROPIXELER@@@std@@@4@@std@@XZ
+  ?getBlendingParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUBlendingParams@MicroSDK@@@Z
+  ?getCapabilitiesSet@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUIRCapabilities@MicroSDK@@@Z
+  ?getCapability@ThermalPicInterface@MICROPIXELER@@UEBAXAEAUTakedMaterialCapability@iVMS4800@@@Z
+  ?getColorAlarmParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAV?$vector@UColorAlarmParams@MicroSDK@@V?$allocator@UColorAlarmParams@MicroSDK@@@std@@@std@@@Z
+  ?getColorBarImg@ThermalPicInterface@MICROPIXELER@@QEBA?AVQImage@@XZ
+  ?getCustomPseudoColor@ThermalPicInterface@MICROPIXELER@@QEBA?AW4PseudoColor@iVMS4800@@XZ
+  ?getCustomPseudoColorFromPicInfo@ThermalPicInterface@MICROPIXELER@@QEBA?AUCustomPseudoColorFromPicInfo@iVMS4800@@XZ
+  ?getDNRParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUDNRParams@MicroSDK@@@Z
+  ?getDefaultImageMatchParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUImageMatchParam@iVMS4800@@@Z
+  ?getDeltaMeasureRules@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAV?$map@IUDeltaMeasureRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUDeltaMeasureRule@MicroSDK@@@std@@@4@@std@@@Z
+  ?getDeltaRuleAlarmGearInfo@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUAlarmGearInfo@MicroSDK@@@Z
+  ?getDeviceInfo@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUDeviceInfo@MicroSDK@@@Z
+  ?getDiagnoseInsulatorInfoVect@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$vector@UInsulatorInfo@iVMS4800@@V?$allocator@UInsulatorInfo@iVMS4800@@@std@@@std@@XZ
+  ?getDifferentRuleName@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@std@@XZ
+  ?getDoodleInfo@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUDoodleInfo@MicroSDK@@@Z
+  ?getEnhancementParams@MicroSDK@@YA_NAEAUEnhancementParams@1@QEAX@Z
+  ?getEnhancementParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUEnhancementParams@MicroSDK@@@Z
+  ?getFusionParams@MicroSDK@@YA_NAEAUFusionParams@1@QEAX@Z
+  ?getFusionParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUFusionParams@MicroSDK@@@Z
+  ?getGeographicInfo@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUGeographicInfo@iVMS4800@@@Z
+  ?getGlobeTempParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUGlobeTempParam@iVMS4800@@@Z
+  ?getGrayToTempTable@ThermalPicInterface@MICROPIXELER@@UEBA?AV?$shared_ptr@UGrayToTempTable@MICROPIXELER@@@std@@XZ
+  ?getISPImageParam@ThermalPicInterface@MICROPIXELER@@QEBA?AUISPImageParam@iVMS4800@@XZ
+  ?getISPImageParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUISPImageParam@iVMS4800@@@Z
+  ?getImageFusionParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUImageFusionParam@iVMS4800@@@Z
+  ?getImageFusionParams@MicroSDK@@YA_NAEAUImageFusionParams@1@QEAX@Z
+  ?getImageFusionParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUImageFusionParams@MicroSDK@@@Z
+  ?getImageISPParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUImageISPParameters@MicroSDK@@@Z
+  ?getImageMatchParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUImageMatchParam@iVMS4800@@@Z
+  ?getImagePaletteParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUImagePaletteParams@MicroSDK@@@Z
+  ?getIntelligentDiagnosisInfo@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAV?$map@IUDiagnosisInfo@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUDiagnosisInfo@MicroSDK@@@std@@@4@@std@@@Z
+  ?getIntelligentRule@InsulatorAreaRule@MICROPIXELER@@UEBAXAEAUIntelligentRule@MicroSDK@@AEAUmResolution@4@@Z
+  ?getIntelligentRule@InsulatorCapRule@MICROPIXELER@@UEBAXAEAUIntelligentRule@MicroSDK@@AEAUmResolution@4@@Z
+  ?getIntelligentRule@InsulatorRule@MICROPIXELER@@UEBAXAEAUIntelligentRule@MicroSDK@@AEAUmResolution@4@@Z
+  ?getIntelligentRule@IntelligentRectRule@MICROPIXELER@@UEBAXAEAUIntelligentRule@MicroSDK@@AEAUmResolution@4@@Z
+  ?getIntelligentRule@ThermalPicInterface@MICROPIXELER@@QEBAPEAVInsulatorRule@2@I@Z
+  ?getIntelligentRuleSet@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$map@IPEAVInsulatorRule@MICROPIXELER@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIPEAVInsulatorRule@MICROPIXELER@@@std@@@4@@std@@XZ
+  ?getIntelligentRules@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAV?$map@IUIntelligentRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUIntelligentRule@MicroSDK@@@std@@@4@@std@@@Z
+  ?getIntelligentSubRuleFeature@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAV?$map@IURuleSetConfig@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIURuleSetConfig@MicroSDK@@@std@@@4@@std@@@Z
+  ?getLevelAndSpanLowerLimit@ThermalPicInterface@MICROPIXELER@@UEAAXAEAM@Z
+  ?getLevelAndSpanUpperLimit@ThermalPicInterface@MICROPIXELER@@UEAAXAEAM@Z
+  ?getLevelSpanParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAULevelSpanParams@MicroSDK@@@Z
+  ?getMainPreviewPic@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$shared_ptr@UPictureInfo@iVMS4800@@@std@@XZ
+  ?getMainPreviewPic@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUPictureInfo@iVMS4800@@@Z
+  ?getMeasureEnvParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUMeasurementEnvParams@MicroSDK@@@Z
+  ?getMeasureRule@Rule@MICROPIXELER@@QEBAXAEAUMeasureRule@MicroSDK@@AEAUmResolution@4@@Z
+  ?getMeasureRule@Rule@MICROPIXELER@@QEBAXAEAUMeasureRule@MicroSDK@@PEBVThermalPicInterface@2@@Z
+  ?getMeasureRules@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAV?$map@IUMeasureRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUMeasureRule@MicroSDK@@@std@@@4@@std@@@Z
+  ?getOSDParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUOSDParams@MicroSDK@@@Z
+  ?getObjAnlyzReqCount@ThermalPicInterface@MICROPIXELER@@QEAAHXZ
+  ?getObjOwnCount@ThermalPicInterface@MICROPIXELER@@QEAAHXZ
+  ?getOptimalScaledResolution@MicroSDK@@YA_NAEAUmResolution@1@QEAX@Z
+  ?getOsdRuleSet@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$map@IPEAVRule@MICROPIXELER@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIPEAVRule@MICROPIXELER@@@std@@@4@@std@@XZ
+  ?getPIPParam@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUPIPParam@iVMS4800@@@Z
+  ?getPIPParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUPIPParams@MicroSDK@@@Z
+  ?getPreviewMode@ThermalPicInterface@MICROPIXELER@@QEBAXAEAW4ShowMode@iVMS4800@@@Z
+  ?getPseudoColorParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUPseudoColorParams@MicroSDK@@@Z
+  ?getRawDataInfo@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAURawDataInfo@MicroSDK@@@Z
+  ?getResolutionInfo@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUResolutionInfo@iVMS4800@@@Z
+  ?getResolutionRatio@ThermalPicInterface@MICROPIXELER@@QEBANXZ
+  ?getRotateMatchedVisPic@ThermalPicInterface@MICROPIXELER@@UEBA?AV?$shared_ptr@UPictureInfo@iVMS4800@@@std@@M@Z
+  ?getRotateMatchedVisPic@ThermalPicInterface@MICROPIXELER@@UEBAXAEAUPictureInfo@iVMS4800@@M@Z
+  ?getRotateVisPicture@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$shared_ptr@UPictureInfo@iVMS4800@@@std@@M@Z
+  ?getRotateVisPicture@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUPictureInfo@iVMS4800@@M@Z
+  ?getRule@ThermalPicInterface@MICROPIXELER@@QEAAPEAVRule@2@I@Z
+  ?getRule@ThermalPicInterface@MICROPIXELER@@QEBAPEBVRule@2@I@Z
+  ?getRuleNum@ThermalPicInterface@MICROPIXELER@@QEBAIXZ
+  ?getRuleSet@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$map@IPEAVRule@MICROPIXELER@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIPEAVRule@MICROPIXELER@@@std@@@4@@std@@XZ
+  ?getShieldedAreaInfo@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUShieldedAreaInfo@MicroSDK@@@Z
+  ?getShootInfo@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUShootInfo@iVMS4800@@@Z
+  ?getShowTemp@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUShowTemp@iVMS4800@@@Z
+  ?getSouceParamData@ThermalPicInterface@MICROPIXELER@@QEBA?AUSourceParamData@2@XZ
+  ?getTakedMaterialDevInfo@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUTakedMaterialDevInfo@iVMS4800@@@Z
+  ?getTempMeasurementParams@ThermalPicInterface@MICROPIXELER@@UEBA_NAEAUTempMeasurementParameters@MicroSDK@@@Z
+  ?getTextShowPos@ThermalPicInterface@MICROPIXELER@@QEBAXAEAW4TextShowPos@iVMS4800@@@Z
+  ?getThermalImage@MicroSDK@@YA_NAEAUImage@1@QEAX@Z
+  ?getThermalPic@ThermalPicInterface@MICROPIXELER@@QEBA?AUImage@MicroSDK@@XZ
+  ?getThermalPic@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUImage@MicroSDK@@@Z
+  ?getThermalPicInterface@Rule@MICROPIXELER@@QEBAPEAVThermalPicInterface@2@XZ
+  ?getThermalPicInterface@TakedMaterial@MICROPIXELER@@QEAA?AV?$shared_ptr@VThermalPicInterface@MICROPIXELER@@@std@@XZ
+  ?getThermalPicInterface@TakedMaterial@MICROPIXELER@@QEBA?AV?$shared_ptr@$$CBVThermalPicInterface@MICROPIXELER@@@std@@XZ
+  ?getThumbnailPicture@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$shared_ptr@UPictureInfo@iVMS4800@@@std@@XZ
+  ?getThumbnailPicture@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUPictureInfo@iVMS4800@@@Z
+  ?getVisPicture@ThermalPicInterface@MICROPIXELER@@QEBA?AV?$shared_ptr@UPictureInfo@iVMS4800@@@std@@XZ
+  ?getVisPicture@ThermalPicInterface@MICROPIXELER@@QEBAXAEAUPictureInfo@iVMS4800@@@Z
+  ?globalRule@ThermalPicInterface@MICROPIXELER@@QEAAPEAVRule@2@XZ
+  ?globalRule@ThermalPicInterface@MICROPIXELER@@QEBAPEBVRule@2@XZ
+  ?imageAnalyzeParams@ThermalPicInterface@MICROPIXELER@@QEBAAEBUImageAnalyzeParams@iVMS4800@@XZ
+  ?isDeviceInfoReady@ThermalPicInterface@MICROPIXELER@@QEBA_NXZ
+  ?isEndOfElecThermal@MaterialParse@MICROPIXELER@@CA_NPEAD@Z
+  ?isMainPreviewInfoReady@ThermalPicInterface@MICROPIXELER@@QEBA_NXZ
+  ?isParamAbnormalImage@ThermalPicInterface@MICROPIXELER@@QEBA_NXZ
+  ?isRawdataAbnormalImage@ThermalPicInterface@MICROPIXELER@@QEBA_NXZ
+  ?isSupportMicroDistance@ThermalPicInterface@MICROPIXELER@@QEBA_NXZ
+  ?isVisPictureReady@ThermalPicInterface@MICROPIXELER@@AEBA_NXZ
+  ?makeUpThermalPicMate@MicroAcousticPicTakedMaterial@MICROPIXELER@@AEAAPEAVThermalPicMetaTakedMaterial@2@PEAX@Z
+  ?makeUpThermalPicMate@MicroThumPicTakedMaterial@MICROPIXELER@@AEAAPEAVThermalPicMetaTakedMaterial@2@PEAX@Z
+  ?parseElecThermalJPEG@MaterialParseFactory@MICROPIXELER@@SAPEAVTakedMaterial@2@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
+  ?parseRadiometricsJPEG@MaterialParseFactory@MICROPIXELER@@SAPEAVTakedMaterial@2@AEAIAEA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV?$vector@UCustomFusionMatchParam@iVMS4800@@V?$allocator@UCustomFusionMatchParam@iVMS4800@@@s
+  ?refreshArithmeticRuleResult@ThermalPicInterface@MICROPIXELER@@QEAAXW4TempUnitEnum@InternationalSetting@Chameleon@@@Z
+  ?registerScaledFunction@MicroSDK@@YA_NAEBV?$function@$$A6A_NAEAUImage@MicroSDK@@AEBU12@@Z@std@@AEBUmResolution@1@PEAX@Z
+  ?registerSuperIR@MicroSDK@@YA_NV?$function@$$A6A_NAEAUImage@MicroSDK@@AEBU12@@Z@std@@PEAX@Z
+  ?resetCacheIdex@ThermalPicInterface@MICROPIXELER@@QEAAXXZ
+  ?restoreCommand@ChangeFusionParamCommand@MICROPIXELER@@UEAA_NXZ
+  ?runCommand@ChangeFusionParamCommand@MICROPIXELER@@UEAA_NXZ
+  ?saveAsThermalPic@MaterialParseFactory@MICROPIXELER@@SA?AV?$shared_ptr@VTakedMaterial@MICROPIXELER@@@std@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@V34@@Z
+  ?saveAsThermalPicModify@MaterialParseFactory@MICROPIXELER@@SA_NV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$shared_ptr@VTakedMaterial@MICROPIXELER@@@4@@Z
+  ?saveCustomPseudoColorFromPicInfo@ThermalPicInterface@MICROPIXELER@@QEAAXXZ
+  ?setAreaMeasureParam@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUAreaMeasureParam@iVMS4800@@@Z
+  ?setAreaROIID@ThermalPicInterface@MICROPIXELER@@QEAAXI@Z
+  ?setArithmeticRuleSet@ThermalPicInterface@MICROPIXELER@@QEAA_NV?$map@IPEAVArithmeticRule@MICROPIXELER@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIPEAVArithmeticRule@MICROPIXELER@@@std@@@4@@std@@@Z
+  ?setBlendingParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUBlendingParams@MicroSDK@@@Z
+  ?setCapabilitiesSet@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUIRCapabilities@MicroSDK@@@Z
+  ?setColorAlarmParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBV?$vector@UColorAlarmParams@MicroSDK@@V?$allocator@UColorAlarmParams@MicroSDK@@@std@@@std@@@Z
+  ?setCoordinateInfoFromRegion@InsulatorRule@MICROPIXELER@@IEAAXAEBUmRegion@MicroSDK@@AEBUmResolution@4@1@Z
+  ?setCustomPseudoColor@ThermalPicInterface@MICROPIXELER@@QEAAXW4PseudoColor@iVMS4800@@@Z
+  ?setCustomPseudoColorFromPicInfo@ThermalPicInterface@MICROPIXELER@@QEAAXUCustomPseudoColorFromPicInfo@iVMS4800@@@Z
+  ?setDNRParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUDNRParams@MicroSDK@@@Z
+  ?setDefaultImageMatchParam@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUImageMatchParam@iVMS4800@@@Z
+  ?setDeltaMeasureRules@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBV?$map@IUDeltaMeasureRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUDeltaMeasureRule@MicroSDK@@@std@@@4@@std@@@Z
+  ?setDeltaRuleAlarmGearInfo@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUAlarmGearInfo@MicroSDK@@@Z
+  ?setDeviceInfo@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUDeviceInfo@MicroSDK@@@Z
+  ?setDiagnoseInsulatorInfoVect@ThermalPicInterface@MICROPIXELER@@QEAAXAEBV?$vector@UInsulatorInfo@iVMS4800@@V?$allocator@UInsulatorInfo@iVMS4800@@@std@@@std@@@Z
+  ?setDoodleInfo@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUDoodleInfo@MicroSDK@@@Z
+  ?setEnhancementParams@MicroSDK@@YA_NAEBUEnhancementParams@1@PEAX@Z
+  ?setEnhancementParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUEnhancementParams@MicroSDK@@@Z
+  ?setFusionParams@MicroSDK@@YA_NAEBUFusionParams@1@PEAX@Z
+  ?setFusionParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUFusionParams@MicroSDK@@@Z
+  ?setGeographicInfo@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUGeographicInfo@iVMS4800@@@Z
+  ?setGlobeTempParam@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUGlobeTempParam@iVMS4800@@@Z
+  ?setGrayToTempTable@ThermalPicInterface@MICROPIXELER@@UEAAXV?$shared_ptr@UGrayToTempTable@MICROPIXELER@@@std@@@Z
+  ?setIRTakedMaterial@Rule@MICROPIXELER@@QEAAXPEAVThermalPicInterface@2@@Z
+  ?setISPImageParam@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUISPImageParam@iVMS4800@@@Z
+  ?setImageAnalyzeParams@ThermalPicInterface@MICROPIXELER@@UEAAXAEBUImageAnalyzeParams@iVMS4800@@@Z
+  ?setImageFusionParam@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUImageFusionParam@iVMS4800@@@Z
+  ?setImageMatchParam@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUImageMatchParam@iVMS4800@@@Z
+  ?setImageParamAbnormal@ThermalPicInterface@MICROPIXELER@@QEAAX_N@Z
+  ?setImageRawdataAbnormal@ThermalPicInterface@MICROPIXELER@@QEAAX_N@Z
+  ?setIntelligentDiagnosisInfo@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBV?$map@IUDiagnosisInfo@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUDiagnosisInfo@MicroSDK@@@std@@@4@@std@@@Z
+  ?setIntelligentRules@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBV?$map@IUIntelligentRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUIntelligentRule@MicroSDK@@@std@@@4@@std@@@Z
+  ?setIntelligentSubRuleFeature@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBV?$map@IURuleSetConfig@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIURuleSetConfig@MicroSDK@@@std@@@4@@std@@@Z
+  ?setLevelSpanParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBULevelSpanParams@MicroSDK@@@Z
+  ?setMainPreviewPic@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUPictureInfo@iVMS4800@@@Z
+  ?setMeasureEnvParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUMeasurementEnvParams@MicroSDK@@@Z
+  ?setMeasureRules@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBV?$map@IUMeasureRule@MicroSDK@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIUMeasureRule@MicroSDK@@@std@@@4@@std@@@Z
+  ?setOSDParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUOSDParams@MicroSDK@@@Z
+  ?setObjAnlyzReqCount@ThermalPicInterface@MICROPIXELER@@QEAAXAEBH@Z
+  ?setObjOwnCount@ThermalPicInterface@MICROPIXELER@@QEAAXH@Z
+  ?setPIPParam@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUPIPParam@iVMS4800@@@Z
+  ?setPIPParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUPIPParams@MicroSDK@@@Z
+  ?setPreviewMode@ThermalPicInterface@MICROPIXELER@@QEAAXAEBW4ShowMode@iVMS4800@@@Z
+  ?setPseudoColorParams@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBUPseudoColorParams@MicroSDK@@@Z
+  ?setRawDataInfo@ThermalPicInterface@MICROPIXELER@@UEAA_NAEBURawDataInfo@MicroSDK@@@Z
+  ?setResolutionInfo@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUResolutionInfo@iVMS4800@@@Z
+  ?setRuleSet@ThermalPicInterface@MICROPIXELER@@QEAAXV?$map@IPEAVRule@MICROPIXELER@@U?$less@I@std@@V?$allocator@U?$pair@$$CBIPEAVRule@MICROPIXELER@@@std@@@4@@std@@@Z
+  ?setShootInfo@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUShootInfo@iVMS4800@@@Z
+  ?setShowTemp@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUShowTemp@iVMS4800@@@Z
+  ?setSourceParamData@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUSourceParamData@2@@Z
+  ?setSuperIREnabled@MicroSDK@@YA_N_NPEAX@Z
+  ?setTakedMaterialDevInfo@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUTakedMaterialDevInfo@iVMS4800@@@Z
+  ?setTextShowPos@ThermalPicInterface@MICROPIXELER@@QEAAXW4TextShowPos@iVMS4800@@@Z
+  ?setThermalJPEG@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUImage@MicroSDK@@@Z
+  ?setThermalPic@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUImage@MicroSDK@@@Z
+  ?setVisibleJPEG@ThermalPicInterface@MICROPIXELER@@QEAAXAEBUImage@MicroSDK@@@Z
+  ?shrink_to_fit@ThermalPicInterface@MICROPIXELER@@QEAAXW4mode@12@@Z
+  ?swapToCache@ThermalPicInterface@MICROPIXELER@@QEAAXXZ
+  ?synRuleData@ThermalPicInterface@MICROPIXELER@@UEAAXXZ
+  ?tempConverte@ThermalPicInterface@MICROPIXELER@@AEAANNW4TempUnitEnum@InternationalSetting@Chameleon@@0@Z
+  ?tempUnitToSDK@ThermalPicInterface@MICROPIXELER@@AEAA?AW4TemperatureUnit@MicroSDK@@W4TempUnitEnum@InternationalSetting@Chameleon@@@Z
+  ?thermalJPEG@ThermalPicInterface@MICROPIXELER@@QEBA?AUImage@MicroSDK@@XZ
+  ?thermalPicCacheIdex@ThermalPicInterface@MICROPIXELER@@QEBAIXZ
+  ?thermalPicInterface@TakedMaterial@MICROPIXELER@@QEBAPEBVThermalPicInterface@2@XZ
+  ?tryData@ThermalPicInterface@MICROPIXELER@@UEBA_NXZ
+  ?updateCustomPseudoColor@ThermalPicInterface@MICROPIXELER@@QEAAXXZ
+  ?updateSourceData@ThermalPicInterface@MICROPIXELER@@QEAAXXZ
+  ?visPicCacheIdex@ThermalPicInterface@MICROPIXELER@@QEBAIXZ
+  ?visibleJPEG@ThermalPicInterface@MICROPIXELER@@QEBA?AUImage@MicroSDK@@XZ
+  Chnage fusion params to takedMtarial.
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\MicroPixeler_Release_x64.pdb
+  Fusion1
+  Fusion2
+  Process thermal image for report.
+  [Info] : AIProcesser::executeAIProcessTask : output resolution =
+  [StartupProfiler][TakedMaterialAnalyzControl] img_aisr_thermal_interface_invalid
+  [StartupProfiler][TakedMaterialAnalyzControl] preheat_aisr_thermal_interface_invalid
+  [Warning] : ElecThumPicTakedMaterial::generateConfigFileData: thermalPicInterface is null.
+  [Warning] : ElecThumPicTakedMaterial::restoreFromConfigData: thermalPicInterface is null.
+  [Warning] OfflinePicAnalyzer::imgAisrProcess: AI super-resolution registration failed.
+  bool __cdecl MICROPIXELER::MaterialParseFactory::exportAnalyzableThermalPic(const class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::shared_ptr<class MICROPIXELER::TakedMaterial>)
+  d:\jenkins\workspace\thermal-pci-software-pipeline@2\5205\code\micropixeler\src\source\analyzcontrol\AIProcessHandleInheritance.h
+  img_aisr_thermal_interface_invalid
+
+======================================================================
+MicroRVP_Release_x64.dll
+  ###=> source->thermal_JPEG.length is =%d
+  ***=> fusion_file_length > 0
+  .?AV?$_Ref_count@VCThermalRawDataRecorder@MicroRVR@@@std@@
+  .?AVThermalImage@MicroSDK@@
+  ====== LIB_OFFLINE_DSP_FUSION_PARAMS_V0 ======
+  ====== dec LIB_OFFLINE_DSP_FUSION_PARAMS_V0 ======
+  ??0CThermalRawDataRecorder@MicroRVR@@QEAA@XZ
+  ??0ISPProcess@MicroSDK@@QEAA@AEBUmResolution@1@AEBUTempRange@1@AEBUImageISPInitParameters@1@_N3@Z
+  ??0TempAnalyzer@MicroSDK@@QEAA@AEBUTempInitParameters@1@AEBUmResolution@1@@Z
+  ??1CThermalRawDataRecorder@MicroRVR@@QEAA@XZ
+  ?ALDParams@ThermalImage@MicroSDK@@UEBA?AUAcousticLeakDetectorParams@2@XZ
+  ?clone@MicroRImageV1@MicroSDK@@UEBAPEAVThermalImage@2@XZ
+  ?createFromOfflineV1AddInfo@ImageFactory@MicroSDK@@SA?AV?$shared_ptr@VThermalImage@MicroSDK@@@std@@AEBUBareBlock@2@AEBUmResolution@2@@Z
+  ?getEnhancementParams@HMRVPlayer@MicroSDK@@QEBA_NAEAUEnhancementParams@2@@Z
+  ?getRawResolution@AddiInfoQuery@MicroRVR@@UEBA?AUmResolution@MicroSDK@@XZ
+  ?getVideoRecordingPath@CThermalRawDataRecorder@MicroRVR@@QEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ
+  ?imageFusionParams@MicroRImageV1@MicroSDK@@UEBA?AUImageFusionParams@2@XZ
+  ?imageProcessAlgParams@BaseImage@MicroSDK@@UEBA?AUImageProcessAlgParams@2@XZ
+  ?imageProcessModeInfo@MicroRImageV1@MicroSDK@@UEBA?AUImageProcessModeInfo@2@XZ
+  ?init@CThermalRawDataRecorder@MicroRVR@@QEAAXXZ
+  ?inputData@CThermalRawDataRecorder@MicroRVR@@QEAAXUSTREAM_FRAME_INFO@2@@Z
+  ?lastRVRecordInfo@CThermalRawDataRecorder@MicroRVR@@QEBA?AURVRecordInfo@MicroSDK@@XZ
+  ?registerSuperIR@HMRVPlayer@MicroSDK@@QEAA_NV?$function@$$A6A_NAEAUImage@MicroSDK@@AEBU12@@Z@std@@@Z
+  ?resolution@HMRVPlayer@MicroSDK@@QEBA?AUmResolution@2@XZ
+  ?setALDParams@ThermalImage@MicroSDK@@UEAA_NAEBUAcousticLeakDetectorParams@2@@Z
+  ?setAddiInfoQuery@CThermalRawDataRecorder@MicroRVR@@QEAAXV?$shared_ptr@VAddiInfoQuery@MicroRVR@@@std@@@Z
+  ?setBrandType@ThermalImage@MicroSDK@@UEAA_NAEBW4BrandType@2@@Z
+  ?setCapability@ThermalImage@MicroSDK@@QEAA_NAEBUIRCapabilities@2@@Z
+  ?setCurrentUvcRawResolution@HMRVPlayer@MicroSDK@@AEAAXAEBUmResolution@2@@Z
+  ?setCurrentUvcUnpackedResolution@HMRVPlayer@MicroSDK@@AEAAXAEBUmResolution@2@@Z
+  ?setEnhancementConfig@ISPProcess@MicroSDK@@QEAA_NAEBUEnhancementParams@2@@Z
+  ?setEnhancementParams@HMRVPlayer@MicroSDK@@QEAA_NAEBUEnhancementParams@2@@Z
+  ?setImageFusionParams@MicroRImageV1@MicroSDK@@UEAA_NAEBUImageFusionParams@2@@Z
+  ?setImageProcessAlgParams@BaseImage@MicroSDK@@UEAA_NAEBUImageProcessAlgParams@2@@Z
+  ?setImageProcessModeInfo@MicroRImageV1@MicroSDK@@UEAA_NAEBUImageProcessModeInfo@2@@Z
+  ?setSuperIREnabled@ISPProcess@MicroSDK@@QEAA_N_N@Z
+  ?setSuperIRFunc@ISPProcess@MicroSDK@@QEAA_NV?$function@$$A6A_NAEAUImage@MicroSDK@@AEBU12@@Z@std@@@Z
+  ?setThermalJPEG@MicroRImageV1@MicroSDK@@UEAA_NAEBUImage@2@@Z
+  ?start@CThermalRawDataRecorder@MicroRVR@@QEAA_NURawRecordParam@2@@Z
+  ?stop@CThermalRawDataRecorder@MicroRVR@@QEAAXXZ
+  ?thermalJPEG@MicroRImageV1@MicroSDK@@UEBA?AUImage@2@XZ
+  ?unInit@CThermalRawDataRecorder@MicroRVR@@QEAAXXZ
+  @@@=> destination->has_fusion_info_flag = %d
+  @@@=> destination->has_thermal_JPEG_flag = %d
+  @@@=> destination->load_info.has_fusion_info_flag = %d
+  @@@=> destination->load_info.has_thermal_JPEG_flag = %d
+  @@@=> destination->offline_extend_info.has_client_fusion_bin_flag = %d
+  AI super resolution function registered successfully
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroRVP_Release_x64.pdb
+  Failed to set superIR function.
+  Fusion1
+  Fusion2
+  HIK Thermal Device
+  Have no has_client_fusion_bin_flag!
+  Have no thermal jpeg!
+  Normal JPEG file, do not have any useful thermal infomations!
+  Not EN_OFF_LINE_CLIENT_FUSION_BIN_PARAM!
+  Not has_client_fusion_bin_flag!
+  Not has_fusion_info_flag!
+  Not has_thermal_JPEG_flag!
+  Not satisfied dsp_fusion_params!
+  Not satisfied st_client_fusion_bin_param!
+  Offline_Pic_Get_Resolution_Height
+  Offline_Pic_Get_Resolution_Width
+  Offline_Pic_Get_Resolution_Width error! index is error
+  Use default AI super IR function.
+  _fusion.bin
+  _fusion_file_length = 0
+  bool __cdecl MicroSDK::BaseDecoder::decodeCompressData(struct MicroSDK::RawDataInfo &,struct MicroSDK::SharedBlock &,const struct MicroSDK::mResolution &,const class std::vector<unsigned char,class std::allocator<unsigned char> > &)
+  bool __cdecl MicroSDK::BaseParser::getEnhancementParams(struct MicroSDK::EnhancementParams &) const
+  bool __cdecl MicroSDK::BaseRVPlayerControl::calculateGray(class std::shared_ptr<class MicroSDK::TempAnalyzer>,const struct MicroSDK::MeasurementStats &,const struct MicroSDK::ImageProcessingParams &)
+  bool __cdecl MicroSDK::HMRVPlayer::getEnhancementParams(struct MicroSDK::EnhancementParams &) const
+  bool __cdecl MicroSDK::HMRVPlayer::registerSuperIR(class std::function<bool __cdecl(struct MicroSDK::Image &,struct MicroSDK::Image const &)>)
+  bool __cdecl MicroSDK::RealTimeDecoder::fillImageParam(struct MicroSDK::ImageProcessingParams &)
+  bool __cdecl MicroSDK::SequencePicParser::packageOneFrame(struct MicroSDK::RVPacket &,const class MicroSDK::ThermalImage *)
+  bool __cdecl MicroSDK::SequencePicParser::parseBuf2Image(class MicroSDK::ThermalImage **,class std::vector<unsigned char,class std::allocator<unsigned char> > &)
+  d:\jenkins\workspace\thermal-pci-software-pipeline\4966\code\microrvp\rvplaymodule\rvplayercontrol\BaseRVPlayerControlEntity.h
+  d:\jenkins\workspace\thermal-pci-software-pipeline\4966\code\microrvp\rvplaymodule\rvplayercontrol\DataPools.h
+  fuse_resolution_version,0x%x
+  fusion_algorithm_version = %d
+  fusion_file_length=%d
+  fusion_version vMainID[%u] vSubID[%u] vModID[%u] vYear[%u] vMonth[%u] vDay[%u]-----
+  general_info.super_resolution_mag = %d
+  index = %d, resolution_height = %d
+  index = %d, resolution_width = %d
+  int client_fusion_bin_version error,0x%x
+  int client_fusion_bin_version=%d
+  int dsp_fusion_params_version error,0x%x
+  int dsp_fusion_params_version=%d
+  magic_head CLINET_FUSION_BIN_MAGIC_HEAD error,0x%x
+  p_extend_param_header->st_client_fusion_bin_param.off_line_data_len = %d
+  p_extend_param_header->st_client_fusion_bin_param.off_line_data_offset = %d
+  p_extend_param_header->st_client_fusion_bin_param.off_line_data_type = %d
+  parse fail, The image type is not ThermalType.
+  struct MicroSDK::ImageProcessingParams __cdecl MicroSDK::HMRVDataConfig::getImageProcessingParams(void) const
+  super_resolution
+  void __cdecl MicroSDK::HMRVDataConfig::setImageProcessingParams(const struct MicroSDK::ImageProcessingParams &)
+
+======================================================================
+MicroRVR_Release_x64.dll
+  ###=> source->thermal_JPEG.length is =%d
+  ***=> fusion_file_length > 0
+  ====== LIB_OFFLINE_DSP_FUSION_PARAMS_V0 ======
+  ====== dec LIB_OFFLINE_DSP_FUSION_PARAMS_V0 ======
+  ??0CThermalRawDataRecorder@MicroRVR@@QEAA@XZ
+  ??1CThermalRawDataRecorder@MicroRVR@@QEAA@XZ
+  ??4CThermalRawDataRecorder@MicroRVR@@QEAAAEAV01@AEBV01@@Z
+  ?getRawResolution@AddiInfoQuery@MicroRVR@@UEBA?AUmResolution@MicroSDK@@XZ
+  ?getVideoRecordingPath@CThermalRawDataRecorder@MicroRVR@@QEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ
+  ?init@CThermalRawDataRecorder@MicroRVR@@QEAAXXZ
+  ?inputData@CThermalRawDataRecorder@MicroRVR@@QEAAXUSTREAM_FRAME_INFO@2@@Z
+  ?isRecording@CThermalRawDataRecorder@MicroRVR@@QEAA_NXZ
+  ?lastError@CThermalRawDataRecorder@MicroRVR@@SAIXZ
+  ?lastRVRecordInfo@CThermalRawDataRecorder@MicroRVR@@QEBA?AURVRecordInfo@MicroSDK@@XZ
+  ?setAddiInfoQuery@CThermalRawDataRecorder@MicroRVR@@QEAAXV?$shared_ptr@VAddiInfoQuery@MicroRVR@@@std@@@Z
+  ?start@CThermalRawDataRecorder@MicroRVR@@QEAA_NURawRecordParam@2@@Z
+  ?stop@CThermalRawDataRecorder@MicroRVR@@QEAAXXZ
+  ?unInit@CThermalRawDataRecorder@MicroRVR@@QEAAXXZ
+  @@@=> destination->has_fusion_info_flag = %d
+  @@@=> destination->has_thermal_JPEG_flag = %d
+  @@@=> destination->load_info.has_fusion_info_flag = %d
+  @@@=> destination->load_info.has_thermal_JPEG_flag = %d
+  @@@=> destination->offline_extend_info.has_client_fusion_bin_flag = %d
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroRVR_Release_x64.pdb
+  Fusion1
+  Fusion2
+  HIK Thermal Device
+  Have no has_client_fusion_bin_flag!
+  Have no thermal jpeg!
+  Normal JPEG file, do not have any useful thermal infomations!
+  Not EN_OFF_LINE_CLIENT_FUSION_BIN_PARAM!
+  Not has_client_fusion_bin_flag!
+  Not has_fusion_info_flag!
+  Not has_thermal_JPEG_flag!
+  Not satisfied dsp_fusion_params!
+  Not satisfied st_client_fusion_bin_param!
+  Offline_Pic_Get_Resolution_Height
+  Offline_Pic_Get_Resolution_Width
+  Offline_Pic_Get_Resolution_Width error! index is error
+  _fusion.bin
+  _fusion_file_length = 0
+  fuse_resolution_version,0x%x
+  fusion_algorithm_version = %d
+  fusion_file_length=%d
+  fusion_version vMainID[%u] vSubID[%u] vModID[%u] vYear[%u] vMonth[%u] vDay[%u]-----
+  general_info.super_resolution_mag = %d
+  index = %d, resolution_height = %d
+  index = %d, resolution_width = %d
+  int client_fusion_bin_version error,0x%x
+  int client_fusion_bin_version=%d
+  int dsp_fusion_params_version error,0x%x
+  int dsp_fusion_params_version=%d
+  magic_head CLINET_FUSION_BIN_MAGIC_HEAD error,0x%x
+  p_extend_param_header->st_client_fusion_bin_param.off_line_data_len = %d
+  p_extend_param_header->st_client_fusion_bin_param.off_line_data_offset = %d
+  p_extend_param_header->st_client_fusion_bin_param.off_line_data_type = %d
+
+======================================================================
+MicroSecurityKit_Release_x64.dll
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroSecurityKit_Release_x64.pdb
+
+======================================================================
+MicroSR_Release_x64.dll
+  ..\MicroIA\ISPProcess\SuperIR\AISuperResWindowsHelper.cpp
+  ??0SuperIRProcess@MicroSDK@@QEAA@AEBUmResolution@1@EAEBUSharedBlock@1@@Z
+  ??1SuperIRProcess@MicroSDK@@QEAA@XZ
+  ?__autoclassinit2@SuperIRProcess@MicroSDK@@QEAAX_K@Z
+  ?finalizeAuthentication@SuperIRProcess@MicroSDK@@SA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
+  ?initiateAuthentication@SuperIRProcess@MicroSDK@@SA_NAEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV34@@Z
+  ?lastError@SuperIRProcess@MicroSDK@@SAIXZ
+  ?m_isAISuperLibLoaded@SuperIRProcess@MicroSDK@@0_NA
+  ?process@SuperIRProcess@MicroSDK@@QEAA_NAEAUImage@2@AEBU32@@Z
+  ?setLogConfig@SuperIRProcess@MicroSDK@@SA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_KIW4VerboseLevel@2@_N@Z
+  ?unloadLib@SuperIRProcess@MicroSDK@@QEAA_NXZ
+  ?version@SuperIRProcess@MicroSDK@@SA?AUmVersion@2@XZ
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroSR_Release_x64.pdb
+  Fusion1
+  Fusion2
+  bool __cdecl MicroSDK::SuperIRProcess::setLogConfig(const class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > &,const unsigned __int64,const unsigned int,const enum MicroSDK::VerboseLevel,const bool)
+
+======================================================================
+MicroTA_Release_x64.dll
+  ??0ITempCalculator@MicroSDK@@QEAA@AEBUTempInitParameters@1@AEBUmResolution@1@@Z
+  ??0TempAnalyzer@MicroSDK@@QEAA@AEBUTempInitParameters@1@AEBUmResolution@1@@Z
+  ?create@CalculatorFactroy@MicroSDK@@SAPEAVITempCalculator@2@AEBUTempInitParameters@2@AEBUmResolution@2@@Z
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline\4966\code\bin\Release\x64\MicroTA_Release_x64.pdb
+  Fusion1
+  Fusion2
+  Input resolution is invalid.
+  bool __cdecl `anonymous-namespace'::V1::SSECompensate::init(const struct MicroSDK::TempInitParameters &,const struct MicroSDK::mResolution &,void *const )
+  bool __cdecl `anonymous-namespace'::V1::createMeasureHandle(class std::unique_ptr<struct _MEM_TAB,class std::function<void __cdecl(struct _MEM_TAB *)> > &,void **,const struct MicroSDK::mResolution &)
+  bool __cdecl `anonymous-namespace'::V2::SSECompensate::init(const struct MicroSDK::TempInitParameters &,const struct MicroSDK::mResolution &,void *const )
+  bool __cdecl `anonymous-namespace'::V2::createMeasureHandle(class std::unique_ptr<struct _MEM_TAB,class std::function<void __cdecl(struct _MEM_TAB *)> > &,void **,const struct MicroSDK::mResolution &)
+  bool __cdecl `anonymous-namespace'::V3::SSECompensate::init(const struct MicroSDK::TempInitParameters &,const struct MicroSDK::mResolution &,void *const )
+  bool __cdecl `anonymous-namespace'::V3::createMeasureHandle(class std::unique_ptr<struct _MEM_TAB,class std::function<void __cdecl(struct _MEM_TAB *)> > &,void **,const struct MicroSDK::mResolution &)
+
+======================================================================
+MicroUI_Release_x64.dll
+  ?interpolated@QVariantAnimation@@MEBA?AVQVariant@@AEBV2@0N@Z
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\MicroUI_Release_x64.pdb
+  Fusion
+
+======================================================================
+MicroUpdaterNet_Release_x64.dll
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\MicroUpdaterNet_Release_x64.pdb
+
+======================================================================
+MTlib_OL.dll
+  MT_CalcBaseGray: thermalShockDiffGray = %d, LensdiffGray = %d
+  MT_calThermalshockDiffGray: diffMeancavTemp[0] = %.4f, diffMeancavTemp[1] = %.4f
+  MT_calThermalshockDiffGray: thermalShockDiffGray = %d, Count = %d, thermalShockLensTempRiteTHD = %.2f
+  thermalShock_startFlag == %d, thermalShockCoeff:k1 = %.f, k2 = %.f, so hepDiffGray = %d
+
+======================================================================
+PublicFunction_Release_x64.dll
+  ?convertFromMatchParam@PubFunc@@YA?AUFusionParams@MicroSDK@@AEBUImageMatchParam@iVMS4800@@AEBUmResolution@3@AEBU23@@Z
+  ?convertFromMatchParamPreserveDisplayMode@PubFunc@@YA?AUFusionParams@MicroSDK@@AEBUImageMatchParam@iVMS4800@@AEBUmResolution@3@AEBU23@@Z
+  ?convertToMatchParam@PubFunc@@YA?AUImageMatchParam@iVMS4800@@AEBUFusionParams@MicroSDK@@AEBUmResolution@5@@Z
+  ?makeNormalTempMeasureRule@PubFunc@@YA_NAEAUMeasureRule@MicroSDK@@AEBURuleParam@iVMS4800@@W4RuleTypeEnum@5@AEBUResolution@5@@Z
+  ?stringOfResolution@PubFunc@@YA?AVQString@@HH@Z
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\PublicFunction_Release_x64.pdb
+  Fusion1
+  Fusion2
+
+======================================================================
+Qt5Core.dll
+  ?fromUserInput@QUrl@@SA?AV1@AEBVQString@@0V?$QFlags@W4UserInputResolutionOption@QUrl@@@@@Z
+  ?getInterpolator@QVariantAnimationPrivate@@SAP6A?AVQVariant@@PEBX0N@ZH@Z
+  ?interpolated@QVariantAnimation@@MEBA?AVQVariant@@AEBV2@0N@Z
+  ?registerInterpolator@QVariantAnimation@@CAXP6A?AVQVariant@@PEBX0N@ZH@Z
+
+======================================================================
+Qt5Gui.dll
+  ?interpolationMode@QGradient@@QEBA?AW4InterpolationMode@1@XZ
+  ?qt_fusionPalette@@YA?AVQPalette@@XZ
+  ?registerInterpolator@QVariantAnimation@@CAXP6A?AVQVariant@@PEBX0N@ZH@Z
+  ?resolution@QPdfEngine@@QEBAHXZ
+  ?resolution@QPdfWriter@@QEBAHXZ
+  ?setInterpolationMode@QGradient@@QEAAXW4InterpolationMode@1@@Z
+  ?setResolution@QPdfEngine@@QEAAXH@Z
+  ?setResolution@QPdfWriter@@QEAAXH@Z
+  QT_QPA_DISABLE_ENHANCED_MOUSE
+
+======================================================================
+Qt5Multimedia.dll
+  .?AVQCameraImageProcessing@@
+  .?AVQCameraImageProcessingControl@@
+  .?AVQCameraImageProcessingFakeControl@@
+  .?AVQCameraImageProcessingPrivate@@
+  ??0QCameraImageProcessing@@AEAA@PEAVQCamera@@@Z
+  ??0QCameraImageProcessingControl@@IEAA@PEAVQObject@@@Z
+  ??1QCameraImageProcessing@@MEAA@XZ
+  ??1QCameraImageProcessingControl@@UEAA@XZ
+  ??_7QCameraImageProcessing@@6B@
+  ??_7QCameraImageProcessingControl@@6B@
+  ??_FQCameraImageProcessingControl@@QEAAXXZ
+  ?Resolution@QMediaMetaData@@3VQString@@B
+  ?brightness@QCameraImageProcessing@@QEBANXZ
+  ?colorFilter@QCameraImageProcessing@@QEBA?AW4ColorFilter@1@XZ
+  ?contrast@QCameraImageProcessing@@QEBANXZ
+  ?d_func@QCameraImageProcessing@@AEAAPEAVQCameraImageProcessingPrivate@@XZ
+  ?d_func@QCameraImageProcessing@@AEBAPEBVQCameraImageProcessingPrivate@@XZ
+  ?denoisingLevel@QCameraImageProcessing@@QEBANXZ
+  ?fromUserInput@QUrl@@SA?AV1@AEBVQString@@0V?$QFlags@W4UserInputResolutionOption@QUrl@@@@@Z
+  ?imageProcessing@QCamera@@QEBAPEAVQCameraImageProcessing@@XZ
+  ?isAvailable@QCameraImageProcessing@@QEBA_NXZ
+  ?isColorFilterSupported@QCameraImageProcessing@@QEBA_NW4ColorFilter@1@@Z
+  ?isWhiteBalanceModeSupported@QCameraImageProcessing@@QEBA_NW4WhiteBalanceMode@1@@Z
+  ?manualWhiteBalance@QCameraImageProcessing@@QEBANXZ
+  ?metaObject@QCameraImageProcessing@@UEBAPEBUQMetaObject@@XZ
+  ?metaObject@QCameraImageProcessingControl@@UEBAPEBUQMetaObject@@XZ
+  ?nativeResolution@QAbstractVideoSurface@@QEBA?AVQSize@@XZ
+  ?nativeResolutionChanged@QAbstractVideoSurface@@QEAAXAEBVQSize@@@Z
+  ?qt_metacall@QCameraImageProcessing@@UEAAHW4Call@QMetaObject@@HPEAPEAX@Z
+  ?qt_metacall@QCameraImageProcessingControl@@UEAAHW4Call@QMetaObject@@HPEAPEAX@Z
+  ?qt_metacast@QCameraImageProcessing@@UEAAPEAXPEBD@Z
+  ?qt_metacast@QCameraImageProcessingControl@@UEAAPEAXPEBD@Z
+  ?qt_static_metacall@QCameraImageProcessing@@CAXPEAVQObject@@W4Call@QMetaObject@@HPEAPEAX@Z
+  ?qt_static_metacall@QCameraImageProcessingControl@@CAXPEAVQObject@@W4Call@QMetaObject@@HPEAPEAX@Z
+  ?resolution@QCameraViewfinderSettings@@QEBA?AVQSize@@XZ
+  ?resolution@QImageEncoderSettings@@QEBA?AVQSize@@XZ
+  ?resolution@QMediaResource@@QEBA?AVQSize@@XZ
+  ?resolution@QVideoEncoderSettings@@QEBA?AVQSize@@XZ
+  ?saturation@QCameraImageProcessing@@QEBANXZ
+  ?setBrightness@QCameraImageProcessing@@QEAAXN@Z
+  ?setColorFilter@QCameraImageProcessing@@QEAAXW4ColorFilter@1@@Z
+  ?setContrast@QCameraImageProcessing@@QEAAXN@Z
+  ?setDenoisingLevel@QCameraImageProcessing@@QEAAXN@Z
+  ?setManualWhiteBalance@QCameraImageProcessing@@QEAAXN@Z
+  ?setNativeResolution@QAbstractVideoSurface@@IEAAXAEBVQSize@@@Z
+  ?setResolution@QCameraViewfinderSettings@@QEAAXAEBVQSize@@@Z
+  ?setResolution@QCameraViewfinderSettings@@QEAAXHH@Z
+  ?setResolution@QImageEncoderSettings@@QEAAXAEBVQSize@@@Z
+  ?setResolution@QImageEncoderSettings@@QEAAXHH@Z
+  ?setResolution@QMediaResource@@QEAAXAEBVQSize@@@Z
+  ?setResolution@QMediaResource@@QEAAXHH@Z
+  ?setResolution@QVideoEncoderSettings@@QEAAXAEBVQSize@@@Z
+  ?setResolution@QVideoEncoderSettings@@QEAAXHH@Z
+  ?setSaturation@QCameraImageProcessing@@QEAAXN@Z
+  ?setSharpeningLevel@QCameraImageProcessing@@QEAAXN@Z
+  ?setWhiteBalanceMode@QCameraImageProcessing@@QEAAXW4WhiteBalanceMode@1@@Z
+  ?sharpeningLevel@QCameraImageProcessing@@QEBANXZ
+  ?staticMetaObject@QCameraImageProcessing@@2UQMetaObject@@B
+  ?staticMetaObject@QCameraImageProcessingControl@@2UQMetaObject@@B
+  ?supportedResolutions@QCameraImageCapture@@QEBA?AV?$QList@VQSize@@@@AEBVQImageEncoderSettings@@PEA_N@Z
+  ?supportedResolutions@QMediaRecorder@@QEBA?AV?$QList@VQSize@@@@AEBVQVideoEncoderSettings@@PEA_N@Z
+  ?supportedViewfinderResolutions@QCamera@@QEBA?AV?$QList@VQSize@@@@AEBVQCameraViewfinderSettings@@@Z
+  ?tr@QCameraImageProcessing@@SA?AVQString@@PEBD0H@Z
+  ?tr@QCameraImageProcessingControl@@SA?AVQString@@PEBD0H@Z
+  ?trUtf8@QCameraImageProcessing@@SA?AVQString@@PEBD0H@Z
+  ?trUtf8@QCameraImageProcessingControl@@SA?AVQString@@PEBD0H@Z
+  ?whiteBalanceMode@QCameraImageProcessing@@QEBA?AW4WhiteBalanceMode@1@XZ
+  QCameraImageProcessing
+  QCameraImageProcessing::ColorFilter
+  QCameraImageProcessing::WhiteBalanceMode
+  QCameraImageProcessingControl
+  QCameraImageProcessingControl::ProcessingParameter
+  Resolution
+  nativeResolution
+  nativeResolutionChanged
+  org.qt-project.qt.cameraimageprocessingcontrol/5.0
+  resolution
+
+======================================================================
+Qt5PrintSupport.dll
+  ), defaultResolution=
+  ?defaultResolution@QPlatformPrintDevice@@UEBAHXZ
+  ?defaultResolution@QPrintDevice@@QEBAHXZ
+  ?loadResolutions@QPlatformPrintDevice@@MEBAXXZ
+  ?resolution@QPrinter@@QEBAHXZ
+  ?setResolution@QPrinter@@QEAAXH@Z
+  ?supportedResolutions@QPlatformPrintDevice@@UEBA?AV?$QList@H@@XZ
+  ?supportedResolutions@QPrintDevice@@QEBA?AV?$QList@H@@XZ
+  ?supportedResolutions@QPrinter@@QEBA?AV?$QList@H@@XZ
+  ?supportedResolutions@QPrinterInfo@@QEBA?AV?$QList@H@@XZ
+  QPrinter::setResolution
+
+======================================================================
+Qt5Qml.dll
+  ?fromUserInput@QUrl@@SA?AV1@AEBVQString@@0V?$QFlags@W4UserInputResolutionOption@QUrl@@@@@Z
+  ?pendingResolutionName@QQmlType@@QEBA?AVQString@@XZ
+  ?setPendingResolutionName@QQmlType@@QEAAXAEBVQString@@@Z
+
+======================================================================
+Qt5Svg.dll
+  ?resolution@QSvgGenerator@@QEBAHXZ
+  ?setResolution@QSvgGenerator@@QEAAXH@Z
+  O?interpolationMode@QGradient@@QEBA?AW4InterpolationMode@1@XZ
+  qZ?setInterpolationMode@QGradient@@QEAAXW4InterpolationMode@1@@Z
+
+======================================================================
+Qt5Widgets.dll
+  .?AVQFusionStyle@@
+  .?AVQFusionStylePrivate@@
+  :/qt-project.org/styles/commonstyle/images/fusion_groupbox.png
+  ??0QFusionStyle@@IEAA@AEAVQFusionStylePrivate@@@Z
+  ??0QFusionStyle@@QEAA@XZ
+  ??1QFusionStyle@@UEAA@XZ
+  ??_7QFusionStyle@@6B@
+  ?d_func@QFusionStyle@@AEAAPEAVQFusionStylePrivate@@XZ
+  ?d_func@QFusionStyle@@AEBAPEBVQFusionStylePrivate@@XZ
+  ?drawComplexControl@QFusionStyle@@UEBAXW4ComplexControl@QStyle@@PEBVQStyleOptionComplex@@PEAVQPainter@@PEBVQWidget@@@Z
+  ?drawControl@QFusionStyle@@UEBAXW4ControlElement@QStyle@@PEBVQStyleOption@@PEAVQPainter@@PEBVQWidget@@@Z
+  ?drawItemPixmap@QFusionStyle@@UEBAXPEAVQPainter@@AEBVQRect@@HAEBVQPixmap@@@Z
+  ?drawItemText@QFusionStyle@@UEBAXPEAVQPainter@@AEBVQRect@@HAEBVQPalette@@_NAEBVQString@@W4ColorRole@4@@Z
+  ?drawPrimitive@QFusionStyle@@UEBAXW4PrimitiveElement@QStyle@@PEBVQStyleOption@@PEAVQPainter@@PEBVQWidget@@@Z
+  ?generatedIconPixmap@QFusionStyle@@UEBA?AVQPixmap@@W4Mode@QIcon@@AEBV2@PEBVQStyleOption@@@Z
+  ?hitTestComplexControl@QFusionStyle@@UEBA?AW4SubControl@QStyle@@W4ComplexControl@3@PEBVQStyleOptionComplex@@AEBVQPoint@@PEBVQWidget@@@Z
+  ?interpolated@QVariantAnimation@@MEBA?AVQVariant@@AEBV2@0N@Z
+  ?itemPixmapRect@QFusionStyle@@UEBA?AVQRect@@AEBV2@HAEBVQPixmap@@@Z
+  ?metaObject@QFusionStyle@@UEBAPEBUQMetaObject@@XZ
+  ?pixelMetric@QFusionStyle@@UEBAHW4PixelMetric@QStyle@@PEBVQStyleOption@@PEBVQWidget@@@Z
+  ?polish@QFusionStyle@@UEAAXAEAVQPalette@@@Z
+  ?polish@QFusionStyle@@UEAAXPEAVQApplication@@@Z
+  ?polish@QFusionStyle@@UEAAXPEAVQWidget@@@Z
+  ?qt_metacall@QFusionStyle@@UEAAHW4Call@QMetaObject@@HPEAPEAX@Z
+  ?qt_metacast@QFusionStyle@@UEAAPEAXPEBD@Z
+  ?qt_static_metacall@QFusionStyle@@CAXPEAVQObject@@W4Call@QMetaObject@@HPEAPEAX@Z
+  ?sizeFromContents@QFusionStyle@@UEBA?AVQSize@@W4ContentsType@QStyle@@PEBVQStyleOption@@AEBV2@PEBVQWidget@@@Z
+  ?standardIcon@QFusionStyle@@UEBA?AVQIcon@@W4StandardPixmap@QStyle@@PEBVQStyleOption@@PEBVQWidget@@@Z
+  ?standardPalette@QFusionStyle@@UEBA?AVQPalette@@XZ
+  ?standardPixmap@QFusionStyle@@UEBA?AVQPixmap@@W4StandardPixmap@QStyle@@PEBVQStyleOption@@PEBVQWidget@@@Z
+  ?staticMetaObject@QFusionStyle@@2UQMetaObject@@B
+  ?styleHint@QFusionStyle@@UEBAHW4StyleHint@QStyle@@PEBVQStyleOption@@PEBVQWidget@@PEAVQStyleHintReturn@@@Z
+  ?subControlRect@QFusionStyle@@UEBA?AVQRect@@W4ComplexControl@QStyle@@PEBVQStyleOptionComplex@@W4SubControl@4@PEBVQWidget@@@Z
+  ?subElementRect@QFusionStyle@@UEBA?AVQRect@@W4SubElement@QStyle@@PEBVQStyleOption@@PEBVQWidget@@@Z
+  ?tr@QFusionStyle@@SA?AVQString@@PEBD0H@Z
+  ?trUtf8@QFusionStyle@@SA?AVQString@@PEBD0H@Z
+  ?unpolish@QFusionStyle@@UEAAXPEAVQApplication@@@Z
+  ?unpolish@QFusionStyle@@UEAAXPEAVQWidget@@@Z
+  Fusion
+  QFusionStyle
+  U?qt_fusionPalette@@YA?AVQPalette@@XZ
+  fusion
+  fusion-arrow
+  fusion_groupbox.png
+
+======================================================================
+Sadp.dll
+  <?xml version="1.0" encoding="utf-8"?><Probe><Uuid>%s</Uuid><MAC>%s</MAC><Types>setWifiRegion</Types><enableWifiEnhancement>%s</enableWifiEnhancement><Password>%s</Password></Probe>
+  enableWifiEnhancement
+  supportWifiEnhancement
+
+======================================================================
+SqlDriver.dll
+  D:\jenkins\workspace\Thermal-PCI-Software-Pipeline@2\5205\code\bin\Release\x64\SqlDriver.pdb
+
+======================================================================
+tvf.dll
+  D:\TVFusion_xwy\windows\TVFusion\x64\Release\tvf.pdb
+
+======================================================================
+AnalyzeData.dll
+  CIDMXManager::GetMfiCodecResolution
+
+======================================================================
+HCAlarm.dll
+  ProcessFaceSnapComm INTER_FACESNAP_ADDINFO Picture length error! nDatalen:%d dwThermalPicLen:%d
+  ProcessFaceSnapMatchAlarm picture lenth err; AlarmLen = %d, SnapFacePicLen = %d, BlackListPicLen = %d, SnapPicLen = %d, ModelDataLen = %d, PersonInfoExtendLen = %d,UIDLen = %d,FDIDLen = %d,PIDLen = %d,FDDescription= %d, FCAdditionInfo=%d, ThermalData
+  ProcessShipsDetectionAlarm picture lenth err; AlarmLen = %d, PicDataLen = %d, ThermalPicLen = %d, ShipsNum = %d, byShipsNumHead = %d, byShipsNumEnd = %d, XmlLen = %d, ShipImageLen = %d
+  ProcessShipsDetectionListen picture lenth err; nBufLen = %d, PicDataLen = %d, ThermalPicLen = %d, ShipsNum = %d, byShipsNumHead = %d, byShipsNumEnd = %d
+  ProcessThermometryAlarm picture lenth err; AlarmLen = %d, PicDataLen = %d, ThermalPicLen = %d, ThermalInfoLen = %d
+  ProcessThermometryDiffAlarm picture lenth err; AlarmLen = %d, PicDataLen = %d, ThermalPicLen = %d, ThermalInfoLen = %d
+  ProcessThermometryDiffAlarm picture lenth err; CBBufLen = %d, PicDataLen = %d, ThermalPicLen = %d, ThermalInfoLen = %d
+  ProcessThermometryListen picture lenth err; CBBufLen = %d, PicDataLen = %d, ThermalPicLen = %d, ThermalInfoLen = %d
+  [CArmingSession]len invalid struAcsEventInfoExtendV20.dwThermalDataLen = %d
+
+======================================================================
+HCCoreDevCfg.dll
+  ProcessEventResolutionAbility
+  ProcessPicResolutionAbility
+  ProcessResolutionAbility
+  ProcessSubResolutionAbility
+  ResolutionConvert
+
+======================================================================
+HCDisplay.dll
+  GET /ISAPI/DisplayDev/Video/inputs/channels/%u/resolution
+  GET /ISAPI/DisplayDev/Video/inputs/channels/%u/resolution/capabilities
+  GET /ISAPI/DisplayDev/Video/inputs/channels/resolution
+  PUT /ISAPI/DisplayDev/Video/inputs/channels/%u/resolution
+  PUT /ISAPI/DisplayDev/Video/inputs/channels/resolution
+  Resolution
+  ResolutionConvert
+  ResolutionList
+
+======================================================================
+HCGeneralCfgMgr.dll
+  ConvertResolutionSwitchXmlToStruct xml parse failed, data error
+  ConvertTHERMALPOWERXmlToStruct xml parse failed, data error
+  ConvertThermalAlgVersionXmlToStruct xml parse failed, data error
+  ConvertThermalIntelruleDisplayXmlToStruct xml parse failed, data error
+  ConvertThermalModeXmlToStruct xml parse failed, data error
+  ConvertThermalPipXmlToStruct xml parse failed, data error
+  DELETE /ISAPI/Thermal/channels/%d/fireShieldMask/regions/%d
+  DELETE /ISAPI/Thermal/channels/%d/smokeShieldMask/regions/%d
+  DELETE /ISAPI/Thermal/manualThermometry/channels/%d/rules/%d
+  GET /ISAPI/Streaming/channels/%d/resolutionSwitch
+  GET /ISAPI/Streaming/channels/%d/resolutionSwitch/capabilities
+  GET /ISAPI/Thermal/AlgVersion
+  GET /ISAPI/Thermal/Power
+  GET /ISAPI/Thermal/Power/capabilities
+  GET /ISAPI/Thermal/TempHumi/%d
+  GET /ISAPI/Thermal/TempHumi/%d/capabilities
+  GET /ISAPI/Thermal/capabilities
+  GET /ISAPI/Thermal/channels/%d/IntelRuleDisplay
+  GET /ISAPI/Thermal/channels/%d/IntelRuleDisplay/capabilities
+  GET /ISAPI/Thermal/channels/%d/SmokeShieldMask
+  GET /ISAPI/Thermal/channels/%d/fireDetection
+  GET /ISAPI/Thermal/channels/%d/fireDetection/capabilities
+  GET /ISAPI/Thermal/channels/%d/fireShieldMask
+  GET /ISAPI/Thermal/channels/%d/fireShieldMask/capabilities
+  GET /ISAPI/Thermal/channels/%d/pip
+  GET /ISAPI/Thermal/channels/%d/pip/capabilities
+  GET /ISAPI/Thermal/channels/%d/smokeShieldMask/capabilities
+  GET /ISAPI/Thermal/channels/%d/thermIntell
+  GET /ISAPI/Thermal/channels/%d/thermIntell/capabilities
+  GET /ISAPI/Thermal/channels/%d/thermometry/%d
+  GET /ISAPI/Thermal/channels/%d/thermometry/%d/alarmRules
+  GET /ISAPI/Thermal/channels/%d/thermometry/1/alarmRules/capabilities
+  GET /ISAPI/Thermal/channels/%d/thermometry/1/capabilities
+  GET /ISAPI/Thermal/channels/%d/thermometry/basicParam
+  GET /ISAPI/Thermal/channels/%d/thermometry/basicParam/capabilities
+  GET /ISAPI/Thermal/channels/%d/thermometryMode
+  GET /ISAPI/Thermal/channels/%d/thermometryMode/capabilities
+  GET /ISAPI/Thermal/manualThermBasic/channels/%d
+  GET /ISAPI/Thermal/manualThermBasic/channels/%d/capabilities
+  GET /ISAPI/Thermal/manualThermometry/channels/%d/capabilities
+  PUT /ISAPI/Streaming/channels/%d/resolutionSwitch
+  PUT /ISAPI/Thermal/Power
+  PUT /ISAPI/Thermal/channels/%d/IntelRuleDisplay
+  PUT /ISAPI/Thermal/channels/%d/SmokeShieldMask
+  PUT /ISAPI/Thermal/channels/%d/fireDetection
+  PUT /ISAPI/Thermal/channels/%d/fireFocusZoom
+  PUT /ISAPI/Thermal/channels/%d/fireShieldMask
+  PUT /ISAPI/Thermal/channels/%d/pip
+  PUT /ISAPI/Thermal/channels/%d/thermIntell
+  PUT /ISAPI/Thermal/channels/%d/thermometry/%d
+  PUT /ISAPI/Thermal/channels/%d/thermometry/%d/alarmRules
+  PUT /ISAPI/Thermal/channels/%d/thermometry/basicParam
+  PUT /ISAPI/Thermal/channels/%d/thermometryMode
+  PUT /ISAPI/Thermal/manualThermBasic/channels/%d
+  PUT /ISAPI/Thermal/manualThermometry/channels/%d
+  ResolutionSwitch
+  ResolutionType
+  ThermalPip
+  borderFusionRatio
+  fusion
+  fusionMode
+  imageFusionRatio
+  thermalOpticalTransmittance
+  thermalOverlapVisible
+  thermalProbe
+  videoResolutionHeight
+  videoResolutionWidth
+  visibleOverlapThermal
+
+======================================================================
+OpenAL32.dll
+  AL_EAXREVERB_DIFFUSION
+  AL_REVERB_DIFFUSION
+  EAX Reverb diffusion out of range
+  Environment Diffusion
+  Reverb diffusion out of range
+
+======================================================================
+StreamTransClient.dll
+  [%d]CTransClient::Start, rtsp Setup thermalStream in
+  [%d]rtsp get thermalStream port failed
+  [%d]rtsp setup thermalStream failed
+  ggc----client CRtspClient ParseSDPThermalStream failed
+  ggc----client CRtspClient ParseSDPThermalStream failed 1
+  ggc----client CRtspClient ParseSDPThermalStream failed 10
+  ggc----client CRtspClient ParseSDPThermalStream failed 11
+  ggc----client CRtspClient ParseSDPThermalStream failed 2
+  ggc----client CRtspClient ParseSDPThermalStream failed 3
+  ggc----client CRtspClient ParseSDPThermalStream failed 4
+  ggc----client CRtspClient ParseSDPThermalStream failed 5
+  ggc----client CRtspClient ParseSDPThermalStream failed 6
+  ggc----client CRtspClient ParseSDPThermalStream failed 7
+  ggc----client CRtspClient ParseSDPThermalStream failed 8
+  ggc----client CRtspClient ParseSDPThermalStream failed 9
+
+======================================================================
+SystemTransform.dll
+  CIDMXManager::GetMfiCodecResolution
+  [%s][%d][0X%p] [Type unsupported, TRANS_SYSTEM_FLV_ENHANCED video type is not supported!video_format:%x]
+  [%s][%d][0X%p] [Type unsupported, TRANS_SYSTEM_RTMP_ENHANCED video type is not supported!video_format:%x]
+
+======================================================================
+qminimal.dll
+  RESOLUTION
+  RESOLUTION_X
+  RESOLUTION_Y
+
+======================================================================
+qoffscreen.dll
+  RESOLUTION
+  RESOLUTION_X
+  RESOLUTION_Y
+  fusion
+
+======================================================================
+qwindows.dll
+  , resolution
+  RESOLUTION
+  RESOLUTION_X
+  RESOLUTION_Y
+
+======================================================================
+dsengine.dll
+  .?AVDSCameraImageProcessingControl@@
+  .?AVQCameraImageProcessingControl@@
+  ??0QCameraImageProcessingControl@@IEAA@PEAVQObject@@@Z
+  ??1QCameraImageProcessingControl@@UEAA@XZ
+  ?Resolution@QMediaMetaData@@3VQString@@B
+  ?qt_metacall@QCameraImageProcessingControl@@UEAAHW4Call@QMetaObject@@HPEAPEAX@Z
+  ?qt_metacast@QCameraImageProcessingControl@@UEAAPEAXPEBD@Z
+  ?resolution@QCameraViewfinderSettings@@QEBA?AVQSize@@XZ
+  ?resolution@QImageEncoderSettings@@QEBA?AVQSize@@XZ
+  ?setResolution@QCameraViewfinderSettings@@QEAAXAEBVQSize@@@Z
+  ?staticMetaObject@QCameraImageProcessingControl@@2UQMetaObject@@B
+  DSCameraImageProcessingControl
+  QCameraImageProcessing::WhiteBalanceMode
+  org.qt-project.qt.cameraimageprocessingcontrol/5.0
+
+======================================================================
+wmfengine.dll
+  ?Resolution@QMediaMetaData@@3VQString@@B
+
+======================================================================
+windowsprintersupport.dll
+  ?supportedResolutions@QPlatformPrintDevice@@UEBA?AV?$QList@H@@XZ
+PS C:\Users\aio\Downloads\gpt>
