@@ -1,0 +1,1779 @@
+
+================================================================================
+STREAM_CALLBACK | RVA=0x91590 | SIZE=0xa00
+================================================================================
+00091590  push     rbp
+00091592  push     rsi
+00091593  push     rdi
+00091594  push     r12
+00091596  push     r13
+00091598  push     r14
+0009159A  push     r15
+0009159C  lea      rbp, [rsp - 0x130]
+000915A4  sub      rsp, 0x230
+000915AB  mov      qword ptr [rbp + 0x20], 0xfffffffffffffffe
+000915B3  mov      qword ptr [rsp + 0x270], rbx
+000915BB  mov      rax, qword ptr [rip + 0x6da46]
+000915C2  xor      rax, rsp
+000915C5  mov      qword ptr [rbp + 0x120], rax
+000915CC  mov      rdi, r8
+000915CF  mov      rbx, rdx
+000915D2  lea      r15, [rip + 0x35fe7]
+000915D9  xor      r14d, r14d
+000915DC  lea      r12, [rip + 0x3cfad]
+000915E3  lea      r13, [rip + 0x3cfe6]
+000915EA  lea      rax, [rip + 0x3548d]
+000915F1  test     rdx, rdx
+000915F4  je       0x180091600
+000915F6  cmp      qword ptr [rdx + 0x20], r14
+000915FA  jne      0x1800916fb
+00091600  mov      qword ptr [rsp + 0x30], r15
+00091605  mov      qword ptr [rsp + 0x38], r14
+0009160A  mov      dword ptr [rsp + 0x40], 0x80
+00091612  mov      qword ptr [rsp + 0x48], r12
+00091617  mov      dword ptr [rsp + 0x50], 0x36
+0009161F  mov      qword ptr [rsp + 0x58], r13
+00091624  mov      word ptr [rsp + 0x60], r14w
+0009162A  mov      qword ptr [rsp + 0x68], r14
+0009162F  mov      byte ptr [rsp + 0x70], r14b
+00091634  mov      qword ptr [rsp + 0x78], r14
+00091639  mov      qword ptr [rbp - 0x80], rax
+0009163D  mov      dword ptr [rbp - 0x78], 2
+00091644  xorps    xmm0, xmm0
+00091647  movdqu   xmmword ptr [rbp - 0x70], xmm0
+0009164C  mov      qword ptr [rbp - 0x60], r14
+00091650  lea      r8, [rip + 0x35429]
+00091657  mov      edx, 1
+0009165C  lea      rcx, [rsp + 0x30]
+00091661  call     0x18001bdb0    <<< CONTROL FLOW
+00091666  mov      rsi, rax
+00091669  cmp      byte ptr [rax + 0x40], 0
+0009166D  je       0x1800916be
+0009166F  mov      rcx, qword ptr [rax + 0x48]
+00091673  add      rcx, 0x88
+0009167A  lea      rcx, [rcx + 0x10]
+0009167E  cmove    rcx, r14
+00091682  lea      rdx, [rip + 0x3ceef]
+00091689  call     0x180012b70    <<< CONTROL FLOW
+0009168E  mov      rax, qword ptr [rip + 0x711fb]
+00091695  test     dword ptr [rax + 0x68], 0x2000
+0009169C  jbe      0x1800916be
+0009169E  mov      rcx, qword ptr [rsi + 0x48]
+000916A2  add      rcx, 0x88
+000916A9  lea      rcx, [rcx + 0x10]
+000916AD  cmove    rcx, r14
+000916B1  lea      rdx, [rip + 0x35408]
+000916B8  call     0x180012b70    <<< CONTROL FLOW
+000916BD  nop      
+000916BE  mov      qword ptr [rsp + 0x30], r15
+000916C3  lea      rcx, [rsp + 0x30]
+000916C8  call     0x18001c2f0    <<< CONTROL FLOW
+000916CD  mov      rcx, qword ptr [rbp - 0x70]
+000916D1  test     rcx, rcx
+000916D4  je       0x1800916f4
+000916D6  mov      rdx, qword ptr [rbp - 0x68]
+000916DA  call     0x180024d70    <<< CONTROL FLOW
+000916DF  mov      r8, qword ptr [rbp - 0x60]
+000916E3  mov      rdx, qword ptr [rbp - 0x70]
+000916E7  sub      r8, rdx
+000916EA  sar      r8, 5
+000916EE  call     0x180021970    <<< CONTROL FLOW
+000916F3  nop      
+000916F4  lea      rax, [rip + 0x35383]
+000916FB  mov      qword ptr [rbp - 0x58], r15
+000916FF  mov      qword ptr [rbp - 0x50], r14
+00091703  mov      dword ptr [rbp - 0x48], 0x80
+0009170A  mov      qword ptr [rbp - 0x40], r12
+0009170E  mov      dword ptr [rbp - 0x38], 0x38
+00091715  mov      qword ptr [rbp - 0x30], r13
+00091719  mov      word ptr [rbp - 0x28], r14w
+0009171E  mov      qword ptr [rbp - 0x20], r14
+00091722  mov      byte ptr [rbp - 0x18], 0
+00091726  mov      qword ptr [rbp - 0x10], r14
+0009172A  mov      qword ptr [rbp - 8], rax
+0009172E  mov      dword ptr [rbp], 2
+00091735  xorps    xmm0, xmm0
+00091738  movdqu   xmmword ptr [rbp + 8], xmm0
+0009173D  mov      qword ptr [rbp + 0x18], r14
+00091741  lea      r8, [rip + 0x35338]
+00091748  mov      edx, 1
+0009174D  lea      rcx, [rbp - 0x58]
+00091751  call     0x18001bdb0    <<< CONTROL FLOW
+00091756  mov      rsi, rax
+00091759  cmp      byte ptr [rax + 0x40], 0
+0009175D  je       0x1800917ae
+0009175F  mov      rcx, qword ptr [rax + 0x48]
+00091763  add      rcx, 0x88
+0009176A  lea      rcx, [rcx + 0x10]
+0009176E  cmove    rcx, r14
+00091772  lea      rdx, [rip + 0x3cf6f]
+00091779  call     0x180012b70    <<< CONTROL FLOW
+0009177E  mov      rax, qword ptr [rip + 0x7110b]
+00091785  test     dword ptr [rax + 0x68], 0x2000
+0009178C  jbe      0x1800917ae
+0009178E  mov      rcx, qword ptr [rsi + 0x48]
+00091792  add      rcx, 0x88
+00091799  lea      rcx, [rcx + 0x10]
+0009179D  cmove    rcx, r14
+000917A1  lea      rdx, [rip + 0x35318]
+000917A8  call     0x180012b70    <<< CONTROL FLOW
+000917AD  nop      
+000917AE  mov      qword ptr [rbp - 0x58], r15
+000917B2  lea      rcx, [rbp - 0x58]
+000917B6  call     0x18001c2f0    <<< CONTROL FLOW
+000917BB  mov      rcx, qword ptr [rbp + 8]
+000917BF  test     rcx, rcx
+000917C2  je       0x1800917e2
+000917C4  mov      rdx, qword ptr [rbp + 0x10]
+000917C8  call     0x180024d70    <<< CONTROL FLOW
+000917CD  mov      r8, qword ptr [rbp + 0x18]
+000917D1  mov      rdx, qword ptr [rbp + 8]
+000917D5  sub      r8, rdx
+000917D8  sar      r8, 5
+000917DC  call     0x180021970    <<< CONTROL FLOW
+000917E1  nop      
+000917E2  test     rdi, rdi
+000917E5  je       0x180091a3f
+000917EB  test     rbx, rbx
+000917EE  je       0x180091a3f
+000917F4  cmp      qword ptr [rbx + 0x20], 0
+000917F9  je       0x180091a3f
+000917FF  cmp      qword ptr [rdi + 0x10], 0
+00091804  je       0x180091a3f
+0009180A  lea      rdx, [rbp + 0xe0]
+00091811  mov      rcx, rdi
+00091814  call     0x180091540    <<< CONTROL FLOW
+00091819  nop      
+0009181A  mov      rcx, qword ptr [rbp + 0x118]
+00091821  test     rcx, rcx
+00091824  je       0x180091a27
+0009182A  xor      eax, eax
+0009182C  mov      qword ptr [rbp + 0x60], rax
+00091830  mov      qword ptr [rbp + 0x68], rax
+00091834  lea      rcx, [rbp + 0x60]
+00091838  call     0x1800995a0    <<< CONTROL FLOW
+0009183D  nop      
+0009183E  mov      rax, qword ptr [rdi]
+00091841  lea      rdx, [rbp + 0x60]
+00091845  mov      rcx, rdi
+00091848  call     qword ptr [rax + 0x30]    <<< CONTROL FLOW
+0009184B  test     al, al
+0009184D  je       0x1800919e9
+00091853  xor      eax, eax
+00091855  mov      qword ptr [rbp + 0xa0], rax
+0009185C  mov      qword ptr [rbp + 0xa8], r14
+00091863  xorps    xmm0, xmm0
+00091866  movdqa   xmmword ptr [rbp + 0xb0], xmm0
+0009186E  mov      qword ptr [rbp + 0xc0], rax
+00091875  mov      qword ptr [rbp + 0xc8], rax
+0009187C  mov      qword ptr [rbp + 0xd0], rax
+00091883  mov      qword ptr [rbp + 0xd8], rax
+0009188A  movdqu   xmmword ptr [rbp + 0x70], xmm0
+0009188F  mov      qword ptr [rbp + 0x80], r14
+00091896  lea      rdx, [rbp + 0x28]
+0009189A  mov      rcx, rdi
+0009189D  call     0x1800974d0    <<< CONTROL FLOW
+000918A2  movzx    ecx, byte ptr [rax + 0x20]
+000918A6  mov      byte ptr [rbp + 0xa0], cl
+000918AC  mov      r8, qword ptr [rbp + 0x40]
+000918B0  cmp      r8, 0x10
+000918B4  jb       0x1800918c2
+000918B6  inc      r8
+000918B9  mov      rdx, qword ptr [rbp + 0x28]
+000918BD  call     0x180012780    <<< CONTROL FLOW
+000918C2  mov      rdx, qword ptr [rbx + 0x20]
+000918C6  mov      r8d, dword ptr [rbx + 0x28]
+000918CA  add      r8, rdx
+000918CD  lea      rcx, [rbp + 0xa8]
+000918D4  call     0x180099650    <<< CONTROL FLOW
+000918D9  mov      rax, qword ptr [rbp + 0x60]
+000918DD  movups   xmm0, xmmword ptr [rax + 0x898]
+000918E4  movaps   xmmword ptr [rbp + 0xc0], xmm0
+000918EB  movups   xmm1, xmmword ptr [rax + 0x8a8]
+000918F2  movaps   xmmword ptr [rbp + 0xd0], xmm1
+000918F9  mov      rcx, qword ptr [rdi + 0x10]
+000918FD  mov      rax, qword ptr [rcx]
+00091900  lea      r8, [rbp + 0xa0]
+00091907  lea      rdx, [rbp + 0x70]
+0009190B  call     qword ptr [rax + 8]    <<< CONTROL FLOW
+0009190E  test     al, al
+00091910  jne      0x18009192d
+00091912  lea      rcx, [rbp + 0x70]
+00091916  call     0x180029460    <<< CONTROL FLOW
+0009191B  nop      
+0009191C  lea      rcx, [rbp + 0xa8]
+00091923  call     0x180029460    <<< CONTROL FLOW
+00091928  jmp      0x1800919e9    <<< CONTROL FLOW
+0009192D  mov      r8, qword ptr [rbp + 0x70]
+00091931  mov      rdx, qword ptr [rbp + 0x78]
+00091935  cmp      r8, rdx
+00091938  sete     al
+0009193B  or       rbx, 0xffffffffffffffff
+0009193F  test     al, al
+00091941  jne      0x180091999
+00091943  mov      rax, qword ptr [rdi + 8]
+00091947  mov      rcx, qword ptr [rax + 0x50]
+0009194B  sub      rdx, r8
+0009194E  mov      qword ptr [rbp + 0x50], rcx
+00091952  mov      qword ptr [rbp + 0x88], rdx
+00091959  mov      qword ptr [rbp + 0x58], r8
+0009195D  mov      qword ptr [rbp + 0x90], rbx
+00091964  mov      rcx, qword ptr [rbp + 0x118]
+0009196B  test     rcx, rcx
+0009196E  jne      0x180091977
+00091970  call     qword ptr [rip + 0x338fa]    <<< CONTROL FLOW
+00091976  int3     
+00091977  mov      rax, qword ptr [rcx]
+0009197A  lea      rdx, [rbp + 0x50]
+0009197E  mov      qword ptr [rsp + 0x20], rdx
+00091983  lea      r9, [rbp + 0x88]
+0009198A  lea      r8, [rbp + 0x58]
+0009198E  lea      rdx, [rbp + 0x90]
+00091995  call     qword ptr [rax + 0x10]    <<< CONTROL FLOW
+00091998  nop      
+00091999  lea      rcx, [rbp + 0x70]
+0009199D  call     0x180029460    <<< CONTROL FLOW
+000919A2  nop      
+000919A3  lea      rcx, [rbp + 0xa8]
+000919AA  call     0x180029460    <<< CONTROL FLOW
+000919AF  nop      
+000919B0  mov      rdi, qword ptr [rbp + 0x68]
+000919B4  test     rdi, rdi
+000919B7  je       0x1800919e0
+000919B9  mov      eax, ebx
+000919BB  lock xadd dword ptr [rdi + 8], eax
+000919C0  cmp      eax, 1
+000919C3  jne      0x1800919e0
+000919C5  mov      rax, qword ptr [rdi]
+000919C8  mov      rcx, rdi
+000919CB  call     qword ptr [rax]    <<< CONTROL FLOW
+000919CD  lock xadd dword ptr [rdi + 0xc], ebx
+000919D2  cmp      ebx, 1
+000919D5  jne      0x1800919e0
+000919D7  mov      rax, qword ptr [rdi]
+000919DA  mov      rcx, rdi
+000919DD  call     qword ptr [rax + 8]    <<< CONTROL FLOW
+000919E0  mov      rcx, qword ptr [rbp + 0x118]
+000919E7  jmp      0x180091a27    <<< CONTROL FLOW
+000919E9  mov      rdi, qword ptr [rbp + 0x68]
+000919ED  test     rdi, rdi
+000919F0  je       0x180091a1e
+000919F2  or       rbx, 0xffffffffffffffff
+000919F6  mov      eax, ebx
+000919F8  lock xadd dword ptr [rdi + 8], eax
+000919FD  cmp      eax, 1
+00091A00  jne      0x180091a1e
+00091A02  mov      rax, qword ptr [rdi]
+00091A05  mov      rcx, rdi
+00091A08  call     qword ptr [rax]    <<< CONTROL FLOW
+00091A0A  lock xadd dword ptr [rdi + 0xc], ebx
+00091A0F  cmp      ebx, 1
+00091A12  jne      0x180091a1e
+00091A14  mov      rax, qword ptr [rdi]
+00091A17  mov      rcx, rdi
+00091A1A  call     qword ptr [rax + 8]    <<< CONTROL FLOW
+00091A1D  nop      
+00091A1E  mov      rcx, qword ptr [rbp + 0x118]
+00091A25  jmp      0x180091a27    <<< CONTROL FLOW
+00091A27  test     rcx, rcx
+00091A2A  je       0x180091a3f
+00091A2C  lea      rdx, [rbp + 0xe0]
+00091A33  cmp      rcx, rdx
+00091A36  mov      rax, qword ptr [rcx]
+00091A39  setne    dl
+00091A3C  call     qword ptr [rax + 0x20]    <<< CONTROL FLOW
+00091A3F  mov      rcx, qword ptr [rbp + 0x120]
+00091A46  xor      rcx, rsp
+00091A49  call     0x1800affa0    <<< CONTROL FLOW
+00091A4E  mov      rbx, qword ptr [rsp + 0x270]
+00091A56  add      rsp, 0x230
+00091A5D  pop      r15
+00091A5F  pop      r14
+00091A61  pop      r13
+00091A63  pop      r12
+00091A65  pop      rdi
+00091A66  pop      rsi
+00091A67  pop      rbp
+00091A68  ret      
+00091A69  int3     
+00091A6A  int3     
+00091A6B  int3     
+00091A6C  int3     
+00091A6D  int3     
+00091A6E  int3     
+00091A6F  int3     
+00091A70  add      rcx, 8
+00091A74  jmp      0x180029460    <<< CONTROL FLOW
+00091A79  int3     
+00091A7A  int3     
+00091A7B  int3     
+00091A7C  int3     
+00091A7D  int3     
+00091A7E  int3     
+00091A7F  int3     
+00091A80  mov      qword ptr [rsp + 8], rcx
+00091A85  push     rdi
+00091A86  sub      rsp, 0x30
+00091A8A  mov      qword ptr [rsp + 0x20], 0xfffffffffffffffe
+00091A93  mov      qword ptr [rsp + 0x48], rbx
+00091A98  mov      rdi, rdx
+00091A9B  mov      rbx, rcx
+00091A9E  call     0x18003aff0    <<< CONTROL FLOW
+00091AA3  nop      
+00091AA4  lea      rax, [rip + 0x3dbbd]
+00091AAB  mov      qword ptr [rbx], rax
+00091AAE  xor      edx, edx
+00091AB0  mov      qword ptr [rbx + 0x10], rdx
+00091AB4  xor      ecx, ecx
+00091AB6  mov      qword ptr [rbx + 0x18], rcx
+00091ABA  mov      qword ptr [rbx + 0x20], rcx
+00091ABE  mov      qword ptr [rbx + 0x38], rcx
+00091AC2  mov      qword ptr [rbx + 0x30], 0xf
+00091ACA  mov      qword ptr [rbx + 0x28], rdx
+00091ACE  cmp      qword ptr [rbx + 0x30], 0x10
+00091AD3  jae      0x180091ad9
+00091AD5  lea      rcx, [rbx + 0x18]
+00091AD9  mov      byte ptr [rcx], dl
+00091ADB  mov      byte ptr [rbx + 0x38], dl
+00091ADE  mov      qword ptr [rbx + 0x40], rdx
+00091AE2  mov      rax, qword ptr [rbx + 8]
+00091AE6  mov      dword ptr [rax + 0xd28], 2
+00091AF0  mov      rcx, qword ptr [rbx + 8]
+00091AF4  add      rcx, 0x1a8
+00091AFB  mov      rdx, rdi
+00091AFE  call     0x180091bf0    <<< CONTROL FLOW
+00091B03  lea      rdx, [rdi + 0x38]
+00091B07  mov      rcx, qword ptr [rbx + 8]
+00091B0B  add      rcx, 0xcc8
+00091B12  cmp      rcx, rdx
+00091B15  je       0x180091b23
+00091B17  or       r9, 0xffffffffffffffff
+00091B1B  xor      r8d, r8d
+00091B1E  call     0x180012320    <<< CONTROL FLOW
+00091B23  lea      rdx, [rdi + 0x18]
+00091B27  mov      rcx, qword ptr [rbx + 8]
+00091B2B  add      rcx, 0xce8
+00091B32  cmp      rcx, rdx
+00091B35  je       0x180091b44
+00091B37  or       r9, 0xffffffffffffffff
+00091B3B  xor      r8d, r8d
+00091B3E  call     0x180012320    <<< CONTROL FLOW
+00091B43  nop      
+00091B44  mov      rax, rbx
+00091B47  mov      rbx, qword ptr [rsp + 0x48]
+00091B4C  add      rsp, 0x30
+00091B50  pop      rdi
+00091B51  ret      
+00091B52  int3     
+00091B53  int3     
+00091B54  int3     
+00091B55  int3     
+00091B56  int3     
+00091B57  int3     
+00091B58  int3     
+00091B59  int3     
+00091B5A  int3     
+00091B5B  int3     
+00091B5C  int3     
+00091B5D  int3     
+00091B5E  int3     
+00091B5F  int3     
+00091B60  mov      qword ptr [rsp + 8], rbx
+00091B65  mov      qword ptr [rsp + 0x10], rsi
+00091B6A  push     rdi
+00091B6B  sub      rsp, 0x20
+00091B6F  lea      rax, [rip + 0x3daf2]
+00091B76  mov      esi, edx
+00091B78  lea      rbx, [rcx + 0x18]
+00091B7C  mov      qword ptr [rcx], rax
+00091B7F  mov      r8, qword ptr [rbx + 0x18]
+00091B83  mov      rdi, rcx
+00091B86  cmp      r8, 0x10
+00091B8A  jb       0x180091b97
+00091B8C  mov      rdx, qword ptr [rbx]
+00091B8F  inc      r8
+00091B92  call     0x180012780    <<< CONTROL FLOW
+00091B97  mov      qword ptr [rbx + 0x18], 0xf
+00091B9F  cmp      qword ptr [rbx + 0x18], 0x10
+00091BA4  mov      qword ptr [rbx + 0x10], 0
+00091BAC  jb       0x180091bb1
+00091BAE  mov      rbx, qword ptr [rbx]
+00091BB1  mov      rcx, rdi
+00091BB4  mov      byte ptr [rbx], 0
+00091BB7  call     0x18003cbd0    <<< CONTROL FLOW
+00091BBC  test     sil, 1
+00091BC0  je       0x180091bcf
+00091BC2  mov      edx, 0x48
+00091BC7  mov      rcx, rdi
+00091BCA  call     0x1800b062c    <<< CONTROL FLOW
+00091BCF  mov      rbx, qword ptr [rsp + 0x30]
+00091BD4  mov      rax, rdi
+00091BD7  mov      rsi, qword ptr [rsp + 0x38]
+00091BDC  add      rsp, 0x20
+00091BE0  pop      rdi
+00091BE1  ret      
+00091BE2  int3     
+00091BE3  int3     
+00091BE4  int3     
+00091BE5  int3     
+00091BE6  int3     
+00091BE7  int3     
+00091BE8  int3     
+00091BE9  int3     
+00091BEA  int3     
+00091BEB  int3     
+00091BEC  int3     
+00091BED  int3     
+00091BEE  int3     
+00091BEF  int3     
+00091BF0  mov      qword ptr [rsp + 8], rbx
+00091BF5  push     rdi
+00091BF6  sub      rsp, 0x20
+00091BFA  mov      rax, qword ptr [rdx]
+00091BFD  mov      rdi, rdx
+00091C00  mov      qword ptr [rcx], rax
+00091C03  mov      rbx, rcx
+00091C06  mov      rax, qword ptr [rdx + 8]
+00091C0A  mov      qword ptr [rcx + 8], rax
+00091C0E  mov      rax, qword ptr [rdx + 0x10]
+00091C12  add      rdx, 0x18
+00091C16  mov      qword ptr [rcx + 0x10], rax
+00091C1A  add      rcx, 0x18
+00091C1E  cmp      rcx, rdx
+00091C21  je       0x180091c2f
+00091C23  or       r9, 0xffffffffffffffff
+00091C27  xor      r8d, r8d
+00091C2A  call     0x180012320    <<< CONTROL FLOW
+00091C2F  lea      rdx, [rdi + 0x38]
+00091C33  lea      rcx, [rbx + 0x38]
+00091C37  cmp      rcx, rdx
+00091C3A  je       0x180091c48
+00091C3C  or       r9, 0xffffffffffffffff
+00091C40  xor      r8d, r8d
+00091C43  call     0x180012320    <<< CONTROL FLOW
+00091C48  lea      rdx, [rdi + 0x58]
+00091C4C  lea      rcx, [rbx + 0x58]
+00091C50  cmp      rcx, rdx
+00091C53  je       0x180091c61
+00091C55  or       r9, 0xffffffffffffffff
+00091C59  xor      r8d, r8d
+00091C5C  call     0x180012320    <<< CONTROL FLOW
+00091C61  mov      rax, rbx
+00091C64  mov      rbx, qword ptr [rsp + 0x30]
+00091C69  add      rsp, 0x20
+00091C6D  pop      rdi
+00091C6E  ret      
+00091C6F  int3     
+00091C70  mov      rax, rsp
+00091C73  push     rdi
+00091C74  sub      rsp, 0xa0
+00091C7B  mov      qword ptr [rax - 0x10], 0xfffffffffffffffe
+00091C83  mov      qword ptr [rax + 8], rbx
+00091C87  mov      qword ptr [rax + 0x10], rsi
+00091C8B  cmp      qword ptr [rcx + 0x18], 0x10
+00091C90  jb       0x180091c95
+00091C92  mov      rcx, qword ptr [rcx]
+00091C95  xor      r8d, r8d
+00091C98  mov      rdx, rcx
+00091C9B  lea      ecx, [r8 + 3]
+00091C9F  call     qword ptr [rip + 0x33453]    <<< CONTROL FLOW
+00091CA5  test     eax, eax
+00091CA7  jne      0x180091dd5
+00091CAD  lea      rsi, [rip + 0x3590c]
+00091CB4  mov      qword ptr [rsp + 0x20], rsi
+00091CB9  xor      edi, edi
+00091CBB  mov      qword ptr [rsp + 0x28], rdi
+00091CC0  mov      dword ptr [rsp + 0x30], 0x10
+00091CC8  lea      rax, [rip + 0x3c8c1]
+00091CCF  mov      qword ptr [rsp + 0x38], rax
+00091CD4  mov      dword ptr [rsp + 0x40], 0x7f
+00091CDC  lea      rax, [rip + 0x3c96d]
+00091CE3  mov      qword ptr [rsp + 0x48], rax
+00091CE8  mov      word ptr [rsp + 0x50], di
+00091CED  mov      qword ptr [rsp + 0x58], rdi
+00091CF2  mov      byte ptr [rsp + 0x60], dil
+00091CF7  mov      qword ptr [rsp + 0x68], rdi
+00091CFC  lea      rax, [rip + 0x34d7b]
+00091D03  mov      qword ptr [rsp + 0x70], rax
+00091D08  mov      dword ptr [rsp + 0x78], 2
+00091D10  xorps    xmm0, xmm0
+00091D13  movdqu   xmmword ptr [rsp + 0x80], xmm0
+00091D1C  mov      qword ptr [rsp + 0x90], rdi
+00091D24  lea      r8, [rip + 0x34d55]
+00091D2B  lea      edx, [rdi + 1]
+00091D2E  lea      rcx, [rsp + 0x20]
+00091D33  call     0x18001bdb0    <<< CONTROL FLOW
+00091D38  mov      rbx, rax
+00091D3B  cmp      byte ptr [rax + 0x40], dil
+00091D3F  je       0x180091d8f
+00091D41  mov      rcx, qword ptr [rax + 0x48]
+00091D45  add      rcx, 0x88
+00091D4C  lea      rcx, [rcx + 0x10]
+00091D50  cmove    rcx, rdi
+00091D54  lea      rdx, [rip + 0x3c8cd]
+00091D5B  call     0x180012b70    <<< CONTROL FLOW
+00091D60  mov      rax, qword ptr [rip + 0x70b29]
+00091D67  test     dword ptr [rax + 0x68], 0x2000
+00091D6E  jbe      0x180091d8f
+00091D70  mov      rax, qword ptr [rbx + 0x48]
+00091D74  add      rax, 0x88
+00091D7A  lea      rcx, [rax + 0x10]
+00091D7E  cmove    rcx, rdi
+00091D82  lea      rdx, [rip + 0x34d37]
+00091D89  call     0x180012b70    <<< CONTROL FLOW
+00091D8E  nop      
+00091D8F  mov      qword ptr [rsp + 0x20], rsi
+00091D94  lea      rcx, [rsp + 0x20]
+00091D99  call     0x18001c2f0    <<< CONTROL FLOW
+00091D9E  mov      rcx, qword ptr [rsp + 0x80]
+00091DA6  test     rcx, rcx
+00091DA9  je       0x180091dd5
+00091DAB  mov      rdx, qword ptr [rsp + 0x88]
+00091DB3  call     0x180024d70    <<< CONTROL FLOW
+00091DB8  mov      r8, qword ptr [rsp + 0x90]
+00091DC0  mov      rdx, qword ptr [rsp + 0x80]
+00091DC8  sub      r8, rdx
+00091DCB  sar      r8, 5
+00091DCF  call     0x180021970    <<< CONTROL FLOW
+00091DD4  nop      
+00091DD5  mov      al, 1
+00091DD7  lea      r11, [rsp + 0xa0]
+00091DDF  mov      rbx, qword ptr [r11 + 0x10]
+00091DE3  mov      rsi, qword ptr [r11 + 0x18]
+00091DE7  mov      rsp, r11
+00091DEA  pop      rdi
+00091DEB  ret      
+00091DEC  int3     
+00091DED  int3     
+00091DEE  int3     
+00091DEF  int3     
+00091DF0  mov      rax, rsp
+00091DF3  push     rbp
+00091DF4  push     r12
+00091DF6  push     r13
+00091DF8  push     r14
+00091DFA  push     r15
+00091DFC  lea      rbp, [rax - 0x5f]
+00091E00  sub      rsp, 0xe0
+00091E07  mov      qword ptr [rsp + 0x20], 0xfffffffffffffffe
+00091E10  mov      qword ptr [rax + 0x10], rbx
+00091E14  mov      qword ptr [rax + 0x18], rsi
+00091E18  mov      qword ptr [rax + 0x20], rdi
+00091E1C  mov      rax, qword ptr [rip + 0x6d1e5]
+00091E23  xor      rax, rsp
+00091E26  mov      qword ptr [rbp + 0x27], rax
+00091E2A  mov      rsi, rcx
+00091E2D  mov      rdi, qword ptr [rcx + 8]
+00091E31  mov      rbx, qword ptr [rcx]
+00091E34  cmp      rbx, rdi
+00091E37  je       0x180091e51
+00091E39  nop      dword ptr [rax]
+00091E40  mov      rcx, rbx
+00091E43  call     0x18003bb80    <<< CONTROL FLOW
+00091E48  add      rbx, 0x78
+00091E4C  cmp      rbx, rdi
+00091E4F  jne      0x180091e40
+00091E51  mov      rax, qword ptr [rsi]
+00091E54  mov      qword ptr [rsi + 8], rax
+00091E58  xorps    xmm0, xmm0
+00091E5B  movdqu   xmmword ptr [rbp - 0x71], xmm0
+00091E60  xor      r13d, r13d
+00091E63  mov      qword ptr [rbp - 0x61], r13
+00091E67  lea      rcx, [rbp - 0x71]
+00091E6B  call     0x18009dda0    <<< CONTROL FLOW
+00091E70  movabs   rdx, 0x6522c3f35ba78195
+00091E7A  mov      r14, qword ptr [rbp - 0x71]
+00091E7E  test     al, al
+00091E80  jne      0x180091e89
+00091E82  xor      bl, bl
+00091E84  jmp      0x18009209e    <<< CONTROL FLOW
+00091E89  mov      r15, r13
+00091E8C  mov      rcx, qword ptr [rbp - 0x69]
+00091E90  sub      rcx, r14
+00091E93  mov      rax, rdx
+00091E96  imul     rcx
+00091E99  mov      r12, rdx
+00091E9C  sar      r12, 8
+00091EA0  mov      rax, r12
+00091EA3  shr      rax, 0x3f
+00091EA7  add      r12, rax
+00091EAA  je       0x180092092
+00091EB0  lea      rdi, [r14 + 0x10]
+00091EB4  nop      dword ptr [rax]
+00091EB8  nop      dword ptr [rax + rax]
+00091EC0  xor      eax, eax
+00091EC2  mov      qword ptr [rbp - 0x59], rax
+00091EC6  mov      qword ptr [rbp - 0x51], rax
+00091ECA  mov      qword ptr [rbp - 0x49], rax
+00091ECE  mov      qword ptr [rbp - 0x29], 0xf
+00091ED6  mov      qword ptr [rbp - 0x31], r13
+00091EDA  mov      byte ptr [rbp - 0x41], al
+00091EDD  mov      qword ptr [rbp - 9], 0xf
+00091EE5  mov      qword ptr [rbp - 0x11], r13
+00091EE9  mov      byte ptr [rbp - 0x21], al
+00091EEC  mov      qword ptr [rbp + 0x17], 0xf
+00091EF4  mov      qword ptr [rbp + 0xf], r13
+00091EF8  mov      byte ptr [rbp - 1], al
+00091EFB  mov      eax, dword ptr [rdi - 0xc]
+00091EFE  mov      qword ptr [rbp - 0x59], rax
+00091F02  mov      eax, dword ptr [rdi - 8]
+00091F05  mov      qword ptr [rbp - 0x51], rax
+00091F09  mov      eax, dword ptr [rdi - 4]
+00091F0C  mov      qword ptr [rbp - 0x49], rax
+00091F10  cmp      byte ptr [rdi], 0
+00091F13  jne      0x180091f1a
+00091F15  mov      r8, r13
+00091F18  jmp      0x180091f2a    <<< CONTROL FLOW
+00091F1A  or       r8, 0xffffffffffffffff
+00091F1E  nop      
+00091F20  inc      r8
+00091F23  cmp      byte ptr [rdi + r8], 0
+00091F28  jne      0x180091f20
+00091F2A  mov      rdx, rdi
+00091F2D  lea      rcx, [rbp - 0x41]
+00091F31  call     0x1800121f0    <<< CONTROL FLOW
+00091F36  lea      rdx, [rdi + 0x20]
+00091F3A  cmp      byte ptr [rdx], 0
+00091F3D  jne      0x180091f44
+00091F3F  mov      r8, r13
+00091F42  jmp      0x180091f5a    <<< CONTROL FLOW
+00091F44  or       r8, 0xffffffffffffffff
+00091F48  nop      dword ptr [rax + rax]
+00091F50  inc      r8
+00091F53  cmp      byte ptr [rdx + r8], 0
+00091F58  jne      0x180091f50
+00091F5A  lea      rcx, [rbp - 0x21]
+00091F5E  call     0x1800121f0    <<< CONTROL FLOW
+00091F63  mov      rcx, qword ptr [rbp - 0x11]
+00091F67  test     rcx, rcx
+00091F6A  je       0x180091fe1
+00091F6C  lea      rax, [rbp - 0x21]
+00091F70  cmp      qword ptr [rbp - 9], 0x10
+00091F75  cmovae   rax, qword ptr [rbp - 0x21]
+00091F7A  lea      rbx, [rcx - 1]
+00091F7E  add      rbx, rax
+00091F81  nop      dword ptr [rax]
+00091F85  nop      word ptr [rax + rax]
+
+================================================================================
+PROCESSOR_METHOD_10 | RVA=0x9b9a0 | SIZE=0x400
+================================================================================
+0009B9A0  mov      rax, rsp
+0009B9A3  push     rbp
+0009B9A4  push     r14
+0009B9A6  push     r15
+0009B9A8  lea      rbp, [rax - 0x5f]
+0009B9AC  sub      rsp, 0xa0
+0009B9B3  mov      qword ptr [rbp + 0x3f], 0xfffffffffffffffe
+0009B9BB  mov      qword ptr [rax + 8], rbx
+0009B9BF  mov      qword ptr [rax + 0x10], rsi
+0009B9C3  mov      qword ptr [rax + 0x18], rdi
+0009B9C7  mov      rdi, r8
+0009B9CA  mov      r14, rdx
+0009B9CD  mov      rbx, rcx
+0009B9D0  mov      rax, qword ptr [r8 + 0x10]
+0009B9D4  cmp      qword ptr [r8 + 8], rax
+0009B9D8  jne      0x18009bae6
+0009B9DE  lea      rsi, [rip + 0x2bbdb]
+0009B9E5  mov      qword ptr [rbp - 0x39], rsi
+0009B9E9  xor      edi, edi
+0009B9EB  mov      qword ptr [rbp - 0x31], rdi
+0009B9EF  mov      dword ptr [rbp - 0x29], 4
+0009B9F6  lea      rax, [rip + 0x33f53]
+0009B9FD  mov      qword ptr [rbp - 0x21], rax
+0009BA01  mov      dword ptr [rbp - 0x19], 0x11f
+0009BA08  lea      rax, [rip + 0x33d81]
+0009BA0F  mov      qword ptr [rbp - 0x11], rax
+0009BA13  mov      word ptr [rbp - 9], di
+0009BA17  mov      qword ptr [rbp - 1], rdi
+0009BA1B  mov      byte ptr [rbp + 7], dil
+0009BA1F  mov      qword ptr [rbp + 0xf], rdi
+0009BA23  lea      rax, [rip + 0x2b054]
+0009BA2A  mov      qword ptr [rbp + 0x17], rax
+0009BA2E  mov      dword ptr [rbp + 0x1f], 2
+0009BA35  xorps    xmm0, xmm0
+0009BA38  movdqu   xmmword ptr [rbp + 0x27], xmm0
+0009BA3D  mov      qword ptr [rbp + 0x37], rdi
+0009BA41  lea      r8, [rip + 0x2b038]
+0009BA48  lea      edx, [rdi + 1]
+0009BA4B  lea      rcx, [rbp - 0x39]
+0009BA4F  call     0x18001bdb0    <<< CONTROL FLOW
+0009BA54  mov      rbx, rax
+0009BA57  cmp      byte ptr [rax + 0x40], dil
+0009BA5B  je       0x18009baab
+0009BA5D  mov      rcx, qword ptr [rax + 0x48]
+0009BA61  add      rcx, 0x88
+0009BA68  lea      rcx, [rcx + 0x10]
+0009BA6C  cmove    rcx, rdi
+0009BA70  lea      rdx, [rip + 0x33ea1]
+0009BA77  call     0x180012b70    <<< CONTROL FLOW
+0009BA7C  mov      rax, qword ptr [rip + 0x66e0d]
+0009BA83  test     dword ptr [rax + 0x68], 0x2000
+0009BA8A  jbe      0x18009baab
+0009BA8C  mov      rax, qword ptr [rbx + 0x48]
+0009BA90  add      rax, 0x88
+0009BA96  lea      rcx, [rax + 0x10]
+0009BA9A  cmove    rcx, rdi
+0009BA9E  lea      rdx, [rip + 0x2b01b]
+0009BAA5  call     0x180012b70    <<< CONTROL FLOW
+0009BAAA  nop      
+0009BAAB  mov      qword ptr [rbp - 0x39], rsi
+0009BAAF  lea      rcx, [rbp - 0x39]
+0009BAB3  call     0x18001c2f0    <<< CONTROL FLOW
+0009BAB8  mov      rcx, qword ptr [rbp + 0x27]
+0009BABC  test     rcx, rcx
+0009BABF  je       0x18009badf
+0009BAC1  mov      rdx, qword ptr [rbp + 0x2f]
+0009BAC5  call     0x180024d70    <<< CONTROL FLOW
+0009BACA  mov      r8, qword ptr [rbp + 0x37]
+0009BACE  mov      rdx, qword ptr [rbp + 0x27]
+0009BAD2  sub      r8, rdx
+0009BAD5  sar      r8, 5
+0009BAD9  call     0x180021970    <<< CONTROL FLOW
+0009BADE  nop      
+0009BADF  xor      al, al
+0009BAE1  jmp      0x18009bc4e    <<< CONTROL FLOW
+0009BAE6  mov      r8, rax
+0009BAE9  sub      r8, qword ptr [rdi + 8]
+0009BAED  add      rcx, 0x28
+0009BAF1  mov      rdx, qword ptr [rdi + 8]
+0009BAF5  call     0x18009c4a0    <<< CONTROL FLOW
+0009BAFA  mov      rcx, qword ptr [rdi + 0x10]
+0009BAFE  sub      rcx, qword ptr [rdi + 8]
+0009BB02  cmp      rax, rcx
+0009BB05  jae      0x18009bc0c
+0009BB0B  lea      rsi, [rip + 0x2baae]
+0009BB12  mov      qword ptr [rbp - 0x39], rsi
+0009BB16  xor      edi, edi
+0009BB18  mov      qword ptr [rbp - 0x31], rdi
+0009BB1C  mov      dword ptr [rbp - 0x29], 4
+0009BB23  lea      rax, [rip + 0x33e26]
+0009BB2A  mov      qword ptr [rbp - 0x21], rax
+0009BB2E  mov      dword ptr [rbp - 0x19], 0x12a
+0009BB35  lea      rax, [rip + 0x33c54]
+0009BB3C  mov      qword ptr [rbp - 0x11], rax
+0009BB40  mov      word ptr [rbp - 9], di
+0009BB44  mov      qword ptr [rbp - 1], rdi
+0009BB48  mov      byte ptr [rbp + 7], dil
+0009BB4C  mov      qword ptr [rbp + 0xf], rdi
+0009BB50  lea      rax, [rip + 0x2af27]
+0009BB57  mov      qword ptr [rbp + 0x17], rax
+0009BB5B  mov      dword ptr [rbp + 0x1f], 2
+0009BB62  xorps    xmm0, xmm0
+0009BB65  movdqu   xmmword ptr [rbp + 0x27], xmm0
+0009BB6A  mov      qword ptr [rbp + 0x37], rdi
+0009BB6E  lea      r8, [rip + 0x2af0b]
+0009BB75  lea      edx, [rdi + 1]
+0009BB78  lea      rcx, [rbp - 0x39]
+0009BB7C  call     0x18001bdb0    <<< CONTROL FLOW
+0009BB81  mov      r15, rax
+0009BB84  cmp      byte ptr [rax + 0x40], dil
+0009BB88  je       0x18009bbd8
+0009BB8A  mov      rcx, qword ptr [rax + 0x48]
+0009BB8E  add      rcx, 0x88
+0009BB95  lea      rcx, [rcx + 0x10]
+0009BB99  cmove    rcx, rdi
+0009BB9D  lea      rdx, [rip + 0x33d44]
+0009BBA4  call     0x180012b70    <<< CONTROL FLOW
+0009BBA9  mov      rax, qword ptr [rip + 0x66ce0]
+0009BBB0  test     dword ptr [rax + 0x68], 0x2000
+0009BBB7  jbe      0x18009bbd8
+0009BBB9  mov      rax, qword ptr [r15 + 0x48]
+0009BBBD  add      rax, 0x88
+0009BBC3  lea      rcx, [rax + 0x10]
+0009BBC7  cmove    rcx, rdi
+0009BBCB  lea      rdx, [rip + 0x2aeee]
+0009BBD2  call     0x180012b70    <<< CONTROL FLOW
+0009BBD7  nop      
+0009BBD8  mov      qword ptr [rbp - 0x39], rsi
+0009BBDC  lea      rcx, [rbp - 0x39]
+0009BBE0  call     0x18001c2f0    <<< CONTROL FLOW
+0009BBE5  mov      rcx, qword ptr [rbp + 0x27]
+0009BBE9  test     rcx, rcx
+0009BBEC  je       0x18009bc0c
+0009BBEE  mov      rdx, qword ptr [rbp + 0x2f]
+0009BBF2  call     0x180024d70    <<< CONTROL FLOW
+0009BBF7  mov      r8, qword ptr [rbp + 0x37]
+0009BBFB  mov      rdx, qword ptr [rbp + 0x27]
+0009BBFF  sub      r8, rdx
+0009BC02  sar      r8, 5
+0009BC06  call     0x180021970    <<< CONTROL FLOW
+0009BC0B  nop      
+0009BC0C  mov      ecx, dword ptr [rbx + 0x20]
+0009BC0F  test     ecx, ecx
+0009BC11  je       0x18009bc29
+0009BC13  cmp      ecx, 1
+0009BC16  jne      0x18009bc4c
+0009BC18  mov      rdx, r14
+0009BC1B  mov      rcx, rbx
+0009BC1E  call     0x18009c0d0    <<< CONTROL FLOW
+0009BC23  test     al, al
+0009BC25  jne      0x18009bc4c
+0009BC27  jmp      0x18009bc4e    <<< CONTROL FLOW
+0009BC29  mov      rcx, rbx
+0009BC2C  call     0x18009be80    <<< CONTROL FLOW
+0009BC31  test     al, al
+0009BC33  je       0x18009badf
+0009BC39  mov      rdx, r14
+0009BC3C  mov      rcx, rbx
+0009BC3F  call     0x18009c0d0    <<< CONTROL FLOW
+0009BC44  test     al, al
+0009BC46  je       0x18009badf
+0009BC4C  mov      al, 1
+0009BC4E  lea      r11, [rsp + 0xa0]
+0009BC56  mov      rbx, qword ptr [r11 + 0x20]
+0009BC5A  mov      rsi, qword ptr [r11 + 0x28]
+0009BC5E  mov      rdi, qword ptr [r11 + 0x30]
+0009BC62  mov      rsp, r11
+0009BC65  pop      r15
+0009BC67  pop      r14
+0009BC69  pop      rbp
+0009BC6A  ret      
+0009BC6B  int3     
+0009BC6C  int3     
+0009BC6D  int3     
+0009BC6E  int3     
+0009BC6F  int3     
+0009BC70  mov      rax, rsp
+0009BC73  push     rdi
+0009BC74  sub      rsp, 0xa0
+0009BC7B  mov      qword ptr [rax - 0x10], 0xfffffffffffffffe
+0009BC83  mov      qword ptr [rax + 8], rbx
+0009BC87  mov      qword ptr [rax + 0x10], rbp
+0009BC8B  mov      qword ptr [rax + 0x18], rsi
+0009BC8F  mov      rbx, r8
+0009BC92  mov      r10, rdx
+0009BC95  lea      rdx, [rcx + 0x28]
+0009BC99  mov      eax, dword ptr [rdx + 0xc]
+0009BC9C  sub      eax, dword ptr [rdx + 8]
+0009BC9F  movsxd   rdi, eax
+0009BCA2  mov      rax, qword ptr [r10 + 8]
+0009BCA6  sub      rax, qword ptr [r10]
+0009BCA9  cmp      rdi, rax
+0009BCAC  jbe      0x18009bcdf
+0009BCAE  mov      esi, dword ptr [rcx + 0x30]
+0009BCB1  mov      r9d, esi
+0009BCB4  mov      r8d, edi
+0009BCB7  mov      rcx, r10
+0009BCBA  call     0x18009c7c0    <<< CONTROL FLOW
+0009BCBF  test     rbx, rbx
+0009BCC2  je       0x18009be5f
+0009BCC8  test     eax, eax
+0009BCCA  jns      0x18009bcd8
+0009BCCC  lea      ecx, [rsi - 3]
+0009BCCF  add      ecx, edi
+0009BCD1  mov      dword ptr [rbx], ecx
+0009BCD3  jmp      0x18009be5f    <<< CONTROL FLOW
+0009BCD8  mov      dword ptr [rbx], eax
+0009BCDA  jmp      0x18009be5f    <<< CONTROL FLOW
+0009BCDF  test     rbx, rbx
+0009BCE2  je       0x18009bcea
+0009BCE4  mov      eax, dword ptr [rcx + 0x30]
+0009BCE7  mov      dword ptr [r8], eax
+0009BCEA  lea      rbp, [rip + 0x2b8cf]
+0009BCF1  mov      qword ptr [rsp + 0x20], rbp
+0009BCF6  xor      esi, esi
+0009BCF8  mov      qword ptr [rsp + 0x28], rsi
+0009BCFD  mov      dword ptr [rsp + 0x30], 4
+0009BD05  lea      rax, [rip + 0x33c44]
+0009BD0C  mov      qword ptr [rsp + 0x38], rax
+0009BD11  mov      dword ptr [rsp + 0x40], 0x163
+0009BD19  lea      rax, [rip + 0x33b10]
+0009BD20  mov      qword ptr [rsp + 0x48], rax
+0009BD25  mov      word ptr [rsp + 0x50], si
+0009BD2A  mov      qword ptr [rsp + 0x58], rsi
+0009BD2F  mov      byte ptr [rsp + 0x60], sil
+0009BD34  mov      qword ptr [rsp + 0x68], rsi
+0009BD39  lea      rax, [rip + 0x2ad3e]
+0009BD40  mov      qword ptr [rsp + 0x70], rax
+0009BD45  mov      dword ptr [rsp + 0x78], 2
+0009BD4D  xorps    xmm0, xmm0
+0009BD50  movdqu   xmmword ptr [rsp + 0x80], xmm0
+0009BD59  mov      qword ptr [rsp + 0x90], rsi
+0009BD61  lea      r8, [rip + 0x2ad18]
+0009BD68  lea      edx, [rsi + 1]
+0009BD6B  lea      rcx, [rsp + 0x20]
+0009BD70  call     0x18001bdb0    <<< CONTROL FLOW
+0009BD75  mov      rbx, rax
+0009BD78  cmp      byte ptr [rax + 0x40], sil
+0009BD7C  je       0x18009bdcc
+0009BD7E  mov      rcx, qword ptr [rax + 0x48]
+0009BD82  add      rcx, 0x88
+0009BD89  lea      rcx, [rcx + 0x10]
+0009BD8D  cmove    rcx, rsi
+0009BD91  lea      rdx, [rip + 0x33c00]
+0009BD98  call     0x180012b70    <<< CONTROL FLOW
+
+================================================================================
+PAYLOAD_EXTRACTOR | RVA=0x9c0d0 | SIZE=0x280
+================================================================================
+0009C0D0  push     rsi
+0009C0D2  push     rdi
+0009C0D3  push     r14
+0009C0D5  sub      rsp, 0x50
+0009C0D9  mov      qword ptr [rsp + 0x20], 0xfffffffffffffffe
+0009C0E2  mov      qword ptr [rsp + 0x80], rbx
+0009C0EA  mov      rax, qword ptr [rip + 0x62f17]
+0009C0F1  xor      rax, rsp
+0009C0F4  mov      qword ptr [rsp + 0x40], rax
+0009C0F9  mov      r14, rdx
+0009C0FC  mov      rsi, rcx
+0009C0FF  cmp      dword ptr [rcx + 0x20], 1
+0009C103  je       0x18009c10c
+0009C105  xor      al, al
+0009C107  jmp      0x18009c294    <<< CONTROL FLOW
+0009C10C  mov      eax, dword ptr [rcx + 0x34]
+0009C10F  sub      eax, dword ptr [rcx + 0x30]
+0009C112  movsxd   rcx, eax
+0009C115  mov      rdx, qword ptr [rsi + 0x90]
+0009C11C  mov      eax, dword ptr [rdx + 0xc]
+0009C11F  cmp      rcx, rax
+0009C122  jb       0x18009c105
+0009C124  xor      eax, eax
+0009C126  xorps    xmm0, xmm0
+0009C129  movdqu   xmmword ptr [rsp + 0x28], xmm0
+0009C12F  mov      qword ptr [rsp + 0x38], rax
+0009C134  mov      edx, dword ptr [rdx + 0xc]
+0009C137  lea      rcx, [rsp + 0x28]
+0009C13C  call     0x180029080    <<< CONTROL FLOW
+0009C141  mov      rax, qword ptr [rsi + 0x90]
+0009C148  mov      r8d, dword ptr [rax + 0xc]
+0009C14C  mov      rbx, qword ptr [rsp + 0x28]
+0009C151  mov      rdx, rbx
+0009C154  lea      rcx, [rsi + 0x28]
+0009C158  call     0x18009c3d0    <<< CONTROL FLOW
+0009C15D  mov      rax, qword ptr [rsi + 0x90]
+0009C164  mov      edx, dword ptr [rax + 0xc]
+0009C167  add      rdx, 0x84
+0009C16E  mov      rcx, r14
+0009C171  call     0x180029080    <<< CONTROL FLOW
+0009C176  mov      rdi, qword ptr [rsi + 0x90]
+0009C17D  mov      rcx, qword ptr [r14]
+0009C180  test     rcx, rcx
+0009C183  je       0x18009c1e8
+0009C185  test     rdi, rdi
+0009C188  je       0x18009c1d6
+0009C18A  movups   xmm0, xmmword ptr [rdi]
+0009C18D  movups   xmmword ptr [rcx], xmm0
+0009C190  movups   xmm1, xmmword ptr [rdi + 0x10]
+0009C194  movups   xmmword ptr [rcx + 0x10], xmm1
+0009C198  movups   xmm0, xmmword ptr [rdi + 0x20]
+0009C19C  movups   xmmword ptr [rcx + 0x20], xmm0
+0009C1A0  movups   xmm1, xmmword ptr [rdi + 0x30]
+0009C1A4  movups   xmmword ptr [rcx + 0x30], xmm1
+0009C1A8  movups   xmm0, xmmword ptr [rdi + 0x40]
+0009C1AC  movups   xmmword ptr [rcx + 0x40], xmm0
+0009C1B0  movups   xmm1, xmmword ptr [rdi + 0x50]
+0009C1B4  movups   xmmword ptr [rcx + 0x50], xmm1
+0009C1B8  movups   xmm0, xmmword ptr [rdi + 0x60]
+0009C1BC  movups   xmmword ptr [rcx + 0x60], xmm0
+0009C1C0  movups   xmm1, xmmword ptr [rdi + 0x70]
+0009C1C4  movups   xmmword ptr [rcx + 0x70], xmm1
+0009C1C8  mov      eax, dword ptr [rdi + 0x80]
+0009C1CE  mov      dword ptr [rcx + 0x80], eax
+0009C1D4  jmp      0x18009c1fa    <<< CONTROL FLOW
+0009C1D6  xor      edx, edx
+0009C1D8  mov      r8d, 0x84
+0009C1DE  call     0x1800b12d0    <<< CONTROL FLOW
+0009C1E3  test     rdi, rdi
+0009C1E6  jne      0x18009c1fa
+0009C1E8  call     qword ptr [rip + 0x2950a]    <<< CONTROL FLOW
+0009C1EE  mov      dword ptr [rax], 0x16
+0009C1F4  call     qword ptr [rip + 0x2952e]    <<< CONTROL FLOW
+0009C1FA  mov      r9, qword ptr [rsp + 0x30]
+0009C1FF  sub      r9, rbx
+0009C202  mov      rax, qword ptr [rsi + 0x90]
+0009C209  mov      rcx, qword ptr [r14]
+0009C20C  mov      edx, dword ptr [rax + 0xc]
+0009C20F  add      rcx, 0x84
+0009C216  mov      r8, rbx
+0009C219  call     0x180034650    <<< CONTROL FLOW
+0009C21E  xor      edx, edx
+0009C220  mov      r8d, 0x84
+0009C226  mov      rcx, qword ptr [rsi + 0x90]
+0009C22D  call     0x1800b12d0    <<< CONTROL FLOW
+0009C232  mov      dword ptr [rsi + 0x20], 0
+0009C239  test     rbx, rbx
+0009C23C  je       0x18009c292
+0009C23E  mov      rax, qword ptr [rsp + 0x38]
+0009C243  sub      rax, rbx
+0009C246  cmp      rax, 0x1000
+0009C24C  jb       0x18009c28a
+0009C24E  test     bl, 0x1f
+0009C251  je       0x18009c25a
+0009C253  call     qword ptr [rip + 0x294c7]    <<< CONTROL FLOW
+0009C259  int3     
+0009C25A  mov      rax, qword ptr [rbx - 8]
+0009C25E  cmp      rax, rbx
+0009C261  jb       0x18009c26a
+0009C263  call     qword ptr [rip + 0x294b7]    <<< CONTROL FLOW
+0009C269  int3     
+0009C26A  sub      rbx, rax
+0009C26D  cmp      rbx, 8
+0009C271  jae      0x18009c27a
+0009C273  call     qword ptr [rip + 0x294a7]    <<< CONTROL FLOW
+0009C279  int3     
+0009C27A  cmp      rbx, 0x27
+0009C27E  jbe      0x18009c287
+0009C280  call     qword ptr [rip + 0x2949a]    <<< CONTROL FLOW
+0009C286  int3     
+0009C287  mov      rbx, rax
+0009C28A  mov      rcx, rbx
+0009C28D  call     0x1800b03dc    <<< CONTROL FLOW
+0009C292  mov      al, 1
+0009C294  mov      rcx, qword ptr [rsp + 0x40]
+0009C299  xor      rcx, rsp
+0009C29C  call     0x1800affa0    <<< CONTROL FLOW
+0009C2A1  mov      rbx, qword ptr [rsp + 0x80]
+0009C2A9  add      rsp, 0x50
+0009C2AD  pop      r14
+0009C2AF  pop      rdi
+0009C2B0  pop      rsi
+0009C2B1  ret      
+0009C2B2  int3     
+0009C2B3  int3     
+0009C2B4  int3     
+0009C2B5  int3     
+0009C2B6  int3     
+0009C2B7  int3     
+0009C2B8  int3     
+0009C2B9  int3     
+0009C2BA  int3     
+0009C2BB  int3     
+0009C2BC  int3     
+0009C2BD  int3     
+0009C2BE  int3     
+0009C2BF  int3     
+0009C2C0  push     rbx
+0009C2C2  sub      rsp, 0x20
+0009C2C6  xor      eax, eax
+0009C2C8  mov      rbx, rcx
+0009C2CB  mov      qword ptr [rcx], rax
+0009C2CE  mov      qword ptr [rcx + 8], rax
+0009C2D2  mov      qword ptr [rcx + 0x10], rax
+0009C2D6  lea      edx, [rax + 4]
+0009C2D9  call     0x180012720    <<< CONTROL FLOW
+0009C2DE  mov      qword ptr [rbx], rax
+0009C2E1  xor      ecx, ecx
+0009C2E3  mov      qword ptr [rbx + 8], rax
+0009C2E7  mov      rax, qword ptr [rbx]
+0009C2EA  add      rax, 4
+0009C2EE  mov      qword ptr [rbx + 0x10], rax
+0009C2F2  mov      rax, qword ptr [rbx]
+0009C2F5  mov      dword ptr [rax], ecx
+0009C2F7  add      qword ptr [rbx + 8], 4
+0009C2FC  mov      rax, rbx
+0009C2FF  add      rsp, 0x20
+0009C303  pop      rbx
+0009C304  ret      
+0009C305  int3     
+0009C306  int3     
+0009C307  int3     
+0009C308  int3     
+0009C309  int3     
+0009C30A  int3     
+0009C30B  int3     
+0009C30C  int3     
+0009C30D  int3     
+0009C30E  int3     
+0009C30F  int3     
+0009C310  push     rbx
+0009C312  sub      rsp, 0x20
+0009C316  mov      rbx, rcx
+0009C319  mov      rcx, qword ptr [rcx]
+0009C31C  call     0x1800b062c    <<< CONTROL FLOW
+0009C321  mov      rcx, qword ptr [rbx + 0x10]
+0009C325  mov      qword ptr [rbx], 0
+0009C32C  call     0x1800b062c    <<< CONTROL FLOW
+0009C331  mov      qword ptr [rbx + 0x10], 0
+0009C339  add      rsp, 0x20
+0009C33D  pop      rbx
+0009C33E  ret      
+0009C33F  int3     
+0009C340  mov      qword ptr [rsp + 8], rbx
+0009C345  push     rdi
+0009C346  sub      rsp, 0x20
+0009C34A  cmp      byte ptr [rcx + 0x18], 0
+0009C34E  mov      edi, edx
+
+================================================================================
+HEADER_VALIDATOR | RVA=0x9be80 | SIZE=0x280
+================================================================================
+0009BE80  mov      rax, rsp
+0009BE83  push     r14
+0009BE85  sub      rsp, 0x60
+0009BE89  mov      qword ptr [rax - 0x40], 0xfffffffffffffffe
+0009BE91  mov      qword ptr [rax + 0x10], rbx
+0009BE95  mov      qword ptr [rax + 0x18], rsi
+0009BE99  mov      qword ptr [rax + 0x20], rdi
+0009BE9D  mov      rax, qword ptr [rip + 0x63164]
+0009BEA4  xor      rax, rsp
+0009BEA7  mov      qword ptr [rsp + 0x58], rax
+0009BEAC  mov      rsi, rcx
+0009BEAF  cmp      dword ptr [rcx + 0x20], 0
+0009BEB3  je       0x18009bebc
+0009BEB5  xor      al, al
+0009BEB7  jmp      0x18009c0a3    <<< CONTROL FLOW
+0009BEBC  lea      rdi, [rcx + 0x28]
+0009BEC0  mov      eax, dword ptr [rdi + 0xc]
+0009BEC3  sub      eax, dword ptr [rdi + 8]
+0009BEC6  cmp      eax, 0x84
+0009BECB  jb       0x18009beb5
+0009BECD  mov      dword ptr [rsp + 0x20], 0
+0009BED5  lea      rdx, [rcx + 0x50]
+0009BED9  lea      r8, [rsp + 0x20]
+0009BEDE  call     0x18009bc70    <<< CONTROL FLOW
+0009BEE3  mov      ebx, eax
+0009BEE5  test     eax, eax
+0009BEE7  jns      0x18009bf08
+0009BEE9  mov      ecx, 0xa
+0009BEEE  call     qword ptr [rip + 0x2928c]    <<< CONTROL FLOW
+0009BEF4  inc      dword ptr [rip + 0x69a7e]
+0009BEFA  mov      edx, dword ptr [rsp + 0x20]
+0009BEFE  mov      rcx, rdi
+0009BF01  call     0x18009c340    <<< CONTROL FLOW
+0009BF06  jmp      0x18009bf1c    <<< CONTROL FLOW
+0009BF08  mov      edx, ebx
+0009BF0A  mov      rcx, rdi
+0009BF0D  call     0x18009c340    <<< CONTROL FLOW
+0009BF12  mov      dword ptr [rip + 0x69a5c], 0
+0009BF1C  test     ebx, ebx
+0009BF1E  js       0x18009beb5
+0009BF20  xor      eax, eax
+0009BF22  xorps    xmm0, xmm0
+0009BF25  movdqu   xmmword ptr [rsp + 0x40], xmm0
+0009BF2B  mov      qword ptr [rsp + 0x50], rax
+0009BF30  mov      edx, 0x84
+0009BF35  lea      rcx, [rsp + 0x40]
+0009BF3A  call     0x180029080    <<< CONTROL FLOW
+0009BF3F  mov      r8d, 0x84
+0009BF45  mov      rbx, qword ptr [rsp + 0x40]
+0009BF4A  mov      rdx, rbx
+0009BF4D  mov      rcx, rdi
+0009BF50  call     0x18009c3d0    <<< CONTROL FLOW
+0009BF55  cmp      dword ptr [rbx], 0x70827773
+0009BF5B  jne      0x18009c042
+0009BF61  cmp      dword ptr [rbx + 0xc], 0
+0009BF65  je       0x18009c042
+0009BF6B  lea      rcx, [rsp + 0x30]
+0009BF70  call     0x18009c890    <<< CONTROL FLOW
+0009BF75  mov      rdx, rax
+0009BF78  lea      rcx, [rsi + 0x90]
+0009BF7F  call     0x180029150    <<< CONTROL FLOW
+0009BF84  mov      rdi, qword ptr [rsp + 0x38]
+0009BF89  test     rdi, rdi
+0009BF8C  je       0x18009bfbd
+0009BF8E  or       ebx, 0xffffffff
+0009BF91  mov      eax, ebx
+0009BF93  lock xadd dword ptr [rdi + 8], eax
+0009BF98  cmp      eax, 1
+0009BF9B  jne      0x18009bfb8
+0009BF9D  mov      rax, qword ptr [rdi]
+0009BFA0  mov      rcx, rdi
+0009BFA3  call     qword ptr [rax]    <<< CONTROL FLOW
+0009BFA5  lock xadd dword ptr [rdi + 0xc], ebx
+0009BFAA  cmp      ebx, 1
+0009BFAD  jne      0x18009bfb8
+0009BFAF  mov      rax, qword ptr [rdi]
+0009BFB2  mov      rcx, rdi
+0009BFB5  call     qword ptr [rax + 8]    <<< CONTROL FLOW
+0009BFB8  mov      rbx, qword ptr [rsp + 0x40]
+0009BFBD  mov      rcx, qword ptr [rsi + 0x90]
+0009BFC4  test     rcx, rcx
+0009BFC7  jne      0x18009bfdd
+0009BFC9  call     qword ptr [rip + 0x29729]    <<< CONTROL FLOW
+0009BFCF  mov      dword ptr [rax], 0x16
+0009BFD5  call     qword ptr [rip + 0x2974d]    <<< CONTROL FLOW
+0009BFDB  jmp      0x18009c027    <<< CONTROL FLOW
+0009BFDD  movups   xmm0, xmmword ptr [rbx]
+0009BFE0  movups   xmmword ptr [rcx], xmm0
+0009BFE3  movups   xmm1, xmmword ptr [rbx + 0x10]
+0009BFE7  movups   xmmword ptr [rcx + 0x10], xmm1
+0009BFEB  movups   xmm0, xmmword ptr [rbx + 0x20]
+0009BFEF  movups   xmmword ptr [rcx + 0x20], xmm0
+0009BFF3  movups   xmm1, xmmword ptr [rbx + 0x30]
+0009BFF7  movups   xmmword ptr [rcx + 0x30], xmm1
+0009BFFB  movups   xmm0, xmmword ptr [rbx + 0x40]
+0009BFFF  movups   xmmword ptr [rcx + 0x40], xmm0
+0009C003  movups   xmm1, xmmword ptr [rbx + 0x50]
+0009C007  movups   xmmword ptr [rcx + 0x50], xmm1
+0009C00B  movups   xmm0, xmmword ptr [rbx + 0x60]
+0009C00F  movups   xmmword ptr [rcx + 0x60], xmm0
+0009C013  movups   xmm1, xmmword ptr [rbx + 0x70]
+0009C017  movups   xmmword ptr [rcx + 0x70], xmm1
+0009C01B  mov      eax, dword ptr [rbx + 0x80]
+0009C021  mov      dword ptr [rcx + 0x80], eax
+0009C027  mov      rdx, qword ptr [rsi + 0x90]
+0009C02E  mov      rcx, rsi
+0009C031  call     0x18009ac90    <<< CONTROL FLOW
+0009C036  mov      dword ptr [rsi + 0x20], 1
+0009C03D  mov      dil, 1
+0009C040  jmp      0x18009c04b    <<< CONTROL FLOW
+0009C042  mov      eax, dword ptr [rdi + 0xc]
+0009C045  mov      dword ptr [rdi + 8], eax
+0009C048  xor      dil, dil
+0009C04B  mov      rax, qword ptr [rsp + 0x50]
+0009C050  sub      rax, rbx
+0009C053  cmp      rax, 0x1000
+0009C059  jb       0x18009c097
+0009C05B  test     bl, 0x1f
+0009C05E  je       0x18009c067
+0009C060  call     qword ptr [rip + 0x296ba]    <<< CONTROL FLOW
+0009C066  int3     
+0009C067  mov      rax, qword ptr [rbx - 8]
+0009C06B  cmp      rax, rbx
+0009C06E  jb       0x18009c077
+0009C070  call     qword ptr [rip + 0x296aa]    <<< CONTROL FLOW
+0009C076  int3     
+0009C077  sub      rbx, rax
+0009C07A  cmp      rbx, 8
+0009C07E  jae      0x18009c087
+0009C080  call     qword ptr [rip + 0x2969a]    <<< CONTROL FLOW
+0009C086  int3     
+0009C087  cmp      rbx, 0x27
+0009C08B  jbe      0x18009c094
+0009C08D  call     qword ptr [rip + 0x2968d]    <<< CONTROL FLOW
+0009C093  int3     
+0009C094  mov      rbx, rax
+0009C097  mov      rcx, rbx
+0009C09A  call     0x1800b03dc    <<< CONTROL FLOW
+0009C09F  movzx    eax, dil
+0009C0A3  mov      rcx, qword ptr [rsp + 0x58]
+0009C0A8  xor      rcx, rsp
+0009C0AB  call     0x1800affa0    <<< CONTROL FLOW
+0009C0B0  lea      r11, [rsp + 0x60]
+0009C0B5  mov      rbx, qword ptr [r11 + 0x18]
+0009C0B9  mov      rsi, qword ptr [r11 + 0x20]
+0009C0BD  mov      rdi, qword ptr [r11 + 0x28]
+0009C0C1  mov      rsp, r11
+0009C0C4  pop      r14
+0009C0C6  ret      
+0009C0C7  int3     
+0009C0C8  int3     
+0009C0C9  int3     
+0009C0CA  int3     
+0009C0CB  int3     
+0009C0CC  int3     
+0009C0CD  int3     
+0009C0CE  int3     
+0009C0CF  int3     
+0009C0D0  push     rsi
+0009C0D2  push     rdi
+0009C0D3  push     r14
+0009C0D5  sub      rsp, 0x50
+0009C0D9  mov      qword ptr [rsp + 0x20], 0xfffffffffffffffe
+0009C0E2  mov      qword ptr [rsp + 0x80], rbx
+0009C0EA  mov      rax, qword ptr [rip + 0x62f17]
+0009C0F1  xor      rax, rsp
+0009C0F4  mov      qword ptr [rsp + 0x40], rax
+0009C0F9  mov      r14, rdx
+0009C0FC  mov      rsi, rcx
+
+================================================================================
+BUFFER_PROCESSOR | RVA=0x9c4a0 | SIZE=0x280
+================================================================================
+0009C4A0  push     rsi
+0009C4A2  push     rdi
+0009C4A3  push     r12
+0009C4A5  push     r13
+0009C4A7  sub      rsp, 0x38
+0009C4AB  mov      rax, qword ptr [rcx]
+0009C4AE  mov      r13, rdx
+0009C4B1  mov      rdx, qword ptr [rcx + 0x20]
+0009C4B5  mov      rdi, rcx
+0009C4B8  mov      esi, 0x400
+0009C4BD  mov      r12, r8
+0009C4C0  movzx    ecx, byte ptr [rax]
+0009C4C3  mov      eax, esi
+0009C4C5  shl      eax, cl
+0009C4C7  cdqe     
+0009C4C9  cmp      rdx, rax
+0009C4CC  jbe      0x18009c5f7
+0009C4D2  cmp      byte ptr [rdi + 0x18], 0
+0009C4D6  jne      0x18009c5f7
+0009C4DC  mov      qword ptr [rsp + 0x70], r14
+0009C4E1  lea      r8, [rdi + 0x10]
+0009C4E5  shr      rdx, 0xa
+0009C4E9  mov      qword ptr [rsp + 0x30], r15
+0009C4EE  call     0x18009cc40    <<< CONTROL FLOW
+0009C4F3  mov      r8d, dword ptr [rdi + 0xc]
+0009C4F7  mov      r15d, dword ptr [rdi + 8]
+0009C4FB  cmp      r8d, r15d
+0009C4FE  jne      0x18009c51a
+0009C500  mov      rcx, qword ptr [rdi]
+0009C503  mov      rax, qword ptr [rdi + 0x10]
+0009C507  mov      qword ptr [rdi], rax
+0009C50A  mov      qword ptr [rdi + 0x10], rcx
+0009C50E  movzx    ecx, byte ptr [rcx]
+0009C511  mov      byte ptr [rdi + 0x18], 1
+0009C515  jmp      0x18009c5e3    <<< CONTROL FLOW
+0009C51A  mov      r10, qword ptr [rdi]
+0009C51D  mov      r9d, esi
+0009C520  mov      qword ptr [rsp + 0x68], rbp
+0009C525  movzx    ecx, byte ptr [r10]
+0009C529  shl      r9d, cl
+0009C52C  lea      ecx, [r9 - 1]
+0009C530  mov      edx, ecx
+0009C532  and      rdx, r15
+0009C535  mov      ebp, ecx
+0009C537  and      rbp, r8
+0009C53A  inc      rdx
+0009C53D  inc      rbp
+0009C540  mov      r8d, r15d
+0009C543  lea      rax, [r10 + rdx]
+0009C547  cmp      rdx, rbp
+0009C54A  jb       0x18009c5b0
+0009C54C  mov      qword ptr [rsp + 0x60], rbx
+0009C551  movsxd   rbx, r9d
+0009C554  mov      r9d, r15d
+0009C557  sub      rbx, rdx
+0009C55A  mov      rdx, qword ptr [rdi + 0x10]
+0009C55E  inc      rbx
+0009C561  mov      qword ptr [rsp + 0x28], rbx
+0009C566  mov      qword ptr [rsp + 0x20], rax
+0009C56B  call     0x18009cb70    <<< CONTROL FLOW
+0009C570  mov      r10, qword ptr [rdi]
+0009C573  lea      r9d, [rbx + r15]
+0009C577  mov      eax, esi
+0009C579  lea      rdx, [rbp - 1]
+0009C57D  mov      qword ptr [rsp + 0x28], rdx
+0009C582  mov      r8d, r15d
+0009C585  mov      rdx, qword ptr [rdi + 0x10]
+0009C589  movzx    ecx, byte ptr [r10]
+0009C58D  shl      eax, cl
+0009C58F  lea      ecx, [rax - 1]
+0009C592  mov      eax, r9d
+0009C595  and      rcx, rax
+0009C598  lea      rax, [r10 + 1]
+0009C59C  add      rax, rcx
+0009C59F  mov      qword ptr [rsp + 0x20], rax
+0009C5A4  call     0x18009cb70    <<< CONTROL FLOW
+0009C5A9  mov      rbx, qword ptr [rsp + 0x60]
+0009C5AE  jmp      0x18009c5c9    <<< CONTROL FLOW
+0009C5B0  sub      rbp, rdx
+0009C5B3  mov      r9d, r15d
+0009C5B6  mov      rdx, qword ptr [rdi + 0x10]
+0009C5BA  mov      qword ptr [rsp + 0x28], rbp
+0009C5BF  mov      qword ptr [rsp + 0x20], rax
+0009C5C4  call     0x18009cb70    <<< CONTROL FLOW
+0009C5C9  mov      rcx, qword ptr [rdi]
+0009C5CC  mov      rax, qword ptr [rdi + 0x10]
+0009C5D0  mov      rbp, qword ptr [rsp + 0x68]
+0009C5D5  mov      qword ptr [rdi], rax
+0009C5D8  mov      qword ptr [rdi + 0x10], rcx
+0009C5DC  mov      byte ptr [rdi + 0x18], 1
+0009C5E0  movzx    ecx, byte ptr [rcx]
+0009C5E3  mov      r14, qword ptr [rsp + 0x70]
+0009C5E8  mov      eax, esi
+0009C5EA  mov      r15, qword ptr [rsp + 0x30]
+0009C5EF  shl      eax, cl
+0009C5F1  cdqe     
+0009C5F3  mov      qword ptr [rdi + 0x20], rax
+0009C5F7  mov      r8d, dword ptr [rdi + 8]
+0009C5FB  mov      edx, dword ptr [rdi + 0xc]
+0009C5FE  cmp      r8d, edx
+0009C601  jl       0x18009c632
+0009C603  test     edx, edx
+0009C605  je       0x18009c60e
+0009C607  xor      r8d, r8d
+0009C60A  mov      qword ptr [rdi + 8], r8
+0009C60E  mov      r9d, dword ptr [rdi + 0xc]
+0009C612  mov      rdx, qword ptr [rdi]
+0009C615  mov      qword ptr [rsp + 0x28], r12
+0009C61A  mov      qword ptr [rsp + 0x20], r13
+0009C61F  call     0x18009cb70    <<< CONTROL FLOW
+0009C624  add      dword ptr [rdi + 0xc], eax
+0009C627  add      rsp, 0x38
+0009C62B  pop      r13
+0009C62D  pop      r12
+0009C62F  pop      rdi
+0009C630  pop      rsi
+0009C631  ret      
+0009C632  mov      rax, qword ptr [rdi]
+0009C635  sub      edx, r8d
+0009C638  movzx    ecx, byte ptr [rax]
+0009C63B  shl      esi, cl
+0009C63D  cmp      edx, esi
+0009C63F  jne      0x18009c60e
+0009C641  xor      eax, eax
+0009C643  add      rsp, 0x38
+0009C647  pop      r13
+0009C649  pop      r12
+0009C64B  pop      rdi
+0009C64C  pop      rsi
+0009C64D  ret      
+0009C64E  int3     
+0009C64F  int3     
+0009C650  mov      qword ptr [rsp + 0x18], rbx
+0009C655  push     rsi
+0009C656  push     rdi
+0009C657  push     r14
+0009C659  sub      rsp, 0x60
+0009C65D  xor      edi, edi
+0009C65F  mov      rbx, rdx
+0009C662  mov      rsi, rcx
+0009C665  cmp      rcx, rdx
+0009C668  je       0x18009c690
+0009C66A  call     0x180029460    <<< CONTROL FLOW
+0009C66F  mov      rax, qword ptr [rbx]
+0009C672  mov      qword ptr [rsi], rax
+0009C675  mov      rax, qword ptr [rbx + 8]
+0009C679  mov      qword ptr [rsi + 8], rax
+0009C67D  mov      rax, qword ptr [rbx + 0x10]
+0009C681  mov      qword ptr [rsi + 0x10], rax
+0009C685  mov      qword ptr [rbx], rdi
+0009C688  mov      qword ptr [rbx + 8], rdi
+0009C68C  mov      qword ptr [rbx + 0x10], rdi
+0009C690  mov      r8, rsi
+0009C693  lea      rdx, [rsp + 0x40]
+0009C698  call     0x18009c920    <<< CONTROL FLOW
+0009C69D  lea      rbx, [rsi + 0x18]
+0009C6A1  mov      r14, rax
+0009C6A4  cmp      rbx, rax
+0009C6A7  je       0x18009c6ed
+0009C6A9  mov      rdx, qword ptr [rbx]
+0009C6AC  test     rdx, rdx
+0009C6AF  je       0x18009c6cc
+0009C6B1  mov      r8, qword ptr [rbx + 0x10]
+0009C6B5  sub      r8, rdx
+0009C6B8  sar      r8, 2
+0009C6BC  call     0x18002c9b0    <<< CONTROL FLOW
+0009C6C1  mov      qword ptr [rbx], rdi
+0009C6C4  mov      qword ptr [rbx + 8], rdi
+0009C6C8  mov      qword ptr [rbx + 0x10], rdi
+0009C6CC  mov      rax, qword ptr [r14]
+0009C6CF  mov      qword ptr [rbx], rax
+0009C6D2  mov      rax, qword ptr [r14 + 8]
+0009C6D6  mov      qword ptr [rbx + 8], rax
+0009C6DA  mov      rax, qword ptr [r14 + 0x10]
+0009C6DE  mov      qword ptr [rbx + 0x10], rax
+0009C6E2  mov      qword ptr [r14], rdi
+0009C6E5  mov      qword ptr [r14 + 8], rdi
+0009C6E9  mov      qword ptr [r14 + 0x10], rdi
+0009C6ED  mov      rdx, qword ptr [rsp + 0x40]
+0009C6F2  test     rdx, rdx
+0009C6F5  je       0x18009c708
+0009C6F7  mov      r8, qword ptr [rsp + 0x50]
+0009C6FC  sub      r8, rdx
+0009C6FF  sar      r8, 2
+0009C703  call     0x18002c9b0    <<< CONTROL FLOW
+0009C708  mov      rax, qword ptr [rsi + 8]
+0009C70C  cmp      rax, qword ptr [rsi]
+0009C70F  je       0x18009c7ad
+0009C715  nop      word ptr [rax + rax]
+
+================================================================================
+PROCESSOR_INITIALIZER | RVA=0x9b6b0 | SIZE=0x300
+================================================================================
+0009B6B0  mov      r11, rsp
+0009B6B3  push     rdi
+0009B6B4  sub      rsp, 0x60
+0009B6B8  mov      qword ptr [r11 - 0x48], 0xfffffffffffffffe
+0009B6C0  mov      qword ptr [r11 + 0x10], rbx
+0009B6C4  mov      qword ptr [r11 + 0x18], rbp
+0009B6C8  mov      qword ptr [r11 + 0x20], rsi
+0009B6CC  mov      rax, qword ptr [rip + 0x63935]
+0009B6D3  xor      rax, rsp
+0009B6D6  mov      qword ptr [rsp + 0x58], rax
+0009B6DB  mov      rdi, rcx
+0009B6DE  mov      qword ptr [r11 - 0x40], rcx
+0009B6E2  xor      ebp, ebp
+0009B6E4  mov      qword ptr [rcx + 8], rbp
+0009B6E8  mov      qword ptr [rcx + 0x10], rbp
+0009B6EC  mov      qword ptr [rcx + 0x18], rbp
+0009B6F0  lea      rax, [rip + 0x34339]
+0009B6F7  mov      qword ptr [rcx], rax
+0009B6FA  mov      dword ptr [rcx + 0x20], ebp
+0009B6FD  lea      r8, [rcx + 0x28]
+0009B701  mov      qword ptr [r8], rbp
+0009B704  mov      qword ptr [r8 + 8], rbp
+0009B708  mov      qword ptr [r8 + 0x10], rbp
+0009B70C  mov      byte ptr [r8 + 0x18], bpl
+0009B710  mov      qword ptr [r8 + 0x20], 0x3e80000
+0009B718  mov      edx, 0xfa00
+0009B71D  call     0x18009cc40    <<< CONTROL FLOW
+0009B722  nop      
+0009B723  lea      rsi, [rdi + 0x50]
+0009B727  mov      qword ptr [rsp + 0x30], rsi
+0009B72C  mov      qword ptr [rsi], rbp
+0009B72F  mov      qword ptr [rsi + 8], rbp
+0009B733  mov      qword ptr [rsi + 0x10], rbp
+0009B737  mov      qword ptr [rsi + 0x18], rbp
+0009B73B  mov      qword ptr [rsi + 0x20], rbp
+0009B73F  mov      qword ptr [rsi + 0x28], rbp
+0009B743  lea      rbx, [rsi + 0x30]
+0009B747  mov      qword ptr [rsp + 0x38], rbx
+0009B74C  mov      qword ptr [rbx], rbp
+0009B74F  mov      qword ptr [rbx + 8], rbp
+0009B753  call     0x1800657b0    <<< CONTROL FLOW
+0009B758  mov      qword ptr [rbx], rax
+0009B75B  mov      qword ptr [rdi + 0x90], rbp
+0009B762  mov      qword ptr [rdi + 0x98], rbp
+0009B769  xor      eax, eax
+0009B76B  mov      qword ptr [rsp + 0x40], rax
+0009B770  mov      qword ptr [rsp + 0x48], rax
+0009B775  mov      qword ptr [rsp + 0x50], rax
+0009B77A  lea      rcx, [rsp + 0x40]
+0009B77F  call     0x18009c2c0    <<< CONTROL FLOW
+0009B784  nop      
+0009B785  mov      r8, qword ptr [rsp + 0x48]
+0009B78A  mov      rcx, qword ptr [rsp + 0x40]
+0009B78F  sub      r8, rcx
+0009B792  je       0x18009b7b9
+0009B794  test     rcx, rcx
+0009B797  jne      0x18009b7ad
+0009B799  call     qword ptr [rip + 0x29f59]    <<< CONTROL FLOW
+0009B79F  mov      dword ptr [rax], 0x16
+0009B7A5  call     qword ptr [rip + 0x29f7d]    <<< CONTROL FLOW
+0009B7AB  jmp      0x18009b7b9    <<< CONTROL FLOW
+0009B7AD  lea      rdx, [rip + 0x2c568]
+0009B7B4  call     0x1800b14ae    <<< CONTROL FLOW
+0009B7B9  lea      rdx, [rsp + 0x40]
+0009B7BE  mov      rcx, rsi
+0009B7C1  call     0x18009c650    <<< CONTROL FLOW
+0009B7C6  nop      
+0009B7C7  mov      rcx, qword ptr [rsp + 0x40]
+0009B7CC  test     rcx, rcx
+0009B7CF  je       0x18009b823
+0009B7D1  mov      rax, qword ptr [rsp + 0x50]
+0009B7D6  sub      rax, rcx
+0009B7D9  cmp      rax, 0x1000
+0009B7DF  jb       0x18009b81d
+0009B7E1  test     cl, 0x1f
+0009B7E4  je       0x18009b7ed
+0009B7E6  call     qword ptr [rip + 0x29f34]    <<< CONTROL FLOW
+0009B7EC  int3     
+0009B7ED  mov      rax, qword ptr [rcx - 8]
+0009B7F1  cmp      rax, rcx
+0009B7F4  jb       0x18009b7fd
+0009B7F6  call     qword ptr [rip + 0x29f24]    <<< CONTROL FLOW
+0009B7FC  int3     
+0009B7FD  sub      rcx, rax
+0009B800  cmp      rcx, 8
+0009B804  jae      0x18009b80d
+0009B806  call     qword ptr [rip + 0x29f14]    <<< CONTROL FLOW
+0009B80C  int3     
+0009B80D  cmp      rcx, 0x27
+0009B811  jbe      0x18009b81a
+0009B813  call     qword ptr [rip + 0x29f07]    <<< CONTROL FLOW
+0009B819  int3     
+0009B81A  mov      rcx, rax
+0009B81D  call     0x1800b03dc    <<< CONTROL FLOW
+0009B822  nop      
+0009B823  mov      rax, rdi
+0009B826  mov      rcx, qword ptr [rsp + 0x58]
+0009B82B  xor      rcx, rsp
+0009B82E  call     0x1800affa0    <<< CONTROL FLOW
+0009B833  lea      r11, [rsp + 0x60]
+0009B838  mov      rbx, qword ptr [r11 + 0x18]
+0009B83C  mov      rbp, qword ptr [r11 + 0x20]
+0009B840  mov      rsi, qword ptr [r11 + 0x28]
+0009B844  mov      rsp, r11
+0009B847  pop      rdi
+0009B848  ret      
+0009B849  int3     
+0009B84A  int3     
+0009B84B  int3     
+0009B84C  int3     
+0009B84D  int3     
+0009B84E  int3     
+0009B84F  int3     
+0009B850  mov      qword ptr [rsp + 8], rbx
+0009B855  push     rdi
+0009B856  sub      rsp, 0x20
+0009B85A  mov      ebx, edx
+0009B85C  mov      rdi, rcx
+0009B85F  call     0x18009b900    <<< CONTROL FLOW
+0009B864  test     bl, 1
+0009B867  je       0x18009b876
+0009B869  mov      edx, 0xa0
+0009B86E  mov      rcx, rdi
+0009B871  call     0x1800b062c    <<< CONTROL FLOW
+0009B876  mov      rax, rdi
+0009B879  mov      rbx, qword ptr [rsp + 0x30]
+0009B87E  add      rsp, 0x20
+0009B882  pop      rdi
+0009B883  ret      
+0009B884  int3     
+0009B885  int3     
+0009B886  int3     
+0009B887  int3     
+0009B888  int3     
+0009B889  int3     
+0009B88A  int3     
+0009B88B  int3     
+0009B88C  int3     
+0009B88D  int3     
+0009B88E  int3     
+0009B88F  int3     
+0009B890  mov      qword ptr [rsp + 0x10], rbx
+0009B895  push     rdi
+0009B896  sub      rsp, 0x20
+0009B89A  mov      r8, qword ptr [rcx + 0x30]
+0009B89E  lea      rdx, [rsp + 0x30]
+0009B8A3  mov      rdi, rcx
+0009B8A6  mov      r9, r8
+0009B8A9  add      rcx, 0x30
+0009B8AD  mov      r8, qword ptr [r8]
+0009B8B0  call     0x18003d4f0    <<< CONTROL FLOW
+0009B8B5  mov      rcx, qword ptr [rdi + 0x30]
+0009B8B9  call     0x1800b03dc    <<< CONTROL FLOW
+0009B8BE  mov      rdx, qword ptr [rdi + 0x18]
+0009B8C2  test     rdx, rdx
+0009B8C5  je       0x18009b8e5
+0009B8C7  mov      r8, qword ptr [rdi + 0x28]
+0009B8CB  sub      r8, rdx
+0009B8CE  sar      r8, 2
+0009B8D2  call     0x18002c9b0    <<< CONTROL FLOW
+0009B8D7  xor      eax, eax
+0009B8D9  mov      qword ptr [rdi + 0x18], rax
+0009B8DD  mov      qword ptr [rdi + 0x20], rax
+0009B8E1  mov      qword ptr [rdi + 0x28], rax
+0009B8E5  mov      rcx, rdi
+0009B8E8  mov      rbx, qword ptr [rsp + 0x38]
+0009B8ED  add      rsp, 0x20
+0009B8F1  pop      rdi
+0009B8F2  jmp      0x180029460    <<< CONTROL FLOW
+0009B8F7  int3     
+0009B8F8  int3     
+0009B8F9  int3     
+0009B8FA  int3     
+0009B8FB  int3     
+0009B8FC  int3     
+0009B8FD  int3     
+0009B8FE  int3     
+0009B8FF  int3     
+0009B900  mov      qword ptr [rsp + 0x10], rbx
+0009B905  push     rdi
+0009B906  sub      rsp, 0x20
+0009B90A  lea      rax, [rip + 0x3411f]
+0009B911  mov      rdi, rcx
+0009B914  mov      qword ptr [rcx], rax
+0009B917  mov      rbx, qword ptr [rcx + 0x98]
+0009B91E  test     rbx, rbx
+0009B921  je       0x18009b957
+0009B923  mov      qword ptr [rsp + 0x30], rsi
+0009B928  or       esi, 0xffffffff
+0009B92B  mov      eax, esi
+0009B92D  lock xadd dword ptr [rbx + 8], eax
+0009B932  cmp      eax, 1
+0009B935  jne      0x18009b952
+0009B937  mov      rax, qword ptr [rbx]
+0009B93A  mov      rcx, rbx
+0009B93D  call     qword ptr [rax]    <<< CONTROL FLOW
+0009B93F  lock xadd dword ptr [rbx + 0xc], esi
+0009B944  cmp      esi, 1
+0009B947  jne      0x18009b952
+0009B949  mov      rax, qword ptr [rbx]
+0009B94C  mov      rcx, rbx
+0009B94F  call     qword ptr [rax + 8]    <<< CONTROL FLOW
+0009B952  mov      rsi, qword ptr [rsp + 0x30]
+0009B957  lea      rcx, [rdi + 0x50]
+0009B95B  call     0x18009b890    <<< CONTROL FLOW
+0009B960  mov      rcx, qword ptr [rdi + 0x28]
+0009B964  call     0x1800b062c    <<< CONTROL FLOW
+0009B969  mov      rcx, qword ptr [rdi + 0x38]
+0009B96D  xor      ebx, ebx
+0009B96F  mov      qword ptr [rdi + 0x28], rbx
+0009B973  call     0x1800b062c    <<< CONTROL FLOW
+0009B978  mov      qword ptr [rdi + 0x38], rbx
+0009B97C  lea      rax, [rip + 0x3404d]
+0009B983  mov      rbx, qword ptr [rsp + 0x38]
+0009B988  mov      qword ptr [rdi], rax
+0009B98B  add      rsp, 0x20
+0009B98F  pop      rdi
+0009B990  ret      
+0009B991  int3     
+0009B992  int3     
+0009B993  int3     
+0009B994  int3     
+0009B995  int3     
+0009B996  int3     
+0009B997  int3     
+0009B998  int3     
+0009B999  int3     
+0009B99A  int3     
+0009B99B  int3     
+0009B99C  int3     
+0009B99D  int3     
+0009B99E  int3     
+0009B99F  int3     
+0009B9A0  mov      rax, rsp
+0009B9A3  push     rbp
+0009B9A4  push     r14
+0009B9A6  push     r15
+0009B9A8  lea      rbp, [rax - 0x5f]
+
+================================================================================
+CALLBACK_HELPER | RVA=0x91540 | SIZE=0x100
+================================================================================
+00091540  mov      qword ptr [rsp + 0x10], rdx
+00091545  push     rbx
+00091546  sub      rsp, 0x30
+0009154A  mov      qword ptr [rsp + 0x28], 0xfffffffffffffffe
+00091553  mov      rbx, rdx
+00091556  xor      edx, edx
+00091558  mov      dword ptr [rsp + 0x20], edx
+0009155C  mov      rax, qword ptr [rcx + 8]
+00091560  mov      qword ptr [rbx + 0x38], rdx
+00091564  mov      rcx, qword ptr [rax + 0x48]
+00091568  test     rcx, rcx
+0009156B  je       0x180091579
+0009156D  mov      rax, qword ptr [rcx]
+00091570  mov      rdx, rbx
+00091573  call     qword ptr [rax]    <<< CONTROL FLOW
+00091575  mov      qword ptr [rbx + 0x38], rax
+00091579  mov      rax, rbx
+0009157C  add      rsp, 0x30
+00091580  pop      rbx
+00091581  ret      
+00091582  int3     
+00091583  int3     
+00091584  int3     
+00091585  int3     
+00091586  int3     
+00091587  int3     
+00091588  int3     
+00091589  int3     
+0009158A  int3     
+0009158B  int3     
+0009158C  int3     
+0009158D  int3     
+0009158E  int3     
+0009158F  int3     
+00091590  push     rbp
+00091592  push     rsi
+00091593  push     rdi
+00091594  push     r12
+00091596  push     r13
+00091598  push     r14
+0009159A  push     r15
+0009159C  lea      rbp, [rsp - 0x130]
+000915A4  sub      rsp, 0x230
+000915AB  mov      qword ptr [rbp + 0x20], 0xfffffffffffffffe
+000915B3  mov      qword ptr [rsp + 0x270], rbx
+000915BB  mov      rax, qword ptr [rip + 0x6da46]
+000915C2  xor      rax, rsp
+000915C5  mov      qword ptr [rbp + 0x120], rax
+000915CC  mov      rdi, r8
+000915CF  mov      rbx, rdx
+000915D2  lea      r15, [rip + 0x35fe7]
+000915D9  xor      r14d, r14d
+000915DC  lea      r12, [rip + 0x3cfad]
+000915E3  lea      r13, [rip + 0x3cfe6]
+000915EA  lea      rax, [rip + 0x3548d]
+000915F1  test     rdx, rdx
+000915F4  je       0x180091600
+000915F6  cmp      qword ptr [rdx + 0x20], r14
+000915FA  jne      0x1800916fb
+00091600  mov      qword ptr [rsp + 0x30], r15
+00091605  mov      qword ptr [rsp + 0x38], r14
+0009160A  mov      dword ptr [rsp + 0x40], 0x80
+00091612  mov      qword ptr [rsp + 0x48], r12
+00091617  mov      dword ptr [rsp + 0x50], 0x36
+0009161F  mov      qword ptr [rsp + 0x58], r13
+00091624  mov      word ptr [rsp + 0x60], r14w
+0009162A  mov      qword ptr [rsp + 0x68], r14
+0009162F  mov      byte ptr [rsp + 0x70], r14b
+00091634  mov      qword ptr [rsp + 0x78], r14
+00091639  mov      qword ptr [rbp - 0x80], rax
