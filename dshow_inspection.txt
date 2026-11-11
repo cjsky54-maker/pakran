@@ -1,0 +1,181 @@
+﻿
+======================================================================
+add_null_render
+======================================================================
+    def add_null_render(self):
+        self.__add_filter(FilterType.render, clsids.CLSID_NullRender)
+
+
+======================================================================
+add_sample_grabber
+======================================================================
+    def add_sample_grabber(self, callback: Callable[[Mat], None]):
+        self.__add_filter(FilterType.sample_grabber, None)
+        sample_grabber = self.filters[FilterType.sample_grabber]
+        sample_grabber_cb = SampleGrabberCallback(callback)
+        sample_grabber.set_callback(sample_grabber_cb, 1)
+        sample_grabber.set_media_type(MediaTypes.Video, MediaSubtypes.RGB24)
+
+
+======================================================================
+prepare_preview_graph
+======================================================================
+    def prepare_preview_graph(self):
+        assert FilterType.video_input in self.filters
+        assert FilterType.render in self.filters
+        if FilterType.sample_grabber not in self.filters:
+            self.graph_builder.Connect(self.filters[FilterType.video_input].get_out(),
+                                       self.filters[FilterType.render].get_in())
+        else:
+            self.graph_builder.Connect(self.filters[FilterType.video_input].get_out(),
+                                       self.filters[FilterType.sample_grabber].get_in())
+            self.graph_builder.Connect(self.filters[FilterType.sample_grabber].get_out(),
+                                       self.filters[FilterType.render].get_in())
+            self.filters[FilterType.sample_grabber].initialize_after_connection()
+        self.is_recording = False
+
+
+======================================================================
+private_add_filter
+======================================================================
+    def __add_filter(self, filter_type: FilterType, filter_id: int | None):
+        assert filter_type not in self.filters
+        filter = self.filter_factory.build_filter(filter_type, filter_id)
+        self.filters[filter_type] = filter
+        self.filter_graph.AddFilter(filter.instance, filter.Name)
+
+
+======================================================================
+SampleGrabber classes
+======================================================================
+
+--- ISampleGrabber ---
+class ISampleGrabber(IUnknown):
+    _case_insensitive_ = True
+    'ISampleGrabber Interface'
+    _iid_ = GUID('{6B652FFF-11FE-4FCE-92AD-0266B5D7C78F}')
+    _idlflags_ = []
+
+
+--- Filter ---
+class Filter:
+    # Wrapper around a Direct Show filter
+    def __init__(self, instance: IBASEFILTER, name: str, capture_builder: ICAPTUREGRAPHBUILDER2):
+        self.instance = instance
+        self.capture_builder = capture_builder
+        self.Name = name
+        self.out_pins: list[IPIN] = []
+        self.in_pins: list[IPIN] = []
+        self.reload_pins()
+
+    def get_out(self):
+        return self.out_pins[0]
+
+    def get_in(self, index: int = 0):
+        return self.in_pins[index]
+
+    def find_pin(self, direction: Literal[0, 1], category=None, type=None, unconnected: bool = True):
+        try:
+            return self.capture_builder.FindPin(self.instance, direction, category, type, unconnected, 0)
+        except COMError:
+            return None  # assuming preview pin not found
+
+    def reload_pins(self):
+        # 0 = in, 1 = out
+        self.out_pins = []
+        self.in_pins = []
+        enum = self.instance.EnumPins()
+        pin, count = enum.Next(1)
+        while count > 0:
+            if pin.QueryDirection() == 0:
+                self.in_pins.append(pin)
+            else:
+                self.out_pins.append(pin)
+            pin, count = enum.Next(1)
+
+    def set_properties(self):
+        show_properties(self.instance)
+
+    def get_name(self):
+        filter_info = self.instance.QueryFilterInfo()
+        return wstring_at(filter_info.achName)
+
+    def print_info(self):
+        print(f"Pins of: {self.get_name()}")
+        enum = self.instance.EnumPins()
+        pin, count = enum.Next(1)
+        while count > 0:
+            info = pin.QueryPinInfo()
+            direction, name = (info.dir, wstring_at(info.achName))
+            print(f"PIN {'in' if direction == 0 else 'out'} - {name}")
+            pin, count = enum.Next(1)
+
+
+--- SampleGrabber ---
+class SampleGrabber(Filter):
+    def __init__(self, capture_builder: ICAPTUREGRAPHBUILDER2):
+        Filter.__init__(
+            self,
+            client.CreateObject(GUID(clsids.CLSID_SampleGrabber), interface=qedit.IBaseFilter),
+            "Sample Grabber",
+            capture_builder,
+        )
+        self.sample_grabber = self.instance.QueryInterface(ISampleGrabber)
+        self.callback: SampleGrabberCallback = None
+
+    def set_callback(self, callback: SampleGrabberCallback, which_method_to_callback):
+        self.callback = callback
+        self.sample_grabber.SetCallback(callback, which_method_to_callback)
+
+    def set_media_type(self, media_type: str, media_subtype: str):
+        sg_type = qedit._AMMediaType()
+        sg_type.majortype = GUID(media_type)
+        sg_type.subtype = GUID(media_subtype)
+        self.sample_grabber.SetMediaType(sg_type)
+
+    def get_resolution(self) -> tuple[int, int]:
+        media_type = self.sample_grabber.GetConnectedMediaType()
+        p_video_info_header = cast(media_type.pbFormat, POINTER(VIDEOINFOHEADER))
+        bmp_header = p_video_info_header.contents.bmi_header
+        return bmp_header.biWidth, bmp_header.biHeight
+
+    def initialize_after_connection(self):
+        self.callback.image_resolution = self.get_resolution()
+
+
+--- SampleGrabberCallback ---
+class SampleGrabberCallback(COMObject):
+    _com_interfaces_ = [qedit.ISampleGrabberCB]
+
+    def __init__(self, callback: Callable[[Mat], None]):
+        self.callback = callback
+        self.cnt = 0
+        self.keep_photo = False
+        self.image_resolution: tuple[int, int] = (0, 0)
+        super(SampleGrabberCallback, self).__init__()
+
+    def grab_frame(self):
+        self.keep_photo = True
+
+    def SampleCB(self, this, SampleTime, pSample) -> int:
+        return 0
+
+    def BufferCB(self, this, SampleTime, pBuffer: NPBUFFER, BufferLen: int) -> int:
+        if self.keep_photo:
+            self.keep_photo = False
+            img = np.ctypeslib.as_array(pBuffer, shape=(self.image_resolution[1], self.image_resolution[0], 3))
+            img = np.flip(np.copy(img), axis=0)
+            self.callback(img)
+        return 0
+
+    # ALTERNATIVE
+    # def BufferCB(self, this, SampleTime, pBuffer, BufferLen):
+    #     if self.keep_photo:
+    #         self.keep_photo = False
+    #         bsize = self.image_resolution[1] *self.image_resolution[0] * 3
+    #         img = pBuffer[:bsize]
+    #         img = np.reshape(img, (self.image_resolution[1], self.image_resolution[0], 3))
+    #         img = np.flip(img, axis=0)
+    #         self.callback(img)
+    #     return 0
+
